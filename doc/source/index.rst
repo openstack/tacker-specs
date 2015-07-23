@@ -20,6 +20,14 @@ Juno approved specs:
 
    specs/juno/*
 
+Liberty approved specs:
+
+.. toctree::
+   :glob:
+   :maxdepth: 1
+
+   specs/liberty/*
+
 ==================
 Indices and tables
 ==================
