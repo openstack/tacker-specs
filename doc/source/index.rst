@@ -12,13 +12,21 @@ Contents:
 
    specs/*
 
-Juno approved specs:
+Newton approved specs:
 
 .. toctree::
    :glob:
    :maxdepth: 1
 
-   specs/juno/*
+   specs/newton/*
+
+Mitaka approved specs:
+
+.. toctree::
+   :glob:
+   :maxdepth: 1
+
+   specs/mitaka/*
 
 Liberty approved specs:
 
@@ -28,13 +36,13 @@ Liberty approved specs:
 
    specs/liberty/*
 
-Mitaka approved specs:
+Juno approved specs:
 
 .. toctree::
    :glob:
    :maxdepth: 1
 
-   specs/mitaka/*
+   specs/juno/*
 
 ==================
 Indices and tables

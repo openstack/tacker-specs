@@ -5,6 +5,10 @@
  http://creativecommons.org/licenses/by/3.0/legalcode
 
 
+NOTE: this template was copied from Neutron one.
+As tacker is at very early stage, the following wouldn't be applied until
+the project matures enough.
+
 ==========================================
 Example Spec - The title of your blueprint
 ==========================================
