@@ -38,7 +38,10 @@ Automatic Flavor Creation
 
 Template Changes
 ~~~~~~~~~~~~~~~~
- topology_template:
+
+.. code-block:: ini
+
+  topology_template:
      node_templates:
          my_server:
              type: tosca.nodes.Compute
@@ -57,14 +60,16 @@ To refer the other properties, refer[1].
 Tacker will fetch the properties from TOSCA template and add them to HOT
 as below:
 
-heat_template_version: 2015-04-30
- resources:
-     my_server_flavor_<UUID>:
-         type: OS::Nova::Flavor
-          properties:
-             disk: 10
-             ram: 512
-             vcpus: 2
+.. code-block:: ini
+
+    heat_template_version: 2015-04-30
+     resources:
+         my_server_flavor_<UUID>:
+             type: OS::Nova::Flavor
+              properties:
+                 disk: 10
+                 ram: 512
+                 vcpus: 2
 
 As 'vcpus' and 'ram' are required parameters in HOT, so if the template doesn't have
 those details, Tacker will provide default values(vcpus=1 and ram=512).
@@ -76,7 +81,9 @@ Automatic Image Creation
 Template Changes
 ~~~~~~~~~~~~~~~~
 
- vdu1:
+.. code-block:: ini
+
+  vdu1:
     artifacts:
      vm_image:
         type: tosca.artifacts.Deployment.Image.VM
@@ -86,34 +93,40 @@ In the modified template, users can either specify the URL for the VM image or
 glance image name in `file` type. Tacker will create the image if URL is specified
 in the `file` parameter.
 
-In this case, we can have three options to automatically create and upload the image.
+In this case, we can have three options to automatically create and upload the image:
 
-1)Specify the image URI in the template and no parametrization
+1). Specify the image URI in the template and no parameterization
 
-If we choose this option, we can't parametrize the `vm_image`. And tackers upload the image
+If we choose this option, we can't parameterize the `vm_image`. And tackers upload the image
 while onboarding the VNFD using glance client. It is one step process. With this option,
 we have to maintain the state of the VNFD based on image creation.
 
-2)Provide the image in CSAR Zip.
+2). Provide the image in CSAR Zip.
 
 Using this option, we have to ship the bundle with image needed for that VNFD. So Tacker will
 upload the image at onboarding time. With this option, we have to maintain the state
 of the VNFD based on image creation.
 
-3)Provide parametrization and upload images at the time of VNF creation.
+3). Provide parameterization and upload images at the time of VNF creation.
 
-Here we can parametrize the `vm_image` attribute. With this option Tacker will upload the image into
+Here we can parameterize the `vm_image` attribute. With this option Tacker will upload the image into
 glance at VNF deployment time using HOT template.
 
 Let's take an example of how TOSCA image artifact can be converted to HOT image resource.
 
-TOSCA
+TOSCA:
+
+.. code-block:: ini
+
     artifacts:
       vm_image:
         type: tosca.artifacts.Deployment.Image.VM.qcow2
         file: http://filer/vnfimages/vrouter.qcow2
 
 Heat:
+
+.. code-block:: ini
+
   image:
     type: OS::Glance::Image
      properties:
@@ -131,14 +144,16 @@ Automatic Network Creation
 Template Changes
 ~~~~~~~~~~~~~~~~
 
-internal_datapath:
-    type: tosca.nodes.nfv.VL.ELAN
-    network_name: net_internal_dp
-    ip_version: 4
-    cidr: '192.168.0.0/24'
-    start_ip: '192.168.0.50'
-    end_ip: '192.168.0.200'
-    gateway_ip: '192.168.0.1'
+.. code-block:: ini
+
+    internal_datapath:
+        type: tosca.nodes.nfv.VL.ELAN
+        network_name: net_internal_dp
+        ip_version: 4
+        cidr: '192.168.0.0/24'
+        start_ip: '192.168.0.50'
+        end_ip: '192.168.0.200'
+        gateway_ip: '192.168.0.1'
 
 In this modified template, users can specify the CIDR of the network, they want
 to deploy VNF. If the user specify the CIDR and not the network_id, tacker will
@@ -149,18 +164,20 @@ storing the network details as network resources are associated with heat stack 
 
 Let's see how the above TOSCA template can be converted to HOT network resource.
 
-net_internal_dp:
-        type: OS::Neutron::Net
-         properties:
-          name: net_internal_dp
+.. code-block:: ini
 
-net_internal_dp_subnet:
-        type: OS::Neutron::Subnet
-         properties:
-          network_id: { get_resource: private_net }
-          cidr: 192.168.0.0/24
-          gateway_ip: 192.168.0.1
-          allocation_pools: [{"end": "192.168.0.200", "start": "192.168.0.50"}]
+    net_internal_dp:
+            type: OS::Neutron::Net
+            properties:
+              name: net_internal_dp
+    
+    net_internal_dp_subnet:
+            type: OS::Neutron::Subnet
+            properties:
+              network_id: { get_resource: private_net }
+              cidr: 192.168.0.0/24
+              gateway_ip: 192.168.0.1
+              allocation_pools: [{"end": "192.168.0.200", "start": "192.168.0.50"}]
 
 Data model impact
 -----------------
@@ -189,7 +206,8 @@ Assignee(s)
 -----------
 
 Primary assignee:
-  Bharath Thiruveedula (bharath-ves)
+
+- Bharath Thiruveedula (bharath-ves)
 
 Other contributors:
   None
@@ -220,5 +238,5 @@ template changes.
 References
 ==========
 
-[1]http://docs.oasis-open.org/tosca/TOSCA-Simple-Profile-YAML/v1.0/TOSCA-Simple-Profile-YAML-v1.0.html
-[2]http://docs.oasis-open.org/tosca/TOSCA-Simple-Profile-YAML/v1.0/csprd01/TOSCA-Simple-Profile-YAML-v1.0-csprd01.html#_Toc430015804
+.. [#] `<http://docs.oasis-open.org/tosca/TOSCA-Simple-Profile-YAML/v1.0/TOSCA-Simple-Profile-YAML-v1.0.html>`_
+.. [#] `<http://docs.oasis-open.org/tosca/TOSCA-Simple-Profile-YAML/v1.0/csprd01/TOSCA-Simple-Profile-YAML-v1.0-csprd01.html#_Toc430015804>`_
