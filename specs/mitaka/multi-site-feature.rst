@@ -105,48 +105,48 @@ the VIM selection. If VIM id is not specified during VNF create operation, VNF
 will be deployed on the localized OpenStack instance as default behavior.
 Region name can also be provided during VNF create operation to deploy in a
 specific region of selected VIM. Availability zone will continue to be supported
-using VNFD placement_policy attribute [1].
+using VNFD placement_policy attribute [#]_.
 
 *python-tackerclient and horizon dashboard changes*
 
 Client changes will be made to include VIM CRUD operations: tacker vim-register,
-vim-show, vim-list, vim-update and vim-delete operations that handle 'vim' REST
+vim-show, vim-list, vim-update and vim-delete operations that handle 'VIM' REST
 API calls to Tacker server. A typical vim-register command can be described as
 below:
 
-::
+.. code-block:: console
 
- tacker vim-register --name VIM3 --config-file ~/vim3.yaml
+  tacker vim-register --name VIM3 --config-file ~/vim3.yaml
 
-The --config/--config-file argument will take vim specific information as a
-direct input or as a file.
+The --config/--config-file argument will take VIM specific information as a
+direct input or as a file:
 
-::
+.. code-block:: ini
 
- auth_url: http://10.10.10.13:5000
- username: nfv_user
- password: tacker_pw
- tenant_name: nfv
+  auth_url: http://10.10.10.13:5000
+  username: nfv_user
+  password: tacker_pw
+  tenant_name: nfv
 
-tacker vim-update command will allow the user to update vim information for a
+tacker vim-update command will allow the user to update VIM information for a
 specific VIM.
 
-::
+.. code-block:: console
 
- tacker vim-update --vim-id VIM3 --config-file ~/vim_update.yaml
+  tacker vim-update --vim-id VIM3 --config-file ~/vim_update.yaml
 
-The --config/--config-file argument can override existing vim information or
-provide additional parameters
+The --config/--config-file argument can override existing VIM information or
+provide additional parameters:
 
-::
+.. code-block:: ini
 
- username: new_user
- password: 123456
- user_domain_id: default
+  username: new_user
+  password: 123456
+  user_domain_id: default
 
 tacker vnf-create command will be updated to provide two new optional
 arguments --vim-id and --region-name that will allow a user to specify VIM id
-along with region.
+along with a region.
 
 Similar changes will be done on the horizon dashboard. A new tab 'NFVO' will
 include a 'VIM Orchestration' sub-tab to handle the orchestration of new VIMs.
@@ -171,7 +171,7 @@ VIM (VIM0) as the default VIM for deploying VNFs.
 
 *Assumptions*
 
-Each OpenStack deployment is assumed to have it's own L2 sub domain (individual
+Each OpenStack deployment is assumed to have its own L2 sub domain (individual
 provider network) or can belong to one big L2 domain with no overlapping
 provider address (shared provider network).
 
@@ -206,8 +206,8 @@ deployed locally. It will be practically overwhelming to deploy Tacker server
 in thousands of OpenStack instances and further perform VNF life cycle
 management in each of these instances.
 
-There are projects such as Keystone federation [2], OPNFV multisite[3] and
-Tricircle [4] that have ongoing work to address multisite challenges. Tacker
+There are projects such as Keystone federation [#]_, OPNFV multisite [#]_ and
+Tricircle [#]_ that have ongoing work to address multisite challenges. Tacker
 can help add NFVO/VNFM requirements to these projects as they evolve in future
 iterations. Unique workflows in telco infrastructure and still evolving NFV
 requirements provide a challenge to implement NFVO in single phase. Hence, it
@@ -353,7 +353,7 @@ Scenario testing
 ------------------
 This feature will require scenario test cases to validate operations in
 multisite deployments. OpenStack Jenkins gate does not yet support multiregion
-testing scenarios with devstack [5] as of writing this spec.
+testing scenarios with devstack [#]_ as of writing this spec.
 
 
 Documentation Impact
@@ -361,7 +361,7 @@ Documentation Impact
 
 User Documentation
 ------------------
-Multisite VIM feature usage will be documented in Tacker usage guide [6] that
+Multisite VIM feature usage will be documented in Tacker usage guide [#]_ that
 will describe the VIM operations that the operator can use for both new and
 existing OpenStack deployments. VNF deployment guide will be modified to
 describe the usage of new optional argument vim_id in both python-tackerclient
@@ -373,9 +373,10 @@ Developer docs will be added to capture the VIM REST API in detail.
 
 References
 ==========
-[1] https://github.com/openstack/tacker/blob/master/devstack/samples/sample-vnfd.yaml#L25
-[2] http://docs.openstack.org/developer/keystone/configure_federation.html
-[3] https://wiki.opnfv.org/multisite
-[4] https://wiki.openstack.org/wiki/Tricircle
-[5] https://review.openstack.org/#/c/200309/
-[6] http://tacker-docs.readthedocs.org/en/latest/index.html
+
+.. [#] https://github.com/openstack/tacker/blob/master/devstack/samples/sample-vnfd.yaml#L25
+.. [#] http://docs.openstack.org/developer/keystone/configure_federation.html
+.. [#] https://wiki.opnfv.org/multisite
+.. [#] https://wiki.openstack.org/wiki/Tricircle
+.. [#] https://review.openstack.org/#/c/200309/
+.. [#] http://tacker-docs.readthedocs.org/en/latest/index.html
