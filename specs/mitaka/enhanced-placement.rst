@@ -50,8 +50,6 @@ the guest therby improving performance.
 
 VNFD host properties schema:
 
-..code-block::
-
 **topology_template**:
 
   **node_templates:**
@@ -154,169 +152,200 @@ For SR-IOV support, a new property called "type" that would accept value of
 'sriov' is introduced for the tosca.nodes.nfv.CP type
 
 
-Find below examples of using the above VNFD template schema
 
-CPU Pinning : Below would be an example of pinning guest vCPUs to host pCPUs.
+VNFD template schema examples
+-----------------------------
 
-topology_template:
-  node_templates:
-    VDU1:
-      type: tosca.nodes.nfv.VDU
+1. CPU Pinning
+~~~~~~~~~~~~~~
 
-      capabilities:
-        nfv_compute:
-          properties:
-            num_cpus: 8
-            mem_size: 4096 # Memory Size in MB
-            disk_size: 8 # Value in GB
+Below would be an example of pinning guest vCPUs to host pCPUs:
 
-            cpu_allocation:
-              cpu_affinity: dedicated
-              thread_allocation: isolate
+.. code-block:: ini
 
-Huge Pages: An example of specifying Huge pages be used for a guest VM
+    topology_template:
+      node_templates:
+        VDU1:
+          type: tosca.nodes.nfv.VDU
+    
+          capabilities:
+            nfv_compute:
+              properties:
+                num_cpus: 8
+                mem_size: 4096 # Memory Size in MB
+                disk_size: 8 # Value in GB
+    
+                cpu_allocation:
+                  cpu_affinity: dedicated
+                  thread_allocation: isolate
 
-topology_template:
-  node_templates:
-    VDU1:
-      type: tosca.nodes.nfv.VDU
+2. Huge Pages
+~~~~~~~~~~~~~
 
-      capabilities:
-        nfv_compute:
-          properties:
-            num_cpus: 8
-            mem_size: 4096 # Memory Size in MB
-            disk_size: 8 # Value in GB
-            mem_page_size: large
+An example of specifying Huge pages be used for a guest VM:
+
+.. code-block:: ini
+
+    topology_template:
+      node_templates:
+        VDU1:
+          type: tosca.nodes.nfv.VDU
+    
+          capabilities:
+            nfv_compute:
+              properties:
+                num_cpus: 8
+                mem_size: 4096 # Memory Size in MB
+                disk_size: 8 # Value in GB
+                mem_page_size: large
+
+3. Asymmetrical NUMA placement
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Below would be an example of specifying asymmetrical
+allocation of CPUs and RAM across NUMA nodes:
+
+.. code-block:: ini
+
+    topology_template:
+      node_templates:
+        VDU1:
+          type: tosca.nodes.nfv.VDU
+    
+          capabilities:
+            nfv_compute:
+              properties:
+                num_cpus: 8
+                mem_size: 6144
+                disk_size: 8
+                numa_nodes:
+    
+                  node1:
+                    id: 0
+                    vcpus: [ 0,1 ]
+                    mem_size: 2048
+                  node2:
+                    id: 1
+                    vcpus: [ 2, 3, 4, 5]
+                    mem_size: 4096
+
+4. Symmetrical NUMA placement
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Below would be an example of specifying symmetrical
+allocation of CPUs and RAM across NUMA nodes:
+
+.. code-block:: ini
+
+    topology_template:
+      node_templates:
+        VDU1:
+          type: tosca.nodes.nfv.VDU
+    
+          capabilities:
+            nfv_compute:
+              properties:
+                num_cpus: 8
+                mem_size: 6144
+                disk_size: 8
+                numa_node_count: 2
 
 
-NUMA placement: Below would be an example of specifying asymmetrical
-allocation of CPUs and RAM across NUMA nodes.
+5. Combination Example
+~~~~~~~~~~~~~~~~~~~~~~
 
-topology_template:
-  node_templates:
-    VDU1:
-      type: tosca.nodes.nfv.VDU
-
-      capabilities:
-        nfv_compute:
-          properties:
-            num_cpus: 8
-            mem_size: 6144
-            disk_size: 8
-            numa_nodes:
-
-              node1:
-                id: 0
-                vcpus: [ 0,1 ]
-                mem_size: 2048
-              node2:
-                id: 1
-                vcpus: [ 2, 3, 4, 5]
-                mem_size: 4096
-
-NUMA placement: Below would be an example of specifying symmetrical
-allocation of CPUs and RAM across NUMA nodes
-
-topology_template:
-  node_templates:
-    VDU1:
-      type: tosca.nodes.nfv.VDU
-
-      capabilities:
-        nfv_compute:
-          properties:
-            num_cpus: 8
-            mem_size: 6144
-            disk_size: 8
-            numa_node_count: 2
-
-
-Combination Example: Below would be an example that specifies HugePages,
+Below would be an example that specifies HugePages,
 CPU pinning, NUMA placement, host hyper-threading disabled, as well providing
-sockets, cores and thread count to be exposed to guest
+sockets, cores and thread count to be exposed to guest:
 
-topology_template:
-  node_templates:
-    VDU1:
-      type: tosca.nodes.nfv.VDU
+.. code-block:: ini
 
-      capabilities:
-        nfv_compute:
-          properties:
-            num_cpus: 8
-            mem_size: 4096
-            disk_size: 80
-            mem_page_size: 1G
-            cpu_allocation:
+    topology_template:
+      node_templates:
+        VDU1:
+          type: tosca.nodes.nfv.VDU
+    
+          capabilities:
+            nfv_compute:
+              properties:
+                num_cpus: 8
+                mem_size: 4096
+                disk_size: 80
+                mem_page_size: 1G
+                cpu_allocation:
+    
+                  cpu_affinity: dedicated
+                  thread_allocation: avoid
+                  socket_count: 2
+                  core_count: 2
+                  thread_count: 2
+    
+                numa_node_count: 2
 
-              cpu_affinity: dedicated
-              thread_allocation: avoid
-              socket_count: 2
-              core_count: 2
-              thread_count: 2
 
-            numa_node_count: 2
+6. Network Interfaces example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Below would be an example that defines multiple
+network interfaces and sriov nic types:
 
-Network Interfaces example: Below would be an example that defines multiple
-network interfaces and sriov nic types.
+.. code-block:: ini
 
-topology_template:
-  node_templates:
-    VDU1:
-      type: tosca.nodes.nfv.VDU
-
-      capabilities:
-        nfv_compute:
-          properties:
-            num_cpus: 8
-            mem_size: 4096 MB
-            disk_size: 8 GB
-            mem_page_size: 1G
-
-            cpu_allocation:
-              cpu_affinity: dedicated
-              thread_allocation: isolate
-              socket_count: 2
-              core_count: 8
-              thread_count: 4
-
-            numa_node_count: 2
-
-    CP11:
-      type: tosca.nodes.nfv.CP
-
-      requirements:
-        - virtualbinding: VDU1
-        - virtualLink: net_mgmt
-
-    CP12:
-     type: tosca.nodes.nfv.CP
-
-     properties:
-         anti_spoof_protection: false
-         type : sriov
-     requirements:
-      - virtualbinding: VDU1
-      - virtualLink: net_ingress
-
-    CP13:
-      type: tosca.nodes.nfv.CP
-
-     properties:
-         anti_spoof_protection: false
-         type : sriov
-
-      requirements:
-        - virtualbinding: VDU1
-        - virtualLink: net_egress
-
-    net_mgmt:
-      type: tosca.nodes.nfv.VL.ELAN
-
-    net_ingress:
-      type: tosca.nodes.nfv.VL.ELAN
+    topology_template:
+      node_templates:
+        VDU1:
+          type: tosca.nodes.nfv.VDU
+    
+          capabilities:
+            nfv_compute:
+              properties:
+                num_cpus: 8
+                mem_size: 4096 MB
+                disk_size: 8 GB
+                mem_page_size: 1G
+    
+                cpu_allocation:
+                  cpu_affinity: dedicated
+                  thread_allocation: isolate
+                  socket_count: 2
+                  core_count: 8
+                  thread_count: 4
+    
+                numa_node_count: 2
+    
+        CP11:
+          type: tosca.nodes.nfv.CP
+    
+          requirements:
+            - virtualbinding: VDU1
+            - virtualLink: net_mgmt
+    
+        CP12:
+         type: tosca.nodes.nfv.CP
+    
+         properties:
+             anti_spoof_protection: false
+             type : sriov
+         requirements:
+          - virtualbinding: VDU1
+          - virtualLink: net_ingress
+    
+        CP13:
+          type: tosca.nodes.nfv.CP
+    
+         properties:
+             anti_spoof_protection: false
+             type : sriov
+    
+          requirements:
+            - virtualbinding: VDU1
+            - virtualLink: net_egress
+    
+        net_mgmt:
+          type: tosca.nodes.nfv.VL.ELAN
+    
+        net_ingress:
+          type: tosca.nodes.nfv.VL.ELAN
 
 
 Alternatives
@@ -394,10 +423,12 @@ So manual testing is a must, and hopefully, some one can provide their own
 hosts in lab to do the third party testing.
 
 Other options are:
-1.Approach openstack-infra / -qa teams to request compute resources be added
-at the gate for testing the capabilities in the spec.
-2.Have a vendor to support a 3rd party CI job and vote against the features
-called out in the spec.
+
+1. Approach openstack-infra / -qa teams to request compute resources be added
+   at the gate for testing the capabilities in the spec.
+2. Have a vendor to support a 3rd party CI job and vote against the features
+   called out in the spec.
+
 
 Documentation Impact
 ====================
@@ -408,9 +439,9 @@ The document will be updated to guide how to use this feature.
 References
 ==========
 
-[1] http://docs.openstack.org/developer/nova/testing/libvirt-numa.html
-[2] http://redhatstackblog.redhat.com/2015/05/05/cpu-pinning-and-numa-topology-awareness-in-openstack-compute/
-[3] https://wiki.openstack.org/wiki/VirtDriverGuestCPUMemoryPlacement
-[4] https://specs.openstack.org/openstack/nova-specs/specs/kilo/implemented/input-output-based-numa-scheduling.html
-[5] http://specs.openstack.org/openstack/nova-specs/specs/mitaka/approved/virt-driver-cpu-pinning.html
-[6] http://redhatstackblog.redhat.com/2015/03/05/red-hat-enterprise-linux-openstack-platform-6-sr-iov-networking-part-i-understanding-the-basics/
+.. [#] `<http://docs.openstack.org/developer/nova/testing/libvirt-numa.html>`_
+.. [#] `<http://redhatstackblog.redhat.com/2015/05/05/cpu-pinning-and-numa-topology-awareness-in-openstack-compute/>`_
+.. [#] `<https://wiki.openstack.org/wiki/VirtDriverGuestCPUMemoryPlacement>`_
+.. [#] `<https://specs.openstack.org/openstack/nova-specs/specs/kilo/implemented/input-output-based-numa-scheduling.html>`_
+.. [#] `<http://specs.openstack.org/openstack/nova-specs/specs/mitaka/approved/virt-driver-cpu-pinning.html>`_
+.. [#] `<http://redhatstackblog.redhat.com/2015/03/05/red-hat-enterprise-linux-openstack-platform-6-sr-iov-networking-part-i-understanding-the-basics/>`_
