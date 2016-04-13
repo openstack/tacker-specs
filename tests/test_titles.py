@@ -52,55 +52,33 @@ class TestTitles(testtools.TestCase):
         return titles
 
     def _check_titles(self, titles):
-        # uncomment all check for now
+        # No explicit titles check, leaving this as a placeholder
         return
-        # self.assertEqual(7, len(titles))
-
-        # problem = 'Problem description'
-        # self.assertIn(problem, titles)
-        # self.assertEqual(0, len(titles[problem]))
-
-        # proposed = 'Proposed change'
-        # self.assertIn(proposed, titles)
-        # self.assertIn('Alternatives', titles[proposed])
-        # self.assertIn('Data model impact', titles[proposed])
-        # self.assertIn('REST API impact', titles[proposed])
-        # self.assertIn('Security impact', titles[proposed])
-        # self.assertIn('Notifications impact', titles[proposed])
-        # self.assertIn('Other end user impact', titles[proposed])
-        # self.assertIn('Performance Impact', titles[proposed])
-        # self.assertIn('Other deployer impact', titles[proposed])
-        # self.assertIn('Developer impact', titles[proposed])
-
-        # impl = 'Implementation'
-        # self.assertIn(impl, titles)
-        # self.assertEqual(2, len(titles[impl]))
-        # self.assertIn('Assignee(s)', titles[impl])
-        # self.assertIn('Work Items', titles[impl])
-
-        # deps = 'Dependencies'
-        # self.assertIn(deps, titles)
-        # self.assertEqual(0, len(titles[deps]))
-
-        # testing = 'Testing'
-        # self.assertIn(testing, titles)
-        # self.assertEqual(0, len(titles[testing]))
-
-        # docs = 'Documentation Impact'
-        # self.assertIn(docs, titles)
-        # self.assertEqual(0, len(titles[docs]))
-
-        # refs = 'References'
-        # self.assertIn(refs, titles)
-        # self.assertEqual(0, len(titles[refs]))
 
     def test_template(self):
-        files = glob.glob('specs/*.rst') + glob.glob('specs/*/*')
-        for filename in files:
-            self.assertTrue(filename.endswith(".rst"),
-                            "spec's file must uses 'rst' extension.")
-            with open(filename) as f:
-                data = f.read()
-            spec = docutils.core.publish_doctree(data)
-            titles = self._get_titles(spec)
-            self._check_titles(titles)
+        releases = [x.split('/')[1] for x in glob.glob('specs/*/')]
+        for release in releases:
+            if release[0] < 'm':
+                # Don't bother enforcement for specs before Mitaka,
+                # or that belong to 'archive' and 'backlog'
+                continue
+            try:
+                # Support release-specific template.
+                with open("specs/%s-template.rst" % release) as f:
+                    template = f.read()
+            except IOError:
+                # Base template if release template not found.
+                with open("specs/template.rst") as f:
+                    template = f.read()
+            spec = docutils.core.publish_doctree(template)
+            template_titles = self._get_titles(spec)
+
+            files = glob.glob("specs/%s/*" % release)
+            for filename in files:
+                self.assertTrue(filename.endswith(".rst"),
+                                "spec's file must uses 'rst' extension.")
+                with open(filename) as f:
+                    data = f.read()
+                spec = docutils.core.publish_doctree(data)
+                titles = self._get_titles(spec)
+                self._check_titles(titles)

@@ -4,23 +4,8 @@
 Tacker Project Specifications
 =============================
 
-Contents:
-
-.. toctree::
-   :glob:
-   :maxdepth: 1
-
-   specs/*
-
-Newton approved specs:
-
-.. toctree::
-   :glob:
-   :maxdepth: 1
-
-   specs/newton/*
-
-Mitaka approved specs:
+Mitaka
+======
 
 .. toctree::
    :glob:
@@ -28,7 +13,8 @@ Mitaka approved specs:
 
    specs/mitaka/*
 
-Liberty approved specs:
+Liberty
+=======
 
 .. toctree::
    :glob:
@@ -36,13 +22,14 @@ Liberty approved specs:
 
    specs/liberty/*
 
-Juno approved specs:
+Archive
+=======
 
 .. toctree::
    :glob:
    :maxdepth: 1
 
-   specs/juno/*
+   specs/archive/**
 
 ==================
 Indices and tables
