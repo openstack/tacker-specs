@@ -4,6 +4,15 @@
 Tacker Project Specifications
 =============================
 
+Newton
+======
+
+.. toctree::
+   :glob:
+   :maxdepth: 1
+
+   specs/newton/*
+
 Mitaka
 ======
 
