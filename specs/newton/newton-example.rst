@@ -5,10 +5,6 @@
  http://creativecommons.org/licenses/by/3.0/legalcode
 
 
-NOTE: this template was copied from Neutron one.
-As tacker is at very early stage, the following wouldn't be applied until
-the project matures enough.
-
 ==========================================
 Example Spec - The title of your blueprint
 ==========================================
@@ -366,6 +362,16 @@ Work items or tasks -- break the feature up into the things that need to be
 done to implement it. Those parts might end up being done by different people,
 but we're mostly trying to understand the timeline for implementation.
 
+Apart from the main functionality, the developer needs to deliver the following
+work items as part of any major blueprint:
+
+ * Unit Tests
+ * Functional Tests
+ * Feature documentation in doc/source/devref/feature
+
+   NOTE: This feature documentation should be treated like code. Preferably
+   this should be included in the primary patchset itself and not as an
+   afterthought. This is also mandatory for a blueprint to be marked complete.
 
 Dependencies
 ============
