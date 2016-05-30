@@ -11,6 +11,7 @@
 # under the License.
 
 import glob
+import re
 
 import docutils.core
 from docutils.parsers import rst
@@ -51,6 +52,13 @@ class TestTitles(testtools.TestCase):
                 titles[section['name']] = section['subtitles']
         return titles
 
+    def _check_trailing_spaces(self, tpl, raw):
+        for i, line in enumerate(raw.split("\n")):
+            trailing_spaces = re.findall(" +$", line)
+            self.assertEqual(
+                0, len(trailing_spaces),
+                "Found trailing spaces on line %s of %s" % (i+1, tpl))
+
     def _check_titles(self, titles):
         # No explicit titles check, leaving this as a placeholder
         return
@@ -77,8 +85,12 @@ class TestTitles(testtools.TestCase):
             for filename in files:
                 self.assertTrue(filename.endswith(".rst"),
                                 "spec's file must uses 'rst' extension.")
+
                 with open(filename) as f:
                     data = f.read()
-                spec = docutils.core.publish_doctree(data)
-                titles = self._get_titles(spec)
-                self._check_titles(titles)
+                    spec = docutils.core.publish_doctree(data)
+                    titles = self._get_titles(spec)
+                    self._check_titles(titles)
+                    # TODO(kanagaraj-manickam): Fix the same old specs as well
+                    if filename.startswith('specs/newton'):
+                        self._check_trailing_spaces(filename, data)
