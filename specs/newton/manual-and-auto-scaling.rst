@@ -202,7 +202,7 @@ would be captured in the deviceattributes table as set of key value pairs.
 REST API impact
 ---------------
 
-**POST on v1.0/vnfs/<vnf-uuid>/scale**
+**POST on v1.0/vnfs/<vnf-uuid>/actions**
 
 with body
 
