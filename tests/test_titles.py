@@ -92,5 +92,6 @@ class TestTitles(testtools.TestCase):
                     titles = self._get_titles(spec)
                     self._check_titles(titles)
                     # TODO(kanagaraj-manickam): Fix the same old specs as well
-                    if filename.startswith('specs/newton'):
+                    if filename.startswith('specs/newton') or \
+                            filename.startswith('specs/ocata'):
                         self._check_trailing_spaces(filename, data)
