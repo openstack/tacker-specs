@@ -33,7 +33,7 @@ auto-scaling failed user can use Senlin commands to delete the failed nodes
 directly. Senlin provides powerful policies(placement policy, deletion policy,
 etc.) which can be used to make VDU auto-scaling much more intelligent than
 Heat autoscaling group. If user wants to scale in a cluster, senlin deletion
-policy(which can added to tacker later) can decide which nodes should be delted
+policy(which can added to tacker later) can decide which nodes should be deleted
 firstly(the elder ones or the young ones) and the nodes which are in ERROR
 status will always be deleted at first. For alarming management, Senlin does
 not only support Ceilometer, but also message service(Zaqar), and even some
@@ -362,4 +362,4 @@ References
 ==========
 
 ..[1] https://wiki.openstack.org/wiki/Senlin
-..[2] https://blueprints.launchpad.net/senlin/+spec/senlin-adpot-function
+..[2] https://blueprints.launchpad.net/senlin/+spec/senlin-adopt-function
