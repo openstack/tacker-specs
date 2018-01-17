@@ -11,31 +11,26 @@ Team and repository tags
 OpenStack Tacker Specifications
 ===============================
 
-NOTE:As Tacker is at early stage, it would be too early to apply the following
-stuff. the following will be applied at some point when Tacker project matures
-enough. The followings are copied from neutron-specs.
-
-
 This git repository is used to hold approved design specifications for additions
-to the Tacker project.  Reviews of the specs are done in gerrit, using a
+to the Tacker project. Reviews of the specs are done in gerrit, using a
 similar workflow to how we review and merge changes to the code itself.
 
 The layout of this repository is::
 
   specs/<release>/
 
-You can find an example spec in `doc/source/specs/template.rst`. A
+You can find an example spec in `specs/template.rst`. A
 skeleton that contains all the sections required for a spec
-file is located in `doc/source/specs/skeleton.rst` and can
+file is located in `specs/skeleton.rst` and can
 be copied, then filled in with the details of a new blueprint for
 convenience.
 
 Specifications are proposed for a given release by adding them to the
-`specs/<release>` directory and posting it for review.  The implementation
+`specs/<release>` directory and posting it for review. The implementation
 status of a blueprint for a given release can be found by looking at the
-blueprint in launchpad.  Not all approved blueprints will get fully implemented.
+blueprint in launchpad. Not all approved blueprints will get fully implemented.
 
-Specifications have to be re-proposed for every release.  The review may be
+Specifications have to be re-proposed for every release. The review may be
 quick, but even if something was previously approved, it should be re-reviewed
 to make sure it still makes sense as written.
 
