@@ -100,9 +100,6 @@ VIM commands
 
 ::
 
-  tacker vim-create
-  openstack vim create
-
   tacker vim-list
   openstack vim list
 
