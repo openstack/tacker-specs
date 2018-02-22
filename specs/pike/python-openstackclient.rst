@@ -78,7 +78,7 @@ VNF Commands
   openstack vnf show
 
   tacker vnf-update
-  openstack vnf update
+  openstack vnf set
 
   tacker vnfd-create
   openstack vnf descriptor create
@@ -110,7 +110,7 @@ VIM commands
   openstack vim show
 
   tacker vim-update
-  openstack vim update
+  openstack vim set
 
   tacker vim-delete
   openstack vim delete
@@ -166,7 +166,7 @@ VNFFG Commands
   openstack vnf graph show
 
   tacker vnffg-update
-  openstack vnf graph update
+  openstack vnf graph set
 
   tacker vnffgd-create
   openstack vnf graph descriptor create
@@ -245,6 +245,9 @@ Primary assignee:
   Trinath Somanchi <trinath.somanchi@nxp.com>
 
 Other contributors:
+  yong sheng gong <gong.yongsheng@99cloud.net>
+  dharmendra kushwaha <dharmendra.kushwaha@nectechnologies.in>
+  Nguyen Hai <nguyentrihai93@gmail.com>
   Srikanth Kumar Lingala <srikanth.lingala@nxp.com>
   Veera Reddy B <veera.b@nxp.com>
 
@@ -252,7 +255,7 @@ Milestones
 ----------
 
 Target Milestone for completion:
-  pike-3
+  queens-3
 
 Work Items
 ----------
