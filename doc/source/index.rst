@@ -4,6 +4,15 @@
 Tacker Project Specifications
 =============================
 
+Rocky
+=====
+
+.. toctree::
+   :glob:
+   :maxdepth: 1
+
+   specs/rocky/*
+
 Queens
 ======
 
@@ -13,16 +22,14 @@ Queens
 
    specs/queens/*
 
-
 Pike
-=====
+====
 
 .. toctree::
    :glob:
    :maxdepth: 1
 
    specs/pike/*
-
 
 Ocata
 =====
