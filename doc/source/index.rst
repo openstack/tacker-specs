@@ -4,80 +4,34 @@
 Tacker Project Specifications
 =============================
 
-Rocky
-=====
+This page contains the approved Tacker specifications.
+
+The specification template can be found at:
+
+https://github.com/openstack/tacker-specs/blob/master/specs/template.rst
+
+If you want to contribute to Tacker, please find
+the information at:
+
+https://docs.openstack.org/tacker/
+
+Specifications
+--------------
 
 .. toctree::
    :glob:
-   :maxdepth: 1
+   :maxdepth: 2
 
-   specs/rocky/*
+   specs/rocky/index
+   specs/queens/index
+   specs/pike/index
+   specs/ocata/index
+   specs/newton/index
+   specs/mitaka/index
+   specs/liberty/index
+   specs/archive/index
 
-Queens
-======
-
-.. toctree::
-   :glob:
-   :maxdepth: 1
-
-   specs/queens/*
-
-Pike
-====
-
-.. toctree::
-   :glob:
-   :maxdepth: 1
-
-   specs/pike/*
-
-Ocata
-=====
-
-.. toctree::
-   :glob:
-   :maxdepth: 1
-
-   specs/ocata/*
-
-Newton
-======
-
-.. toctree::
-   :glob:
-   :maxdepth: 1
-
-   specs/newton/*
-
-Mitaka
-======
-
-.. toctree::
-   :glob:
-   :maxdepth: 1
-
-   specs/mitaka/*
-
-Liberty
-=======
-
-.. toctree::
-   :glob:
-   :maxdepth: 1
-
-   specs/liberty/*
-
-Archive
-=======
-
-.. toctree::
-   :glob:
-   :maxdepth: 1
-
-   specs/archive/**
-
-==================
 Indices and tables
-==================
+------------------
 
 * :ref:`search`
