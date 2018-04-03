@@ -167,14 +167,14 @@ Below would be an example of pinning guest vCPUs to host pCPUs:
       node_templates:
         VDU1:
           type: tosca.nodes.nfv.VDU
-    
+
           capabilities:
             nfv_compute:
               properties:
                 num_cpus: 8
                 mem_size: 4096 # Memory Size in MB
                 disk_size: 8 # Value in GB
-    
+
                 cpu_allocation:
                   cpu_affinity: dedicated
                   thread_allocation: isolate
@@ -190,7 +190,7 @@ An example of specifying Huge pages be used for a guest VM:
       node_templates:
         VDU1:
           type: tosca.nodes.nfv.VDU
-    
+
           capabilities:
             nfv_compute:
               properties:
@@ -211,7 +211,7 @@ allocation of CPUs and RAM across NUMA nodes:
       node_templates:
         VDU1:
           type: tosca.nodes.nfv.VDU
-    
+
           capabilities:
             nfv_compute:
               properties:
@@ -219,7 +219,7 @@ allocation of CPUs and RAM across NUMA nodes:
                 mem_size: 6144
                 disk_size: 8
                 numa_nodes:
-    
+
                   node1:
                     id: 0
                     vcpus: [ 0,1 ]
@@ -241,7 +241,7 @@ allocation of CPUs and RAM across NUMA nodes:
       node_templates:
         VDU1:
           type: tosca.nodes.nfv.VDU
-    
+
           capabilities:
             nfv_compute:
               properties:
@@ -264,7 +264,7 @@ sockets, cores and thread count to be exposed to guest:
       node_templates:
         VDU1:
           type: tosca.nodes.nfv.VDU
-    
+
           capabilities:
             nfv_compute:
               properties:
@@ -273,13 +273,13 @@ sockets, cores and thread count to be exposed to guest:
                 disk_size: 80
                 mem_page_size: 1G
                 cpu_allocation:
-    
+
                   cpu_affinity: dedicated
                   thread_allocation: avoid
                   socket_count: 2
                   core_count: 2
                   thread_count: 2
-    
+
                 numa_node_count: 2
 
 
@@ -295,7 +295,7 @@ network interfaces and sriov nic types:
       node_templates:
         VDU1:
           type: tosca.nodes.nfv.VDU
-    
+
           capabilities:
             nfv_compute:
               properties:
@@ -303,47 +303,47 @@ network interfaces and sriov nic types:
                 mem_size: 4096 MB
                 disk_size: 8 GB
                 mem_page_size: 1G
-    
+
                 cpu_allocation:
                   cpu_affinity: dedicated
                   thread_allocation: isolate
                   socket_count: 2
                   core_count: 8
                   thread_count: 4
-    
+
                 numa_node_count: 2
-    
+
         CP11:
           type: tosca.nodes.nfv.CP
-    
+
           requirements:
             - virtualbinding: VDU1
             - virtualLink: net_mgmt
-    
+
         CP12:
          type: tosca.nodes.nfv.CP
-    
+
          properties:
              anti_spoof_protection: false
              type : sriov
          requirements:
           - virtualbinding: VDU1
           - virtualLink: net_ingress
-    
+
         CP13:
           type: tosca.nodes.nfv.CP
-    
+
          properties:
              anti_spoof_protection: false
              type : sriov
-    
+
           requirements:
             - virtualbinding: VDU1
             - virtualLink: net_egress
-    
+
         net_mgmt:
           type: tosca.nodes.nfv.VL.ELAN
-    
+
         net_ingress:
           type: tosca.nodes.nfv.VL.ELAN
 
@@ -439,9 +439,9 @@ The document will be updated to guide how to use this feature.
 References
 ==========
 
-.. [#] `<http://docs.openstack.org/developer/nova/testing/libvirt-numa.html>`_
-.. [#] `<http://redhatstackblog.redhat.com/2015/05/05/cpu-pinning-and-numa-topology-awareness-in-openstack-compute/>`_
-.. [#] `<https://wiki.openstack.org/wiki/VirtDriverGuestCPUMemoryPlacement>`_
-.. [#] `<https://specs.openstack.org/openstack/nova-specs/specs/kilo/implemented/input-output-based-numa-scheduling.html>`_
-.. [#] `<http://specs.openstack.org/openstack/nova-specs/specs/mitaka/approved/virt-driver-cpu-pinning.html>`_
-.. [#] `<http://redhatstackblog.redhat.com/2015/03/05/red-hat-enterprise-linux-openstack-platform-6-sr-iov-networking-part-i-understanding-the-basics/>`_
+* http://docs.openstack.org/developer/nova/testing/libvirt-numa.html
+* http://redhatstackblog.redhat.com/2015/05/05/cpu-pinning-and-numa-topology-awareness-in-openstack-compute/
+* https://wiki.openstack.org/wiki/VirtDriverGuestCPUMemoryPlacement
+* https://specs.openstack.org/openstack/nova-specs/specs/kilo/implemented/input-output-based-numa-scheduling.html
+* http://specs.openstack.org/openstack/nova-specs/specs/mitaka/approved/virt-driver-cpu-pinning.html
+* http://redhatstackblog.redhat.com/2015/03/05/red-hat-enterprise-linux-openstack-platform-6-sr-iov-networking-part-i-understanding-the-basics/

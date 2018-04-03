@@ -34,28 +34,28 @@ Proposed change
 
 asciiflow::
 
-	                             +---------------------+
-	                             |  Mistral workflow   |
-	                     +-(1)---> VNF monitor action  |
-	+---------------+    |       |                     |
-	| Tacker server +----+       +--------^------------+
-	+-----+---------+                     |
-	      |      |                        |
-	      |      |                        |
-	      |      |                        |
-	      |      |                        |
-	      |      |               +--------v----+
-	      |      |----(3)-------->  MSG Queue  <----+
-	      |                      +-------------+    (2)
-	      |                                         |
-	      |                                 +-------v----------+
-	      |                                 |     Tacker       |
-	      |                                 | conductor server |
-	      |       +------+-----+     +------+                  |
-	      |       |            |     |      +------------------+
-	      +-------> Tacker DB  <-----+
-	              |            |
-	              +-------------
+                                 +---------------------+
+                                 |  Mistral workflow   |
+                         +-(1)---> VNF monitor action  |
+    +---------------+    |       |                     |
+    | Tacker server +----+       +--------^------------+
+    +-----+---------+                     |
+          |      |                        |
+          |      |                        |
+          |      |                        |
+          |      |                        |
+          |      |               +--------v----+
+          |      |----(3)-------->  MSG Queue  <----+
+          |                      +-------------+    (2)
+          |                                         |
+          |                                 +-------v----------+
+          |                                 |     Tacker       |
+          |                                 | conductor server |
+          |       +------+-----+     +------+                  |
+          |       |            |     |      +------------------+
+          +-------> Tacker DB  <-----+
+                  |            |
+                  +------------+
 
 
 (1) Since Mistral is an integral part of tacker system, a long-live Mistral
@@ -81,15 +81,15 @@ VNFPolicyActionRPC:
 
 .. code-block:: python
 
-	class VNFPolicyActionRPC(object)
-	  # execute policy action
-	  def  execute_policy_action(context, vnf, monitor_return_value,
-	                             policy_actions, action_id):
-	     # The response message containing the operation result
-	     # the status should be the passed in by request or 'bad_action'
-	     # if the action is not the wanted action.
-	     status = rpc call conductor
-	     return status
+    class VNFPolicyActionRPC(object)
+       # execute policy action
+       def execute_policy_action(context, vnf, monitor_return_value,
+                                 policy_actions, action_id):
+           # The response message containing the operation result
+           # the status should be the passed in by request or 'bad_action'
+           # if the action is not the wanted action.
+           status = rpc call conductor
+           return status
 
 
 After workflow is removed due to VNF change or removal, VNFM plugin kills the mistral
@@ -97,14 +97,14 @@ action via the following interface VNFPolicyMonitorRPC asynchronously:
 
 .. code-block:: python
 
-	class VNFPolicyMonitorRPC(object)
-	  # kill the mistral action job
-	  def  kill(context, action_id):
-	     pass
+    class VNFPolicyMonitorRPC(object)
+       # kill the mistral action job
+       def kill(context, action_id):
+          pass
 
-      # update the mistral action job
-      def update(context, action_id, parameter):
-         pass
+       # update the mistral action job
+       def update(context, action_id, parameter):
+          pass
 
 
 The update method in above interface is used to notify policy monitor that changes

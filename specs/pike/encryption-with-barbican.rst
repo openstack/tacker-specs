@@ -40,11 +40,11 @@ administrators as they add tacker-server instances for scaling.
 Barbican introduction
 =====================
 
-Barbican[1] is a REST API designed for the secure storage, provisioning and
+Barbican [1]_ is a REST API designed for the secure storage, provisioning and
 management of secrets. It is aimed at being useful for all environments,
 including large ephemeral Clouds.
 
-The barbican API [2] includes the following items:
+The barbican API [2]_ includes the following items:
 
 * Secrets API. It provides access to the secret / keying material stored
   in the system, including Private Key/Certificate/Password/SSH Keys
@@ -118,21 +118,21 @@ Invoked in Nova or Cinder
 -------------------------
 
 Barbican is introduced into nova and cinder to support the volume
-encryption feature [3][4].
+encryption feature [3]_ [4]_.
 They invoke castellan as key_mamager, allowing Barbican to securely
 generate, store, and present encryption keys.
 
 Invoked in Neutron-lbaas or Magnum
 ----------------------------------
 
-Neutron-lbaas and Magnum introduces barbican to support TLS [5][6].
+Neutron-lbaas and Magnum introduces barbican to support TLS [5]_ [6]_.
 They invoke barbicanclient directly to store tenants' TLS certificates in
 barbican secure containers.
 
 Castellan introduction
 ----------------------
 
-Castellan[7] is the library of Barbican, working on the principle of providing
+Castellan [7]_ is the library of Barbican, working on the principle of providing
 an abstracted key manager based on the configurations. In this manner,
 several different management services can be supported through a single
 interface. In addition to the key manager, Castellan also provides primitives
@@ -188,7 +188,7 @@ How to use castellan
 How to use barbicanclient
 -------------------------
 
-We can refer to castellan to see how to invoke barbicanclient [12]:
+We can refer to castellan to see how to invoke barbicanclient [12]_:
 
 store secret:
 
@@ -240,7 +240,7 @@ There are two methods to generate the context.
 
 1. Using a reserved project
 
-Castellan Usage[8] shows a method, saving the credentials in configuration.
+Castellan Usage [8]_ shows a method, saving the credentials in configuration.
 We can create a reserved tenant (e.g. 'tacker-vim-credential-store' or
 long living existing created user), and all vims' passwords are saved and
 retrieved in this tenant's domain.
@@ -258,7 +258,7 @@ As discussion in IRC [11], we should not do in this way.
 
 2. Using the operator's context (who creates vim)
 
-The default RBAC policy[9] about secrets are following:
+The default RBAC policy [9]_ about secrets are following:
 
 .. code-block:: ini
 
@@ -290,10 +290,10 @@ The default RBAC policy[9] about secrets are following:
     "secrets:get": "rule:all_but_audit",
 
 The barbican support a white-list ACL for each secret. It is not
-convenient to add all projects to the ACL [10] if vim is shared.
+convenient to add all projects to the ACL [10]_ if vim is shared.
 
 In this method, we can not support shared vim. As result of IRC
-discussion [11], in future, vim is limited to be shared with
+discussion [11]_, in future, vim is limited to be shared with
 specified projects via rbac policies, we may add these projects
 into the ACL of the secret.
 

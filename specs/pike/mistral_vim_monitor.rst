@@ -32,22 +32,22 @@ Proposed change
 
 asciiflow::
 
-	                             +---------------------+
-	                             | mistral workflow    |
-	                     +-------> vim monitor action  |
-	+--------------+     |       |                     |
-	| Tacker server+-----+       +------------------+--+
-	+-----+--------+                                |
-	      |                                         |
-	      |                                         |
-	      |                                 +-------v----------+
-	      |                                 |                  |
-	      |                                 | conductor server |
-	      |       +------------+     +------+                  |
-	      |       |            |     |      +------------------+
-	      +-------> tacker DB  <-----+
-	              |            |
-	              +-------------
+                                 +---------------------+
+                                 | Mistral workflow    |
+                         +-------> VIM monitor action  |
+    +--------------+     |       |                     |
+    | Tacker server+-----+       +------------------+--+
+    +-----+--------+                                |
+          |                                         |
+          |                                         |
+          |                                 +-------v----------+
+          |                                 |                  |
+          |                                 | Conductor server |
+          |       +------------+     +------+                  |
+          |       |            |     |      +------------------+
+          +-------> Tacker DB  <-----+
+                  |            |
+                  +------------+
 
 
 Since Mistral is an integral part of tacker system, a long-live Mistral workflow
@@ -71,14 +71,14 @@ with the conductor via the following interface VimMonitor:
 
 .. code-block:: python
 
-	class VimMonitorAction2ConductorRPC(object)
-	  # update vim's status, action_id is the task action
-	  def update_vim (vim_id, status, action_id):
-	     # The response message containing the operation result
-	     # the status should be the passed in by request or 'bad_action'
-	     # if the action is not the wanted action.
-	     status = rpc call conductor
-	     return status
+    class VimMonitorAction2ConductorRPC(object)
+       # update vim's status, action_id is the task action
+       def update_vim (vim_id, status, action_id):
+          # The response message containing the operation result
+          # the status should be the passed in by request or 'bad_action'
+          # if the action is not the wanted action.
+          status = rpc call conductor
+          return status
 
 
 sequence diagram for register vim:
@@ -133,12 +133,12 @@ Another way to use mistral is to use a loop workflow:
 
 asciiflow::
 
-	start_task -----> ping_task ------> update_task
-	                      ^               |
-	                      |               |
-	                      |               |
-	                      |   on_succes   |
-	                       ---------------+
+    start_task -----> ping_task ------> update_task
+                          ^               |
+                          |               |
+                          |               |
+                          |   on_succes   |
+                          +---------------+
 
 
 But Mistral will save task executions into Mistral database, so the loop

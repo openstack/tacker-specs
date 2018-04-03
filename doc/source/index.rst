@@ -22,6 +22,7 @@ Specifications
    :glob:
    :maxdepth: 2
 
+   specs/stein/index
    specs/rocky/index
    specs/queens/index
    specs/pike/index
@@ -29,7 +30,6 @@ Specifications
    specs/newton/index
    specs/mitaka/index
    specs/liberty/index
-   specs/archive/index
 
 Indices and tables
 ------------------

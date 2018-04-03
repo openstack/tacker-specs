@@ -153,9 +153,9 @@ One TOSCA template can support multiple VBs and CBs.
       node_templates:
         VDU1:
           type: tosca.nodes.nfv.VDU.Tacker
-	      properties:
-	        image: centos
-	        flavor: centos
+          properties:
+            image: centos
+            flavor: centos
 
         CP1:
           type: tosca.nodes.nfv.CP.Tacker
@@ -199,8 +199,8 @@ the volume when VDU deleting.
       node_templates:
         VDU1:
           type: tosca.nodes.nfv.VDU.Tacker
-	      properties:
-	        flavor: centos
+          properties:
+            flavor: centos
           requirements:
             - local_storage:
                 node: VB1
@@ -306,4 +306,4 @@ None
 References
 ==========
 
-.. [1] http://docs.oasis-open.org/tosca/TOSCA-Simple-Profile-YAML/v1.0/csprd01/TOSCA-Simple-Profile-YAML-v1.0-csprd01.html#_Toc430015836
+* http://docs.oasis-open.org/tosca/TOSCA-Simple-Profile-YAML/v1.0/csprd01/TOSCA-Simple-Profile-YAML-v1.0-csprd01.html#_Toc430015836

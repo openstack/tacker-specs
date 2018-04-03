@@ -55,7 +55,7 @@ Template Changes
 When the user give host properties, Tacker will create a new flavor with those
 details by adding those details in heat template. Tacker will handle three
 minimum host properties like 'disk_size' and 'num_cpus' and 'mem_size'.
-To refer the other properties, refer[1].
+To refer the other properties, refer [#]_.
 
 Tacker will fetch the properties from TOSCA template and add them to HOT
 as below:
@@ -157,7 +157,7 @@ Template Changes
 
 In this modified template, users can specify the CIDR of the network, they want
 to deploy VNF. If the user specify the CIDR and not the network_id, tacker will
-automatically create network and corresponding subnet. Refer [2] for the
+automatically create network and corresponding subnet. Refer [#]_ for the
 properties the tacker will support in network_interfaces. For the networks, tacker
 will create the network resources at VNF creation time using heat code. So we are not
 storing the network details as network resources are associated with heat stack details.
@@ -170,7 +170,7 @@ Let's see how the above TOSCA template can be converted to HOT network resource.
             type: OS::Neutron::Net
             properties:
               name: net_internal_dp
-    
+
     net_internal_dp_subnet:
             type: OS::Neutron::Subnet
             properties:

@@ -386,6 +386,6 @@ None
 
 References
 ==========
-.. [#first] https://www.zabbix.com/documentation/3.0/manual
-.. [#second] https://share.zabbix.com/
-.. [#third] https://www.nagios.org/documentation/
+* https://www.zabbix.com/documentation/3.2/manual
+* https://share.zabbix.com/
+* https://www.nagios.org/documentation/
