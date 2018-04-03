@@ -241,21 +241,24 @@ Implementation
 Assignee(s)
 -----------
 
-Primary assignee:
   Trinath Somanchi <trinath.somanchi@nxp.com>
 
-Other contributors:
   yong sheng gong <gong.yongsheng@99cloud.net>
+
   dharmendra kushwaha <dharmendra.kushwaha@nectechnologies.in>
-  Nguyen Hai <nguyentrihai93@gmail.com>
+
+  Nguyen Hai <nguyentrihai93@gmail.com> <nguyentrihai@soongsil.ac.kr>
+
   Srikanth Kumar Lingala <srikanth.lingala@nxp.com>
+
   Veera Reddy B <veera.b@nxp.com>
+
 
 Milestones
 ----------
 
 Target Milestone for completion:
-  queens-3
+  rocky-1
 
 Work Items
 ----------

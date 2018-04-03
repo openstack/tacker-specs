@@ -15,18 +15,18 @@ https://blueprints.launchpad.net/tacker/+spec/mistral-monitor-policy
 Problem description
 ===================
 
-currently, tacker server hosts a local variable to keep the monitoring
-of vnfs and uses local threads to do the monitoring. This causes tacker
+Currently, Tacker server hosts a local variable to keep the monitoring
+of VNFs and uses local threads to do the monitoring. This causes tacker
 server not to be scalable and impacts the API performance as well:
 
-* if we have a lot of VNFs which needs monitoring, the tacker server will
+* If we have a lot of VNFs which needs monitoring, the tacker server will
   have to run a lot of threads to monitor them, which will impact the API
   function of tacker server.
 
-* if the tacker server restarts, the monitor threads will not start
+* If the tacker server restarts, the monitor threads will not start.
 
-* cannot run more than one tacker server, since this is making tacker server
-  stateful.
+* The system cannot run more than one tacker server, since this is
+  making tacker server stateful.
 
 
 Proposed change
@@ -35,25 +35,25 @@ Proposed change
 asciiflow::
 
 	                             +---------------------+
-	                             | mistral workflow    |
-	                     +-(1)---> vnf monitor action  |
-	+--------------+     |       |                     |
-	| Tacker server+-----+       +--------^------------+
-	+-----+--------+                      |
+	                             |  Mistral workflow   |
+	                     +-(1)---> VNF monitor action  |
+	+---------------+    |       |                     |
+	| Tacker server +----+       +--------^------------+
+	+-----+---------+                     |
 	      |      |                        |
 	      |      |                        |
 	      |      |                        |
-	             |                        |
+	      |      |                        |
 	      |      |               +--------v----+
 	      |      |----(3)-------->  MSG Queue  <----+
 	      |                      +-------------+    (2)
 	      |                                         |
 	      |                                 +-------v----------+
-	      |                                 |                  |
+	      |                                 |     Tacker       |
 	      |                                 | conductor server |
 	      |       +------+-----+     +------+                  |
 	      |       |            |     |      +------------------+
-	      +-------> tacker DB  <-----+
+	      +-------> Tacker DB  <-----+
 	              |            |
 	              +-------------
 
@@ -65,7 +65,7 @@ asciiflow::
     will be removed once the monitored target VDU is removed.
 
 (2) Monitor actions cannot access tacker database directly, so we introduce a
-    conductor server to do database access for the mistral actions.
+    Tacker-conductor server to do database access for the mistral actions.
 
 (3) Mistral does not stop long-live running action even if the workflow
     execution is deleted.
@@ -110,7 +110,7 @@ action via the following interface VNFPolicyMonitorRPC asynchronously:
 The update method in above interface is used to notify policy monitor that changes
 happened on the monitored vnf, for example the VNF was scaled, and was respawned.
 
-sequence diagram for create VNF:
+Sequence diagram for create VNF:
 
 .. seqdiag::
 
@@ -156,13 +156,13 @@ If conductor finds the action is obsolete, it will return bad_action to vnf_poli
 then the vnf_policy_monitor will exit.
 
 
-sequence diagram for update VNF:
+Sequence diagram for update VNF:
 
 No need for this operation to do workflow stuff since VNF update is just used to config
 VDUs.
 
 
-sequence diagram for deleting VNF:
+Sequence diagram for deleting VNF:
 
 .. seqdiag::
 
@@ -174,7 +174,7 @@ sequence diagram for deleting VNF:
   }
 
 
-sequence diagram for scale VNF:
+Sequence diagram for scale VNF:
 
 .. seqdiag::
 
@@ -238,18 +238,24 @@ Implementation
 
 Assignee(s)
 -----------
+  Yong sheng gong <gong.yongsheng@99cloud.net>
+
+  Nguyen Hai <nguyentrihai93@gmail.com> <nguyentrihai@soongsil.ac.kr>
+
+  dharmendra <dharmendra.kushwaha@nectechnologies.in>
 
 
-Primary assignee:
-  gongysh
+Milestones
+----------
 
-Other contributors:
-  <launchpad-id or None>
+Target Milestone for completion:
+  rocky-1
+
 
 Work Items
 ----------
 
-* implement workflow version of monitor policy for VNF
+* Implement workflow version of monitor policy for VNF
 * Unit Tests
 
 
@@ -298,11 +304,11 @@ Testing
 Documentation Impact
 ====================
 
-* change tacker deployment document
-* add a document about mistral workflow way to do actions in tacker server
+* Change tacker deployment document
+* Add a document about mistral workflow way to do actions in tacker server
 
 
 References
 ==========
 
-* https://docs.openstack.org/developer/mistral/dsl/dsl_v2.html
+* https://docs.openstack.org/mistral/ocata/dsl/dsl_v2.html
