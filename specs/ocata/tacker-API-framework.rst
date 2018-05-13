@@ -188,4 +188,4 @@ References
 https://wiki.openstack.org/wiki/Zaqar/pecan-evaluation
 http://falcon.readthedocs.io/en/stable/user/tutorial.html
 http://gunicorn.org
-https://pypi.python.org/pypi/falcon-mutualauth
+https://pypi.org/project/falcon-mutualauth
