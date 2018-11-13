@@ -228,7 +228,7 @@ and its Containers:
 * scaling_object: used to map scaling policy to Horizontal Pod Autoscaling. See more details in
   "3. Definition of Scaling policy".
 
-* network_name: network of VDU, for pure Kubernetes, it is used when enable netron network
+* network_name: network of VDU, for pure Kubernetes, it is used when enable neutron network
   with Kuryr-Kubernetes.
 
 2. Definition of VnfcConfigurableProperties
