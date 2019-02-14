@@ -10,30 +10,30 @@ Force Delete resources
 
 https://blueprints.launchpad.net/tacker/+spec/force-delete-resources
 
-Provide support to force delete resources being stucked in some state
-like pending, error etc..
+Provide support to force delete resources being stuck in some states
+such as pending, error, etc..
 
 Problem description
 ===================
 
-In the current implementation, if resources(i.e. VNFs) stuck in any abnormal
-state, we don't have mechanism to clean them. It is required to clean those
-resource from database even if somehow deletion from backend got failed.
-Like, when VNF delete fails due to underlying system or software error, those
-VNFs goes into PENDING_DELETE state. Now, vnf-delete on these PENDING_DELETE
-VNFs doesn't work and these VNFs are stuck forever.
-We need to provide some mechanism for admin to "force" the deletion of
+In the current implementation, if any resource (i.e., VNFs) stuck in an abnormal
+state, we don't have a mechanism to clean them. It is required to clean those
+resource from the database even if somehow deletion from backend got failed.
+For example, when the VNFs are failed to delete due to underlying system or
+software error, those VNFs goes into PENDING_DELETE state. As a result,
+vnf-delete on these PENDING_DELETE VNFs doesn't work and these VNFs are stuck
+forever. We need to provide some mechanism for admin to "force" the deletion of
 resources in PENDING_DELETE state.
 
 
 Proposed change
 ===============
 
-Add New parameter --force in delete command for resources(i.e. VNF, NS & VNFFG) and
-corresponding support in server will be added to force delete these resources.
+Add a new parameter --force in delete command for resources (i.e., VNF, NS & VNFFG)
+and corresponding support in the server will be added to force delete these resources.
 
 The purpose is to make admin capable to quickly delete the resources that are
-not further usable, and stuck in ERROR or PENDING_* state.
+not further usable and stuck in ERROR or PENDING_* state.
 
 To delete VNF
 
@@ -53,14 +53,13 @@ To delete NS
 
   openstack ns delete <NS name / id> --force
 
-* This feature will be required to clean Tacker db for the cases when normal
-  delete workflow get failed. So to avoid the chances of accident and any
-  inconsistency, we will keep it as an admin-only operation. so that admin
-  can verify/debug the issue and can take suitable action on backend.
+* This feature will be required to clean Tacker DB for the cases when normal
+  delete workflow is failed. To avoid the chances of accident and any
+  inconsistency, we will keep it as an admin-only operation. So that admin
+  can verify/debug the issue and can take suitable action on the backend.
 
-* Success message will have some information that resource has been deleted
-  with --force.
-  Ex:
+* A success message will have some information that resource has been deleted
+  with --force. For example:
 
 .. code-block:: console
 
@@ -70,9 +69,9 @@ To delete NS
 Alternatives
 ------------
 
-Login to Tacker database, use the sql commands to list the resources which are
-stuck in PENDING_* state, and then remove them manually from the database. Keep
-in mind to update other related tables too.
+After login to Tacker database, we can use the SQL commands to list the resources
+which are stuck in PENDING_* state and then remove them manually from the database.
+Keep in mind that we also need to update other related tables too.
 
 Data model impact
 -----------------
@@ -132,6 +131,8 @@ Primary assignee:
 Other contributors:
   Dharmendra Kushwaha <Dharmendra.kushwaha@india.nec.com>
 
+  Nguyen Hai <nguyentrihai93@gmail.com> <nguyentrihai@soongsil.ac.kr>
+
 Work Items
 ----------
 
@@ -157,7 +158,8 @@ None
 Documentation Impact
 ====================
 
-Tacker documentation will need to be updated to reflect this new support.
+Tacker documentation will need to be updated to show this new feature and
+how to use it.
 
 References
 ==========
