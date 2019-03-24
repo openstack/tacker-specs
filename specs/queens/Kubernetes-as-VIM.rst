@@ -280,7 +280,7 @@ networking between OpenStack VMs and Kubernetes Pods by adding following.
   KUBERNETES_VIM=True
   NEUTRON_CREATE_INITIAL_NETWORKS=False
   enable_plugin kuryr-kubernetes https://git.openstack.org/openstack/kuryr-kubernetes master
-  enable_plugin neutron-lbaas git://git.openstack.org/openstack/neutron-lbaas master
+  enable_plugin neutron-lbaas https://git.openstack.org/openstack/neutron-lbaas master
   enable_plugin devstack-plugin-container https://git.openstack.org/openstack/devstack-plugin-container master
 
 In the future, Service Function Channing between VM and container based VNFs will be supported.
