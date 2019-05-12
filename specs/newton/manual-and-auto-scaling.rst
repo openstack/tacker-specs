@@ -183,7 +183,7 @@ Here, targets should match with corresponding scaling policy. Also the exact
 schematic of this kind of monitoring policy is defined by the monitoring
 `spec`_ .
 
-.. _spec: https://review.openstack.org/306562
+.. _spec: https://review.opendev.org/306562
 
 Alternatives
 ------------------
@@ -422,8 +422,8 @@ Reference
 
 2. http://docs.oasis-open.org/tosca/tosca-nfv/v1.0/tosca-nfv-v1.0.pdf
 
-3. https://review.openstack.org/#/c/214297/4/specs/liberty/Auto-Scaling.rst
+3. https://review.opendev.org/#/c/214297/4/specs/liberty/Auto-Scaling.rst
 
-4. https://review.openstack.org/#/c/283163/1/specs/mitaka/manual-scaling.rst
+4. https://review.opendev.org/#/c/283163/1/specs/mitaka/manual-scaling.rst
 
-5. https://review.openstack.org/321370
+5. https://review.opendev.org/321370

@@ -941,8 +941,8 @@ References
 .. [#fourth] https://github.com/openstack/networking-sfc/blob/master/doc/source/api.rst
 .. [#fifth] https://github.com/opendaylight/sfc
 .. [#sixth] https://tools.ietf.org/html/draft-ietf-netmod-acl-model-05
-.. [#seventh] https://review.openstack.org/#/c/190463/20/specs/liberty/classifier.rst
+.. [#seventh] https://review.opendev.org/#/c/190463/20/specs/liberty/classifier.rst
 .. [#eighth] https://specs.openstack.org/openstack/neutron-specs/specs/liberty/rbac-networks.html
 .. [#ninth] http://docs.oasis-open.org/tosca/tosca-nfv/v1.0/tosca-nfv-v1.0.pdf
 .. [#tenth] http://www.etsi.org/deliver/etsi_gs/NFV-MAN/001_099/001/01.01.01_60/gs_nfv-man001v010101p.pdf
-.. [#eleventh] https://review.openstack.org/#/c/290771/
+.. [#eleventh] https://review.opendev.org/#/c/290771/

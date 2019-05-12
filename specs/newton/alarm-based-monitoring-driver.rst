@@ -393,7 +393,7 @@ Reference
 =========
 
 .. [1] http://docs.oasis-open.org/tosca/tosca-nfv/v1.0/tosca-nfv-v1.0.pdf
-.. [2] https://review.openstack.org/#/c/318577/
+.. [2] https://review.opendev.org/#/c/318577/
 .. [3] https://www.oasis-open.org/committees/download.php/56812/2015-10-27%20OpenStack%20Tokyo%20-%20Senlin-TOSCA%20vBrownBag-final.pdf
 .. [4] https://github.com/openstack/tosca-parser/blob/master/toscaparser/tests/data/policies/tosca_policy_template.yaml#L60
 .. [5] https://github.com/openstack/ceilometer/blob/stable/liberty/ceilometer/alarm/notifier/rest.py#L84

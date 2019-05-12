@@ -378,5 +378,5 @@ References
 .. [#] http://docs.openstack.org/developer/keystone/configure_federation.html
 .. [#] https://wiki.opnfv.org/multisite
 .. [#] https://wiki.openstack.org/wiki/Tricircle
-.. [#] https://review.openstack.org/#/c/200309/
+.. [#] https://review.opendev.org/#/c/200309/
 .. [#] http://tacker-docs.readthedocs.org/en/latest/index.html
