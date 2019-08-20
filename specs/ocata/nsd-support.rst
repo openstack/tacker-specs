@@ -667,7 +667,7 @@ Add developer documentation for the api and usage details
 
 References
 ==========
- * https://review.openstack.org/#/q/status:open+project:openstack/tacker+branch:master+topic:bp/nsd-support
+ * https://review.opendev.org/#/q/status:open+project:openstack/tacker+branch:master+topic:bp/nsd-support
  * http://www.etsi.org/deliver/etsi_gs/NFV-MAN/001_099/001/01.01.01_60/gs_nfv-man001v010101p.pdf
  * http://docs.oasis-open.org/tosca/tosca-nfv/v1.0/csd02/tosca-nfv-v1.0-csd02.html#_Toc433298703
  * http://docs.oasis-open.org/tosca/tosca-nfv/v1.0/csd02/tosca-nfv-v1.0-csd02.html#_Toc433298756

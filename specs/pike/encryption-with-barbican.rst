@@ -510,7 +510,7 @@ References
 .. [1] https://github.com/openstack/barbican
 .. [2] https://developer.openstack.org/api-guide/key-manager/
 .. [3] https://github.com/openstack/nova-specs/blob/master/specs/juno/approved/encryption-with-barbican.rst
-.. [4] https://review.openstack.org/#/c/106437/2/specs/juno/encryption-with-barbican.rst
+.. [4] https://review.opendev.org/#/c/106437/2/specs/juno/encryption-with-barbican.rst
 .. [5] https://github.com/openstack/neutron-specs/blob/master/specs/kilo/lbaas-tls.rst
 .. [6] https://github.com/openstack/magnum-specs/blob/master/specs/pre-ocata/implemented/tls-support-magnum.rst
 .. [7] https://github.com/openstack/castellan
