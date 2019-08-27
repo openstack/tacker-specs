@@ -108,31 +108,6 @@ Changes include:
     REST APIs.
   * Make necessary changes to Tacker-server.
 
-Tacker-server's new REST API Resources and methods overview:
-
-+-------------------------+-----------------------------------------------------+-------------+----------------------------------------+
-| Resource name           | Resource URI                                        | HTTP Method | Meaning                                |
-+=========================+=====================================================+=============+========================================+
-| VNF packages            | /vnfpkgm/v1/vnf_packages                            | GET         | Query VNF packages information         |
-|                         |                                                     +-------------+----------------------------------------+
-|                         |                                                     | POST        | Create a new individual VNF package    |
-|                         |                                                     |             | resource                               |
-+-------------------------+-----------------------------------------------------+-------------+----------------------------------------+
-| Individual VNF package  | /vnfpkgm/v1/vnf_packages/{vnfPkgId}                 | GET         | Read information about an individual   |
-|                         |                                                     |             | VNF package                            |
-|                         |                                                     +-------------+----------------------------------------+
-|                         |                                                     | DELETE      | Delete an individual VNF package       |
-+-------------------------+-----------------------------------------------------+-------------+----------------------------------------+
-| VNFD of an individual   | /vnfpkgm/v1/vnf_packages/{vnfPkgId}/vnfd            | GET         | Read VNFD of an on-boarded VNF package |
-| VNF package             |                                                     |             |                                        |
-+-------------------------+-----------------------------------------------------+-------------+----------------------------------------+
-| VNF package content     | /vnfpkgm/v1/vnf_packages/{vnfPkgId}/package_content | PUT         | Upload a VNF package by providing      |
-|                         |                                                     |             | the content of the VNF package         |
-+-------------------------+-----------------------------------------------------+-------------+----------------------------------------+
-| Upload VNF package form | /vnfpkgm/v1/vnf_packages/{vnfPkgId}/package_content | POST        | Upload a VNF package by providing the  |
-| URI task                | /upload_from_uri                                    |             | address information of the VNF package |
-+-------------------------+-----------------------------------------------------+-------------+----------------------------------------+
-
 .. code-block:: console
 
     +------------+         +--------------+         +---------------+
@@ -279,7 +254,7 @@ vnf_packages::
 
   `created_at` datetime NOT NULL
 
-  `updated_at` datetime NOT NULL
+  `updated_at` datetime NULL
 
   `deleted_at` datetime NULL
 
@@ -293,7 +268,7 @@ vnf_packages::
 
   `location_glance_store` text NULL
 
-  This table will have `uuid` as primary key.
+  This table will have `id` as primary key.
 
 vnf_packages_user_data::
   `id` int(11) Pri, auto_increment
@@ -306,40 +281,40 @@ vnf_packages_user_data::
 
   `created_at` datetime NOT NULL
 
-  `updated_at` datetime NOT NULL
+  `updated_at` datetime NULL
 
   `deleted_at` datetime NULL
 
   `deleted` tinyint(1) NULL
 
   This table will have `id` as primary key. `package_uuid` will be foreign
-  key of `vnf_packages`.`uuid`.
+  key of `vnf_packages`.`id`.
 
 vnf_package_vnfd::
   `id` int(11) Pri, auto_increment
 
   `package_uuid` varchar(36) NOT NULL
 
-  `vnfd_uuid` varchar(36) Unique, NULL
+  `vnfd_id` varchar(36) Unique, NOT NULL
 
-  `vnf_provider` varchar(255)
+  `vnf_provider` varchar(255), NOT NULL
 
-  `vnf_product_name` varchar(255)
+  `vnf_product_name` varchar(255), NOT NULL
 
-  `vnf_software_version` varchar(255)
+  `vnf_software_version` varchar(255), NOT NULL
 
-  `vnfd_version` varchar(255)
+  `vnfd_version` varchar(255), NOT NULL
 
   `created_at` datetime NOT NULL
 
-  `updated_at` datetime NOT NULL
+  `updated_at` datetime NULL
 
   `deleted_at` datetime NULL
 
   `deleted` tinyint(1) NULL
 
   This table will have `id` as primary key. `package_uuid` will be foreign
-  key of `vnf_packages`.`uuid`.
+  key of `vnf_packages`.`id`.
 
   note::
     The existing `vnfd` db tables will not used here. When the VNF
@@ -347,12 +322,36 @@ vnf_package_vnfd::
     basic information in this table like ``vnf_product_name``,
     ``vnf_software_version`` etc which can be returned when user will
     query information about an individual VNF package without the need
-    to read that particular information from the VNF Package file.
+    to read that particular information from the VNF Package file
 
-vnf_software_images::
-  `id` varchar(36) NOT NULL
+vnf_deployment_flavours::
+  `id` varchar(36) Pri, NOT NULL
 
   `package_uuid` varchar(36) NOT NULL
+
+  `flavour_id` varchar(255) NOT NULL
+
+  `flavour_description` text NOT NULL
+
+  `instantiation_levels` text NULL
+
+  `created_at` datetime NOT NULL
+
+  `updated_at` datetime NULL
+
+  `deleted_at` datetime NULL
+
+  `deleted` tinyint(1) NULL
+
+  This table will have `id` as primary key. `package_uuid` will be foreign
+  key of `vnf_packages`.`id`.
+
+vnf_software_images::
+  `id` varchar(36) Pri, NOT NULL
+
+  `software_image_id` varchar(255) NOT NULL # VDU Name
+
+  `flavour_uuid` varchar(36) NOT NULL
 
   `name` varchar(255) NOT NULL
 
@@ -378,14 +377,15 @@ vnf_software_images::
 
   `created_at` datetime NOT NULL
 
-  `updated_at` datetime NOT NULL
+  `updated_at` datetime NULL
 
   `deleted_at` datetime NULL
 
   `deleted` tinyint(1) NULL
 
-  This table will have `id` as primary key. `package_uuid` will be foreign
-  key of `vnf_packages`.`uuid`.
+  This table will have `id` as primary key. `flavour_uuid` will be foreign
+  key of `vnf_deployment_flavours`.`id`.
+
 
 vnf_software_image_metadata::
   `id` int(11) Pri, auto_increment
@@ -398,58 +398,141 @@ vnf_software_image_metadata::
 
   `created_at` datetime NOT NULL
 
-  `updated_at` datetime NOT NULL
+  `updated_at` datetime NULL
 
   `deleted_at` datetime NULL
 
   `deleted` tinyint(1) NULL
 
   This table will have `id` as primary key. `image_uuid` will be foreign
-  key of `vnf_software_images.`image_uuid`.
+  key of `vnf_software_images.`id`.
 
-vnf_artifacts::
-  `id` varchar(36) NOT NULL
+Upgrade tacker Database to HEAD  version
+------------------------------------------------
 
-  `artifact_uuid` varchar(36) NOT NULL
+.. code-block:: console
 
-  `package_uuid` varchar(36) NOT NULL
+   tacker-db-manage --config-file /etc/tacker/tacker.conf upgrade HEAD
 
-  `artifact_path` text NOT NULL
+..
 
-  `algorithm` varchar(64) NOT NULL
+REST API impact
+===============
 
-  `hash` varchar(128) NOT NULL
+Below new RestFul APIs will be added:-
 
-  `created_at` datetime NOT NULL
++-------------------------+-----------------------------------------------------+-------------+----------------------------------------+--------------------------+
+| Resource name           | Resource URI                                        | HTTP Method | Meaning                                | Response Codes           |
++=========================+=====================================================+=============+========================================+==========================+
+| VNF packages            | /vnfpkgm/v1/vnf_packages                            | GET         | Query VNF packages information         | Success: 200             |
+|                         |                                                     |             |                                        | Error: 401, 403          |
+|                         |                                                     +-------------+----------------------------------------+--------------------------+
+|                         |                                                     | POST        | Create a new individual VNF package    | Success: 201             |
+|                         |                                                     |             | resource                               | Error: 400, 401, 403     |
++-------------------------+-----------------------------------------------------+-------------+----------------------------------------+--------------------------+
+| Individual VNF package  | /vnfpkgm/v1/vnf_packages/{vnfPkgId}                 | GET         | Read information about an individual   | Success: 200             |
+|                         |                                                     |             | VNF package                            | Error: 401, 403, 404     |
+|                         |                                                     +-------------+----------------------------------------+--------------------------+
+|                         |                                                     | DELETE      | Delete an individual VNF package       | Success: 204             |
+|                         |                                                     |             |                                        | Error: 401, 302,404      |
++-------------------------+-----------------------------------------------------+-------------+----------------------------------------+--------------------------+
+| VNF package content     | /vnfpkgm/v1/vnf_packages/{vnfPkgId}/package_content | PUT         | Upload a VNF package by providing      | Success: 202             |
+|                         |                                                     |             | the content of the VNF package         | Error: 401, 403, 404, 409|
++-------------------------+-----------------------------------------------------+-------------+----------------------------------------+--------------------------+
+| Upload VNF package from | /vnfpkgm/v1/vnf_packages/{vnfPkgId}/package_content | POST        | Upload a VNF package by providing the  | Success: 202             |
+| URI task                | /upload_from_uri                                    |             | address information of the VNF package | Error: 401, 403, 404, 409|
++-------------------------+-----------------------------------------------------+-------------+----------------------------------------+--------------------------+
 
-  `updated_at` datetime NOT NULL
 
-  `deleted_at` datetime NULL
 
-  `deleted` tinyint(1) NULL
+Other end user impact
+=====================
 
-  This table will have `id` as primary key. `package_uuid` will be foreign
-  key of `vnf_packages`.`package_uuid`.
+Below new OpenStackClient commands will be added for managing VNF packages.
 
-vnf_artifacts_metadata::
-  `id` int(11) Pri, auto_increment
+.. code-block:: console
 
-  `artifact_uuid` varchar(36) NOT NULL
+    openstack vnf package create
+    openstack vnf package list
+    openstack vnf package show
+    openstack vnf package upload
+    openstack vnf package delete
 
-  `key` varchar(255) NOT NULL
+..
 
-  `value` varchar(255) NOT NULL
+Other deployer impact
+=====================
 
-  `created_at` datetime NOT NULL
 
-  `updated_at` datetime NOT NULL
+Changes in api-paste.ini
+------------------------
 
-  `deleted_at` datetime NULL
+.. code-block:: ini
 
-  `deleted` tinyint(1) NULL
+    [composite:tacker]
+    /vnfpkgm/v1: vnfpkgmapi_v1
 
-  This table will have `id` as primary key. `artifact_uuid` will be foreign
-  key of `vnf_artifacts.`artifact_uuid`.
+    [composite:vnfpkgmapi_v1]
+    use = call:tacker.auth:pipeline_factory
+    noauth = request_id catch_errors extensions vnfpkgmapp_v1
+    keystone = request_id catch_errors authtoken keystonecontext extensions vnfpkgmapp_v1
+
+    [app:vnfpkgmapp_v1]
+    paste.app_factory = tacker.api.vnfpkgm.v1.router:VnfpkgmAPIRouter.factory
+
+..
+
+
+Changes in tacker.conf
+-----------------------
+
+.. code-block:: console
+
+    [DEFAULT]
+    vnf_package_delete_interval = 1800
+
+    [vnf_package]
+    vnf_package_csar_path = /var/lib/tacker/vnfpackages/
+
+    [glance_store]
+    default_backend = file
+    filesystem_store_datadir = /var/lib/tacker/csar_files
+
+..
+
+Changes in policy.json
+----------------------
+
+Below default policies will be added for the newly added restFul APIs.
+If you want to customize these policies, you must edit policy.json file.
+
+.. code-block:: console
+
+    # Creates a vnf package.
+    # POST  /vnf_packages
+    # "os_nfv_orchestration_api:vnf_packages:create": "rule:admin_or_owner"
+
+    # Show a vnf package.
+    # GET  /vnf_packages/{vnf_package_id}
+    # "os_nfv_orchestration_api:vnf_packages:show": "rule:admin_or_owner"
+
+    # List all vnf packages.
+    # GET  /vnf_packages/
+    # "os_nfv_orchestration_api:vnf_packages:index": "rule:admin_or_owner"
+
+    # Delete a vnf package.
+    # DELETE  /vnf_packages/{vnf_package_id}
+    # "os_nfv_orchestration_api:vnf_packages:delete": "rule:admin_or_owner"
+
+    # upload a vnf package content.
+    # PUT  /vnf_packages/{vnf_package_id}/package_content
+    # "os_nfv_orchestration_api:vnf_packages:upload_package_content": "rule:admin_or_owner"
+
+    # upload a vnf package content from uri.
+    # POST  /vnf_packages/{vnf_package_id}/package_content/upload_from_uri
+    # "os_nfv_orchestration_api:vnf_packages:upload_from_uri": "rule:admin_or_owner"
+
+..
 
 Implementation
 ==============
