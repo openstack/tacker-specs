@@ -22,6 +22,7 @@ Specifications
    :glob:
    :maxdepth: 2
 
+   specs/ussuri/index
    specs/train/index
    specs/stein/index
    specs/rocky/index
