@@ -304,6 +304,34 @@ Supported Policy Types
 #. tosca.policies.nfv.VduScalingAspectsDeltas
 #. tosca.policies.nfv.VduInitialDelta
 
+Add task_state to perform atomic operation on vnf instances
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Add ``task_state`` to the ``vnf_instances`` db table. The main purpose of
+introducing ``task_state`` is to allow actions to be performed on VNF in
+atomic way. Meaning, if you are instantiating a VNF, it won't allow you to
+perform same action or any other action on the VNF until that operation is
+complete. If user attempts to instantiate it again before completing the
+previous request, it will reject that request with 400 error.
+
+Types of ``task_state``:
+
+* INSTANTIATING: Set when a user calls instantiate API. After the VNF is
+  instantiated completely, it will be set to None. If it fails to instantiate
+  a VNF successfully, then it will be set to ``ERROR``.
+
+* HEALING: Set when a user calls heal API. After the VNF is
+  healed completely, it will be set to None. If it fails to heal
+  a VNF successfully, then it will be set to ``ERROR``.
+
+* TERMINATING: Set when a user calls terminate API. After the VNF is
+  terminated completely, it will be set to None. If it fails to terminate
+  a VNF successfully, then it will be set to ``ERROR``.
+
+* ERROR: An user won't be able to perform any actions on a VNF whose
+  ``task_state`` is ``ERROR``. An Operator will need to fix all such issues
+  manually. We plan to fix VNFs in such states using periodic tasks in future.
+
 
 Alternatives
 ------------
@@ -336,6 +364,8 @@ vnf_instances::
     `vnfd_version` varchar(255) NOT NULL
 
     `instantiation_state` varchar(255) NOT NULL
+
+    `task_state` varchar(255) NULL
 
     `vim_connection_info` json NULL
 
@@ -375,6 +405,10 @@ vnf_instantiated_info::
     `vnf_state` varchar(255) NOT NULL
 
     `instance_id` varchar(255) NOT NULL
+
+    `instantiation_level_id` varchar(255) NULL
+
+    `additional_params` json NULL
 
     `created_at` datetime NOT NULL
 
@@ -528,7 +562,7 @@ The following restFul APIs will be added:
   +----------------------------+------------------------------+-------------+-----------------+
   | >vnfState                  | VnfOperationalStateType      | 1           | Yes             |
   +----------------------------+------------------------------+-------------+-----------------+
-  | >scaleStatus               | ScaleInfo                    | 0..N        | Yes             |
+  | >scaleStatus               | ScaleInfo                    | 0..N        | No              |
   +----------------------------+------------------------------+-------------+-----------------+
   | >extCpInfo                 | VnfExtCpInfo                 | 1..N        | Yes             |
   +----------------------------+------------------------------+-------------+-----------------+
@@ -714,7 +748,11 @@ The following restFul APIs will be added:
   | Attribute name             | Data type      | Possible values | Cardinality | Support     | Description                                                                             |
   +============================+================+=================+=============+=============+=========================================================================================+
   | terminationType            | Enum (inlined) | FORCEFUL        | 1           | Yes         | Indicates whether forceful or graceful termination is requested.                        |
-  |                            |                |                 |             |             | At first, only forceful termination will be supported.                                  |
+  |                            |                | GRACEFUL        |             |             | FORCEFUL: The VNFM will shut down the VNF and release the resources immediately.        |
+  |                            |                |                 |             |             | GRACEFUL: The VNFM will first arrange to take the VNF out of service. Once the          |
+  |                            |                |                 |             |             | operation of taking the VNF out of service finishes, it will wait for the period        |
+  |                            |                |                 |             |             | as specified in the `gracefulTerminationTimeout` and then VNFM will shutdown the VNF    |
+  |                            |                |                 |             |             | and release the resources.                                                              |
   +----------------------------+----------------+-----------------+-------------+-------------+-----------------------------------------------------------------------------------------+
   | additionalParams           | KeyValuePairs  |                 | 0..1        | No          | Additional parameters to the termination process, specific to the VNF being terminated. |
   +----------------------------+----------------+-----------------+-------------+-------------+-----------------------------------------------------------------------------------------+
