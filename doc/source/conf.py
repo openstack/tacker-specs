@@ -12,8 +12,6 @@
 # serve to show the default.
 
 import datetime
-import sys
-import os
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -27,7 +25,7 @@ import os
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc',
+extensions = [
               'sphinx.ext.todo',
               'sphinx.ext.viewcode',
               'sphinxcontrib.blockdiag',
@@ -128,10 +126,6 @@ html_theme = 'openstackdocs'
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
 #html_favicon = None
-
-# If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
-# using the given strftime format.
-html_last_updated_fmt = '%Y-%m-%d %H:%M'
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
