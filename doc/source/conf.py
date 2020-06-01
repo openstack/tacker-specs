@@ -89,7 +89,7 @@ add_module_names = False
 show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = 'native'
 
 # A list of ignored prefixes for module index sorting.
 modindex_common_prefix = ['tacker-specs.']
@@ -229,6 +229,7 @@ texinfo_documents = [
 #texinfo_show_urls = 'footnote'
 
 # openstackdocstheme options
-repository_name = 'openstack/tacker-specs'
-bug_project = 'tacker'
-bug_tag = 'doc'
+openstackdocs_repo_name = 'openstack/tacker-specs'
+openstackdocs_auto_name = False
+openstackdocs_bug_project = 'tacker'
+openstackdocs_bug_tag = 'doc'
