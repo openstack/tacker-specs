@@ -1,7 +1,7 @@
 ==========================================
 Enhance VNF package (TOSCA CSAR) in Tacker
 ==========================================
-https://blueprints.launchpad.net/tacker/+spec/tosca-scar-mgmt-driver
+https://blueprints.launchpad.net/tacker/+spec/tosca-csar-mgmt-driver
 
 This specification describes enhancement of VNF Packages Management in
 Tacker.
