@@ -185,6 +185,14 @@ The procedure consists of the following steps as illustrated in above sequence:
 When scaling multiple VMs, resource-signal and Update Stack are repeated as
 a set for each VM.
 
+When scale-in (resource-signal) is executed using Heat, Heat operates to
+delete the VM which was created at first. Depending on the VNF, it may be
+necessary to delete the VM that is last created . Therefore, it is
+possible to select the order of VM removal in 'additionalParams' as
+scaling request parameter. If isReverse in 'additionalParams' is True,
+delete from the last registered VM. If not, delete from first registered
+VM. If 'additionalParams' is not set, the behavior is the same as False.
+
 Postcondition: VNF instance still in INSTANTIATED state and VNF has been
 scaled.
 
