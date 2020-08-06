@@ -374,9 +374,9 @@ Developer docs will be added to capture the VIM REST API in detail.
 References
 ==========
 
-.. [#] https://github.com/openstack/tacker/blob/master/devstack/samples/sample-vnfd.yaml#L25
+.. [#] https://opendev.org/openstack/tacker/src/branch/master/samples/tosca-templates/vnffg-nsd/tosca-vnfd1-sample.yaml#L28
 .. [#] http://docs.openstack.org/developer/keystone/configure_federation.html
 .. [#] https://wiki.opnfv.org/multisite
 .. [#] https://wiki.openstack.org/wiki/Tricircle
 .. [#] https://review.opendev.org/#/c/200309/
-.. [#] http://tacker-docs.readthedocs.org/en/latest/index.html
+.. [#] https://docs.openstack.org/tacker/latest/user/multisite_vim_usage_guide.html
