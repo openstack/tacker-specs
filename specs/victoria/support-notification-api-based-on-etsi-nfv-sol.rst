@@ -343,6 +343,7 @@ vnf_lcm_subscriptions:
         id id varchar(36) Not Null
         callback_uri callback_uri varchar(255) Not Null
         subscription_authentication subscription_authentication json
+        deleted deleted tinyint(1)
 
 This table has registration information of Subscription
 
