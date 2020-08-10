@@ -322,7 +322,7 @@ Documentation Impact
 References
 ==========
 
-.. [#f1] http://www.etsi.org/deliver/etsi_gs/NFV-IFA/001_099/010/02.01.01_60/gs_NFV-IFA011v020101p.pdf
+.. [#f1] https://www.etsi.org/deliver/etsi_gs/NFV-IFA/001_099/011/02.01.01_60/gs_NFV-IFA011v020101p.pdf
 .. [#f2] https://github.com/openstack/tosca-parser/blob/f208175e69f05b5723c6cd2b0f56512b0bd3caa3/toscaparser/elements/TOSCA_definition_1_0.yaml#L931
 .. [#f3] https://bugs.launchpad.net/heat-translator/+bug/1755433
 .. [#f4] https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
