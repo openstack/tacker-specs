@@ -141,4 +141,4 @@ User-guide will be provided.
 References
 ==========
 
-[1]. https://github.com/openstack/tacker/blob/master/api-ref/source/v1/vnfs.inc
+[1]. https://opendev.org/openstack/tacker/src/branch/master/api-ref/source/v1/vnfs.inc
