@@ -266,7 +266,7 @@ API end points for 'vim' resource as described below:
 
 Security impact
 ---------------
-VIM passwords are encrypted and stored in a seperate 'vimauth' table accessible
+VIM passwords are encrypted and stored in a separate 'vimauth' table accessible
 to db admin only. The fernet keys are stored in root file system and will be
 used to decrypt vim passwords.
 
