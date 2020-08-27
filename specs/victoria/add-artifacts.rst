@@ -51,26 +51,30 @@ of files:-
 1. TOSCA.meta
 
    If CSAR package contains TOSCA.meta file, it's possible to specify artifacts
-   information as shown below::
+   information according to `TOSCA v1.0 specification` as shown below::
 
      TOSCA-Meta-File-Version: 1.0
      Created-by: Author_name
      CSAR-Version: 1.1
      Entry-Definitions: Definitions/root.yaml
 
-     Source: MRF.yaml
+     Name: MRF.yaml
+     Content-Type: text/plain
      Algorithm: SHA-256
      Hash: 09e5a788acb180162c51679ae4c998039fa6644505db2415e35107d1ee213943
 
-     Source: scripts/install.sh
+     Name: scripts/install.sh
+     Content-Type: application/x-sh
      Algorithm: SHA-256
      Hash: d0e7828293355a07c2dccaaa765c80b507e60e6167067c950dc2e6b0da0dbd8b
 
-     Source: https://www.vendor_org.com/MRF/v4.1/scripts/scale/scale.sh
+     Name: https://www.vendor_org.com/MRF/v4.1/scripts/scale/scale.sh
+     Content-Type: application/x-sh
      Algorithm: SHA-256
      Hash: 36f945953929812aca2701b114b068c71bd8c95ceb3609711428c26325649165
 
-     Source: Files/images/cirros.img
+     Name: Files/images/cirros.img
+     Content-Type: application/x-iso9066-image
      Algorithm: SHA-256
      Hash: 9569dfc57e26436315180cb61f2d0d45c0de7c0ddb47d5759271ae825dc3acab
 
@@ -82,12 +86,6 @@ of files:-
           ignored as software images shouldn't be included in
           ``additionalArtifacts`` as described in table 10.5.2.2
           `etsi_sol003`_.
-
-.. note:: When an external resource having the ``Source`` of URI is provided in
-          TOSCA.meta or manifest file, it should be stored in the vnf_artifacts
-          DB table but it is not possible to fetch with the new API of
-          ``GET /vnf_packages/{vnfPkgId}/artifacts/{artifactPath}`` because users
-          can get it directly from the URI.
 
 2. Manifest file
 
@@ -131,6 +129,12 @@ of files:-
           ``metadata`` for artifact in manifest file so the ``metadata``
           returned for type ``VnfPackageArtifactInfo`` in ``additionalArtifacts``
           parameter will always be an empty dictionary.
+
+.. note:: When an external resource having the ``Name`` of URI is provided in
+          TOSCA.meta or ``Source`` in manifest file, it should be stored in
+          the vnf_artifacts DB table but it is not possible to fetch with the
+          new API of ``GET /vnf_packages/{vnfPkgId}/artifacts/{artifactPath}``
+          because users can get it directly from the URI.
 
 3. Tosca definition VNFD file
 
@@ -445,8 +449,11 @@ Documentation Impact
 References
 ==========
 
+None
+
 .. _etsi_sol003: https://www.etsi.org/deliver/etsi_gs/NFV-SOL/001_099/003/02.06.01_60/gs_nfv-sol003v020601p.pdf
 .. _etsi_sol004:  https://www.etsi.org/deliver/etsi_gs/NFV-SOL/001_099/004/02.06.01_60/gs_nfv-sol004v020601p.pdf
 .. _etsi_sol005: https://www.etsi.org/deliver/etsi_gs/NFV-SOL/001_099/005/02.06.01_60/gs_nfv-sol005v020601p.pdf
 .. _spec1: https://www.etsi.org/deliver/etsi_gs/NFV-SOL/001_099/005/02.06.01_60/gs_nfv-sol005v020601p.pdf
 .. _spec2: https://www.etsi.org/deliver/etsi_gs/NFV-SOL/001_099/005/02.06.01_60/gs_nfv-sol005v020601p.pdf
+.. _TOSCA v1.0 specification: http://docs.oasis-open.org/tosca/TOSCA/v1.0/os/TOSCA-v1.0-os.pdf
