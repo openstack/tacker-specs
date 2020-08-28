@@ -356,6 +356,10 @@ Kubernetes infra driver:
 
 .. seqdiag::
 
+  seqdiag {
+    node_width = 100;
+    edge_length = 115;
+
     KubernetesDriver --> KubernetesUtil [label =
         "1. cnf_to_kube_objects(\ncnf_def_dict)"];
     KubernetesDriver <-- KubernetesUtil [label =
@@ -368,6 +372,7 @@ Kubernetes infra driver:
     KubernetesDriver <-- KubernetesPythonClient [label =
         "3. deployed objects info"];
     KubernetesDriver -->> KubernetesDriver [label = "prepare\ninstance id"];
+  }
 
 #. Definitions extracted from Kubernetes object YAML files will be translated
    into Kubernetes model objects [#kubernetes-model-objects]_. KubernetesUtils
@@ -491,7 +496,7 @@ This spec proposes to add support for following API groups:
 Kubernetes resource kind support
 --------------------------------
 
-In this spec we will support Kubernetes v1.5.0 and Kubernetes python
+In this spec we will support Kubernetes v1.16.0 and Kubernetes python
 client v11.0. Following Kubernetes APIs will be supported.
 
 * API Group ``core`` (CoreV1Api)
@@ -665,10 +670,17 @@ Table name: vnf_instantiated_info
 +----------------------------+----------------+---------------+
 
 The instance id returned by Kubernetes driver will be a string containing
-deployment names. It can grow beyond 255 characters. Hence we propose to
+deployment names. It can grow beyond 255 characters. Hence, we propose to
 change the data type of ``instance_id`` field of ``vnf_instantiated_info``
 table from VARCHAR(255) to TEXT.
 
+Table name: vnf_resources
+
++----------------------------+----------------+---------------+
+| Column Name                | Old data type  | New data type |
++============================+================+===============+
+| resource_name              | VARCHAR(255)   |    TEXT       |
++----------------------------+----------------+---------------+
 
 REST API impact
 ---------------
@@ -741,7 +753,7 @@ Testing
 
 Unit and functional tests will be added to cover cases required in the spec.
 
-TODO: Since there is assupmtion that Kubernetes cluster will be pre installed,
+TODO: Since there is assumption that Kubernetes cluster will be pre-installed,
 gate job needs to fetch the information about existing cluster and create
 kubernetes VIM.
 
