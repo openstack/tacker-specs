@@ -307,15 +307,12 @@ vnf_lcm_filters:
         id id varchar(36) Not Null
         subscription_uuid subscription_uuid varchar(36) Not Null
         filter filter json Not Null
-        vnf_instance_ids vnf_instance_ids MEDIUMBLOB
-        vnf_instance_ids_len vnf_instance_ids_len int
         notification_types notification_types MEDIUMBLOB
         notification_types_len notification_types_len int
         operation_types operation_types MEDIUMBLOB
         operation_types_len operation_types_len int
-        operation_states operation_states MEDIUMBLOB
-        operation_states_len operation_states_len int
 
+`subscription_uuid` will be foreign key of `vnf_lcm_subscriptions`.`id`.
 This table has current status of LCM.
 Table for accumulating information for each event.
 
@@ -329,11 +326,19 @@ vnf_lcm_op_occs:
         start_time start_time datetime Not Null
         vnf_instance_id vnf_instance_id varchar(36) Not Null
         operation operation varchar(16) Not Null
+        is_cancel_pending is_cancel_pending tinyint(1) Not Null
         is_automatic_invocation is_automatic_invocation tinyint(1) Not Null
         operation_params operation_params json
         error error json
         resource_changes resource_changes json
+        error_point error_point int
+        changed_info changed_info json
+        created_at created_at datetime Not Null
+        updated_at updated_at datetime
+        deleted_at deleted_at datetime
+        deleted deleted tinyint(1) Not Null
 
+`vnf_instance_id` will be foreign key of `vnf_instances`.`id`.
 This table has current status of  operation occurrence
 
 vnf_lcm_subscriptions:
