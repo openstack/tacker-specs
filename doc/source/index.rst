@@ -22,6 +22,7 @@ Specifications
    :glob:
    :maxdepth: 2
 
+   specs/wallaby/index
    specs/victoria/index
    specs/ussuri/index
    specs/train/index
