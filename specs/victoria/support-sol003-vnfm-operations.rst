@@ -230,8 +230,25 @@ None
 Data model impact
 -----------------
 
-None
+Add a table in ``tacker`` database.
 
+placement_constraint:
+
+    .. code-block:: python
+
+       id id varchar(36) Not Null
+       vnf_instance_id vnf_instance_id varchar(36) Not Null
+       affinity_or_anti_affinity affinity_or_anti_affinity varchar(255) Not Null
+       scope scope varchar(255) Not Null
+       server_group_name server_group_name varchar(255) Not Null
+       resource resource json Not Null
+       created_at created_at datetime Not Null
+       updated_at updated_at datetime
+       deleted_at deleted_at datetime
+       deleted deleted tinyint(1) Not Null
+
+This table has `id` as primary key. `vnf_instance_id` is a foreign
+key of `vnf_instances`.`id`.
 
 
 REST API impact
