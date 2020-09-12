@@ -232,4 +232,4 @@ Tacker VNFC user-guide will be provided.
 References
 ==========
 
-[1] https://github.com/openstack/heat-templates/blob/master/hot/software-config/elements/README.rst
+[1] https://docs.openstack.org/heat-agents/latest/install/building_image.html
