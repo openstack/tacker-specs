@@ -251,9 +251,16 @@ ETSI NFV SOL002 [#NFV-SOL002]_ and SOL003 [#NFV-SOL003]_.
      * - n/a
        - n/a
        - | Success 202
-         | Error 409 412
+         | Error 409
        - The request was accepted for processing, but the processing has not
          been completed.
+
+  .. note::
+      According to the ETSI NFV SOL document, there is no API request/response
+      specification for Etag yet, and transactions using Etag are not defined
+      by standardization. Therefore, the Victoria release does not support
+      `Error Code: 412 Precondition Failed`. Once a standard specification
+      for this is established, it will be installed on the tacker.
 
 Security impact
 ---------------
