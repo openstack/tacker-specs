@@ -8,16 +8,16 @@ This work is licensed under a Creative Commons Attribution 3.0 Unported
 Tacker API Framework
 ====================
 
-Currently there is a API implementation in tacker but it doesn't follow the
+Currently there is an API implementation in tacker but it doesn't follow the
 OpenStack standard. There are two API frameworks which are largely adopted
 by the community 1. PECAN 2. Falcon
-I have gone through all the posibilities about the selecting the framework
+I have gone through all the possibilities about the selecting the framework
 but the PECAN's adoption is very high as compare to Falcon by Openstack
 community. Currently there are many OpenStack project already using
 PECAN like zaqar, magnum & others but Ironic is facing lot of issues in
 PECAN + WSME approach. Pecan community is not providing the support on
 filed bugs. Falcon is faster and more secure as compare to PECAN.
-We dont need to depend on third part project like WSME for attribute
+We don't need to depend on third part project like WSME for attribute
 validation if we use Falcon. Falcon has less dependencies as compare to
 PECAN.
 There are many project using PECAN now but taking all the above
@@ -27,7 +27,7 @@ Falcon is developed for complete Cloud REST API's. Currently Zaqar is using.
 Problem description
 ===================
 
-We need a API framework which gives us better performance, secure and
+We need an API framework which gives us better performance, secure and
 has good community support.
 Current implementation is not adopted by OpenStack community & has less
 performance as compare to Falcon/PECAN.
@@ -53,7 +53,7 @@ Following are the changes -
 
 Implement Controllers instead extensions -
 
-We have written seperate extension for nfvo & vnfm for API. We need to
+We have written separate extension for nfvo & vnfm for API. We need to
 introduce new controllers to below extensions.
 tacker/extension/nfvo.py
 tacker/extension/vnfm.py
@@ -89,11 +89,11 @@ falcon.HTTPInternalServerError
 
 Plugins -
 
-I dont think there will be direct impact on existing plugins, but for new
+I don't think there will be direct impact on existing plugins, but for new
 features, we should write separate controllers & introduce the functionality.
-Like VNFFG, its better to write seperate api/controller/v1/vnffg.py because
+Like VNFFG, it's better to write separate api/controller/v1/vnffg.py because
 we are offering complete CRUD for VNFFG.
-Its always better to write separate controller file for those who offer
+It's always better to write separate controller file for those who offer
 complete CRUD operations.
 
 Authentication -
