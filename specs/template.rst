@@ -38,7 +38,8 @@ Some notes about using this template:
   are preferred. http://asciiflow.com/ is a very nice tool to assist with
   making ascii diagrams. blockdiag is another tool. These are described below.
   If you require an image (screenshot) for your BP, attaching that to the BP
-  and checking it in is also accepted. However, text representations are preferred.
+  and checking it in is also accepted. However, text representations are
+  preferred.
 
 * Diagram examples
 
@@ -181,17 +182,37 @@ be used:
 |          |       |         |         |'green'     |state         |
 +----------+-------+---------+---------+------------+--------------+
 
+Here is more preferable and configurable example of the table using
+``list-table``.
 
-Here is the other example of the table using csv-table
+.. list-table:: ListTable
+    :header-rows: 1
+    :widths: 12 10 12 12 18 18
 
-
-.. csv-table:: CSVTable
-    :header: Attribute Name,Type,Access,Default Value,Validation Conversion,Description
-
-    id,string (UUID),"RO, all",generated,N/A,identity
-    name,string,"RW, all","''",string,human-readable name
-    color,string,"RW, admin",red,"'red', 'yellow' or 'green'",color indicating state
-
+    * - Attribute Name
+      - Type
+      - Access
+      - Default Value
+      - Validation/Conversion
+      - Description
+    * - id
+      - string (UUID)
+      - RO, all
+      - generated
+      - N/A
+      - identity
+    * - name
+      - string
+      - RW, all
+      - ''
+      - string
+      - human-readable name
+    * - color
+      - string
+      - RW, admin
+      - red
+      - 'red', 'yellow' or 'green'
+      - color indicating state
 
 Each API method which is either added or changed that does not use
 Tacker's attribute map facility should have the following:
@@ -294,14 +315,14 @@ Examples of things to consider here include:
   another service the load is multiplied by the number of nodes in the system.
 
 * A small change in a utility function or a commonly used decorator can have a
-  large impacts on performance.
+  large impact on performance.
 
-* Calls which result in a database queries (whether direct or via conductor) can
+* Calls that result in database queries (whether direct or via conductor) can
   have a profound impact on performance when called in critical sections of the
   code.
 
-* Will the change include any locking, and if so what considerations are there on
-  holding the lock?
+* Will the change include any locking, and if so what considerations are there
+  on holding the lock?
 
 Other deployer impact
 ---------------------
@@ -379,12 +400,12 @@ Dependencies
 * Include specific references to specs and/or blueprints in tacker, or in other
   projects, that this one either depends on or is related to.
 
-* If this requires functionality of another project that is not currently used
+* If this requires the functionality of another project that is not currently used
   by Tacker (such as the glance v2 API when we previously only required v1),
   document that fact.
 
 * Does this feature require any new library dependencies or code otherwise not
-  included in OpenStack? Or does it depend on a specific version of library?
+  included in OpenStack? Or does it depend on a specific version of the library?
 
 
 Testing
@@ -396,7 +417,7 @@ added so that doesn't need to be mentioned explicitly, but discussion of why
 you think unit tests are sufficient and we don't need to add more tempest
 tests would need to be included.
 
-Is this untestable in gate given current limitations (specific hardware /
+Is this untestable in gate given current limitations (specific hardware or
 software configurations available)? If so, are there mitigation plans (3rd
 party testing, gate enhancements, etc).
 
@@ -406,14 +427,14 @@ Documentation Impact
 
 What is the impact on the docs team of this change? Some changes might require
 donating resources to the docs team to have the documentation updated. Don't
-repeat details discussed above, but please reference them here.
+repeat the details discussed above, but please reference them here.
 
 
 References
 ==========
 
 Please add any useful references here. You are not required to have any
-reference. Moreover, this specification should still make sense when your
+references. Moreover, this specification should still make sense when your
 references are unavailable. Examples of what you could include are:
 
 * Links to mailing list or IRC discussions
