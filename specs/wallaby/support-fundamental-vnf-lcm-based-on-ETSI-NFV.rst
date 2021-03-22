@@ -185,7 +185,7 @@ vnf_lcm_filters:
 
 .. code-block:: python
 
-   vnfd_id MEDIUMBLOB
+   vnfd_ids MEDIUMBLOB
    vnf_products_from_providers json
    vnf_provider VARBINARY(255)
    vnf_product_name vnf_product_name
