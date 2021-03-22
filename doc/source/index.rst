@@ -8,7 +8,7 @@ This page contains the approved Tacker specifications.
 
 The specification template can be found at:
 
-https://github.com/openstack/tacker-specs/blob/master/specs/template.rst
+https://opendev.org/openstack/tacker-specs/src/branch/master/specs/template.rst
 
 If you want to contribute to Tacker, please find
 the information at:
