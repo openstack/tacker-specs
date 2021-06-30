@@ -1,10 +1,18 @@
-AUTHORS
-ChangeLog
+*.pyc
+
+# Packages
+*.egg*
 build
+
+# Unit test
+.stestr
 .tox
 .venv
-*.egg*
+
+# pbr generates these
+AUTHORS
+ChangeLog
+
+# Editors
 *.swp
 *.swo
-*.pyc
-.testrepository
