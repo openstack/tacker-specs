@@ -22,6 +22,7 @@ Specifications
    :glob:
    :maxdepth: 2
 
+   specs/yoga/index
    specs/xena/index
    specs/wallaby/index
    specs/victoria/index
