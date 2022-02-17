@@ -47,9 +47,17 @@ We propose the following changes:
       + The attributes in the TackerDB to be updated are as follows:
 
         + VnfInstance.vnfdId: Replace the existing vnfd ID with the new vnfd ID.
+        + VnfInstance.instantiatedVnfInfo.vnfcResourceInfo.computeResource.resourceId: Update resourceId with the new resource ID. Whether the attribute is updated depends on the change of the resource. See note.
 
-        .. note:: Rolling update changes the VM on the original stack, so the stack, compute resource and connection point are not changed.
-                  Therefore, this process only changes the VnfInstance.VnfdId in TackerDB.
+        .. note:: VnfInstance.instantiatedVnfInfo.vnfcResourceInfo.computeResource.resourceId is not updated by the below.
+
+         + old computeResource (created by image) -> new computeResource (created by image)
+
+         VnfInstance.instantiatedVnfInfo.vnfcResourceInfo.computeResource.resourceId is updated by the below.
+
+         + old computeResource (created by image) -> new computeResource (created by volume)
+         + old computeResource (created by volume) -> new computeResource (created by image)
+         + old computeResource (created by volume) -> new computeResource (created by volume)
 
    C. Blue-Green deployment process for Kubernetes VIM.
 
@@ -71,7 +79,10 @@ We propose the following changes:
       + The attributes in the TackerDB to be updated are as follows:
 
         + VnfInstance.vnfdId: Replace the existing vnfd ID with the new vnfd ID.
+        + VnfInstance.metadata: Update metadata with the new file path specified in lcm-kubernetes-def-files in the request.
+        + VnfInstance.instantiatedVnfInfo.vnfcResourceInfo.id: Update resourceInfoId with the new UUID.
         + VnfInstance.instantiatedVnfInfo.vnfcResourceInfo.computeResource.resourceId: Update resourceId with the new Pod name.
+        + VnfInstance.instantiatedVnfInfo.vnfcResourceInfo.metadata: Update metadata for the new Pod.
 
         .. note:: Rolling update changes the Pod on the original Deployment, so the Deployment itself and connection point are not changed.
                   Therefore, this process does not need to modify VnfInstance.instantiatedVnfInfo.vnfVirtualLinkResourceInfo.networkResource.resourceId and VnfResource.resourceName in TackerDB.
@@ -443,6 +454,7 @@ Sequence for Rolling update operation (For OpenStack VIM)
 #. VnfLcmDriver updates the following attributes in TackerDB:
 
    + ``VnfInstance.vnfdId``
+   + ``VnfInstance.instantiatedVnfInfo.vnfcResourceInfo.computeResource.resourceId``
 
 Change current VNF Package operation for Kubernetes VIM
 -------------------------------------------------------
@@ -745,8 +757,13 @@ Sequence for Rolling update operation (For Kubernetes VIM)
 #. VnfLcmDriver updates the following attributes in TackerDB:
 
    + ``VnfInstance.vnfdId``
+   + ``VnfInstance.metadata``
+   + ``VnfInstance.instantiatedVnfInfo.vnfcResourceInfo.id``
    + ``VnfInstance.instantiatedVnfInfo.vnfcResourceInfo.computeResource.resourceId``
+   + ``VnfInstance.instantiatedVnfInfo.vnfcResourceInfo.metadata``
 
+   .. note:: VnfInstance.metadata is updated only when a new file path is specified
+     in lcm-kubernetes-def-files in the request.
 
 Alternatives
 ------------
@@ -889,6 +906,10 @@ The following RESTful API will be added. This RESTful API will be based on ETSI 
       * - > password
         - 1
         - Password of load balancer server.
+      * - lcm-kubernetes-def-files
+        - 0..N
+        - File path of Kubernetes definition files such as configMap or secret.
+          Required only for the Kubernetes VIM.
 
   Following is a sample of request body:
 
@@ -908,18 +929,21 @@ The following RESTful API will be added. This RESTful API will be based on ETSI 
             "cp_name": "CP1",
             "username": "ubuntu",
             "password": "ubuntu"
-          }
+          },
           "new_vnfc_param": {
             "cp_name": "CP1",
             "username": "ubuntu",
             "password": "ubuntu"
           }
-        }
+        },
         "external_lb_param": {
           "ip_address": "10.10.0.50",
           "username": "ubuntu",
           "password": "ubuntu"
-        }
+        },
+        "lcm-kubernetes-def-files": [
+          "Files/kubernetes/deployment.yaml"
+        ]
       }
     }
 
