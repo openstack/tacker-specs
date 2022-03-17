@@ -51,15 +51,15 @@ Management operations that occurred in different tenants.
 Currently Tacker can associate a VIM with a VNF, even if both belong to
 different tenants.
 
-For example, admin user can instantiate VNF using VIM belongs to different
+For example, admin user can instantiate VNF using VIM belonging to different
 tenant than VNF.
-None admin user cannot terminate VNF because the none admin user isn't belong
-to tenant of VIM.
+A non-admin user cannot terminate VNF because the non-admin user doesn't belong
+to the tenant of VIM.
 
-#. None admin user creates a VNF.
-#. Admin user instantiates the VNF by specifying a VIM to which non-admin user
-   doesn't belong.
-#. None admin user cannot terminates the VNF.
+#. The non-admin user creates a VNF.
+#. The admin user instantiates the VNF by specifying a VIM to which the non-admin
+   user doesn't belong.
+#. The non-admin user cannot terminates the VNF.
 
 It does not problem that the admin user can get resource information for VNF or
 operate VNF LCM.
