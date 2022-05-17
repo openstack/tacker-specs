@@ -24,7 +24,7 @@ operator to obtain information on when and by whom certain Tacker resources
 were created, updated and terminated and what life cycle state changes it
 went through. This kind of information becomes critical when deployed in
 production for purposes of audit and troubleshooting. Also it helps to track
-the progress of the lifcycle operation.
+the progress of the lifecycle operation.
 
 
 Proposed change
@@ -101,7 +101,7 @@ The table will hold the below attributes:
 +----------------+----------+---------------------------------------+
 | resource_state | string   | Captured state of event source        |
 +----------------+----------+---------------------------------------+
-| event_type     | string   | Type of actionsuch as create,update,  |
+| event_type     | string   | Type of action such as create,update, |
 |                |          | scale_out, etc.                       |
 +----------------+----------+---------------------------------------+
 | resource_type  | string   | Event resource type such as VNFD,     |
