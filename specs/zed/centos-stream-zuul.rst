@@ -26,7 +26,7 @@ Proposed change
 ===============
 
 To check that Tacker works properly on Fedora family OS, we plan to add
-testsets on CentOS Stream 8 nodeset to the testsets in Zuul.
+testsets on CentOS Stream 9 nodeset to the testsets in Zuul.
 
 Target testsets are the following:
 
@@ -36,10 +36,15 @@ Target testsets are the following:
 * tacker-functional-devstack-multinode-sol-kubernetes
 * tacker-functional-devstack-multinode-libs-master
 * tacker-functional-devstack-multinode-sol-v2
+* tacker-functional-devstack-multinode-sol-separated-nfvo-v2
+* tacker-functional-devstack-multinode-sol-kubernetes-v2
+* tacker-functional-devstack-multinode-sol-multi-tenant
+* tacker-functional-devstack-multinode-sol-kubernetes-multi-tenant
+* tacker-compliance-devstack-multinode-sol
 
 The above is a list of testsets on Ubuntu.
 We will create new testsets changing nodeset definition of the above
-testsets from Ubuntu to CentOS Stream 8.
+testsets from Ubuntu to CentOS Stream 9.
 
 The new testsets will be non-voting tests.
 
@@ -102,7 +107,7 @@ Primary assignee:
 Work Items
 ----------
 
-* Add new testsets on CentOS Stream 8
+* Add new testsets on CentOS Stream 9
 
 Dependencies
 ============
@@ -112,7 +117,7 @@ None
 Testing
 =======
 
-* Add new testsets on CentOS Stream 8
+* Add new testsets on CentOS Stream 9
 
 Documentation Impact
 ====================
