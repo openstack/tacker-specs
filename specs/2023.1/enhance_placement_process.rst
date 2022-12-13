@@ -75,9 +75,14 @@ The VNFLCM v2 API (instantiate/heal/scale for VNF) process can change
 the availability zone to be used from the one notified by the NFVO if
 necessary.
 If the availability zone notified by the NFVO has insufficient
-resources, the VNF is created/updated in a different availability zone.
-The availability zone is reselected considering Affinity/Anti-Affinity
-and re-create/update until there are no more candidates.
+resources, the VNF is re-created/updated in a different availability
+zone.
+The availability zone is reselected and the VNF is re-created/updated
+until there are no more candidates.
+
+.. note::
+  Availability zone reselection is valid only when StandardUserData is
+  specified for the user data class.
 
 1) Flowchart of availability zone reselection
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -115,21 +120,25 @@ flow:
 
 #. Execute "stack create/update" in the availability zone notified by
    the NFVO.
-#. If an error occurs in 1, get the availability zone list.
+#. If an insufficient resource error occurs in 1, get the availability
+   zone list.
    Availability zone list details are described in :ref:`2) Get and
    manage availability zone list<az-list>`.
-#. Select an availability zone (excluding the Availability Zone where
-   the error occurred) randomly in compliance with
-   Affinity/Anti-Affinity from the availability zone list obtained in 2,
+#. Select an availability zone (excluding the availability zone where
+   the error occurred) from the availability zone list obtained in 2,
    and re-execute “stack create/update”.
    Reselection policy details are described in :ref:`3) Availability
    zone reselection policy<reselection-policy>`.
 #. If "stack create/update" in the availability zone reselected in 3
-   becomes an error, reselect the availability zone and repeat until
-   "stack create/update" succeeds or until all availability zone
-   candidates fail.
-   Detecting error details are described in :ref:`4) Detection method
-   of insufficient resource error<detection-method>`.
+   becomes an insufficient resource error, reselect the availability
+   zone and repeat until "stack create/update" succeeds or until all
+   availability zone candidates fail.
+
+.. note::
+  Detecting error details are described in :ref:`4) Detection method
+  of insufficient resource error<detection-method>`.
+  If the error is other than insufficient resource error, the process
+  ends(fails) without reselecting availability zones.
 
 .. _az-list:
 
@@ -192,8 +201,12 @@ flow:
 3) Availability zone reselection policy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Availability zones in error are excluded from the reselection
-candidates, and Availability zones are reselected randomly in compliance
-with Affinity/Anti-Affinity of PlacementConstraint.
+candidates, and are reselected preferentially from unselected
+availability zones.
+
+.. note::
+  Affinity/Anti-Affinity of PlacementConstraint and resource states of
+  availability zones are not considered during reselection.
 
 The availability zone in error can be identified in the following way.
 
@@ -204,63 +217,138 @@ The availability zone in error can be identified in the following way.
 3. Identify the availability zone by the VDU identified in 2.
 
 .. note::
-
   Insufficient resource in availability zones that once failed during
   reselection attempts may be resolved, but the availability zones will
   not be reselected.
   In Scale/Heal operations, VDUs that have already been deployed will
   not be re-created.
 
-Availability zone reselection for each PlacementConstraint is as
-follows.
+Availability zone reselection for each VNFLCM v2 API
+(instantiate/heal/scale for VNF) is as follows.
 
-Precondition: availability zone AZ-1/AZ-2/AZ-3 exist and VNF VDU-1/VDU-2
-are deployed
+Precondition: availability zone AZ-1/AZ-2/AZ-3/AZ-4/AZ-5 exist and VNF
+VDU1-0/VDU1-1/VDU2-0/VDU2-1 are deployed
 
-+ PlacementConstraint is Anti-Affinity
+.. note::
+  VNFs in VDU1 are in the same availability zone (Affinity), and VNFs in
+  VDU2 and VDU1/VDU2 are in different availability zones (Anti-Affinity).
+
++ Instantiate
 
   + Before reselection, the following attempts to deploy failed (AZ-1
-    has insufficient resource)
+    and AZ-2 have insufficient resource)
 
-    + VDU-1: AZ-1
+    + VDU1-0: AZ-1
+    + VDU1-1: AZ-1
+    + VDU2-0: AZ-2
+    + VDU2-1: AZ-3
 
-    + VDU-2: AZ-2
+  + VDU1-0/1: Reselect the following (except AZ-1/AZ-2/AZ-3, select AZ-4
+    or AZ-5)
 
-  + Reselect the following (except AZ-1, select AZ-2/AZ-3 in compliance
-    with Anti-Affinity)
+    + VDU1-0: AZ-4
+    + VDU1-1: AZ-4
+    + VDU2-0: AZ-2
+    + VDU2-1: AZ-3
 
-    + VDU-1: AZ-2
+  + VDU2-0: Reselect the following (except AZ-2/AZ-3/AZ-4, select AZ-1 or
+    AZ-5)
 
-    + VDU-2: AZ-3
+    + VDU1-0: AZ-4
+    + VDU1-1: AZ-4
+    + VDU2-0: AZ-5
+    + VDU2-1: AZ-3
 
-  .. note::
+    .. note::
+      The above is an example, and the reselection target is randomly
+      selected from unselected availability zones.
 
-    The above is an example, and it is possible that the reverse
-    availability zones are selected for VDU-1 and VDU-2, but it is
-    guaranteed that they will not be the same availability zone.
++ Heal(VDU1-1/VDU2-0)
 
+  + Before reselection, the following attempts to deploy failed (AZ-1
+    and AZ-2 have insufficient resource)
 
-+ PlacementConstraint is Affinity
+    + VDU1-0: AZ-1
+    + VDU1-1: AZ-1
+    + VDU2-0: AZ-2
+    + VDU2-1: AZ-3
 
-  + Before reselection, attempt to deploy in the following and fail
-    (AZ-1 has insufficient resource)
+  + VDU1-1: Reselect the following (except AZ-1/AZ-2/AZ-3, select AZ-4
+    or AZ-5)
 
-    + VDU-1: AZ-1
+    + VDU1-0: AZ-1
+    + VDU1-1: AZ-4
+    + VDU2-0: AZ-2
+    + VDU2-1: AZ-3
 
-    + VDU-2: AZ-1
+    .. note::
+      Only Heal target VNFs are targeted for availability zone
+      reselection.
+      Therefore, Affinity may not be satisfied due to the operation of
+      reselection.
 
-  + Reselect the following (except AZ-1, select AZ-2/AZ-3 in compliance
-    with Affinity)
+  + VDU2-0: Reselect the following (except AZ-1/AZ-2/AZ-3/AZ-4, select
+    AZ-5)
 
-    + VDU-1: AZ-2
+    + VDU1-0: AZ-1
+    + VDU1-1: AZ-4
+    + VDU2-0: AZ-5
+    + VDU2-1: AZ-3
 
-    + VDU-2: AZ-2
++ Scale out(add VDU1-2/VDU1-3)
 
-  .. note::
+  + Before reselection, VDU1-3 deploy failed (AZ-1 has insufficient
+    resource)
 
-    The above is an example, and it is possible that the availability
-    zone AZ-3 is selected for VDU-1 and VDU-2, but it is guaranteed
-    that they will be the same availability zone.
+    + VDU1-0: AZ-1
+    + VDU1-1: AZ-1
+    + VDU1-2: AZ-1
+    + VDU1-3: AZ-1
+    + VDU2-0: AZ-2
+    + VDU2-1: AZ-3
+
+  + VDU1-2/3: Reselect the following (except AZ-1/AZ-2/AZ-3, select AZ-4
+    or AZ-5)
+
+    + VDU1-0: AZ-1
+    + VDU1-1: AZ-1
+    + VDU1-2: AZ-4
+    + VDU1-3: AZ-4
+    + VDU2-0: AZ-2
+    + VDU2-1: AZ-3
+
+    .. note::
+      In the case of Affinity, even if VDU1-2 has been successfully
+      deployed, both VDU1-2/VDU1-3 availability zones will be reselected.
+      Existing VDU1-0/VDU1-1 will not be reselected, so all VDUs may not
+      be in the same availability zone even in Affinity case.
+
++ Scale out(add VDU2-2/VDU2-3)
+
+  + Before reselection, VDU2-3 deploy failed (AZ-5 has insufficient
+    resource)
+
+    + VDU1-0: AZ-1
+    + VDU1-1: AZ-1
+    + VDU2-0: AZ-2
+    + VDU2-1: AZ-3
+    + VDU2-2: AZ-4
+    + VDU2-3: AZ-5
+
+  + VDU2-3: Reselect the following (except AZ-5, select AZ-1 or AZ-2 or
+    AZ-3 or AZ-4)
+
+    + VDU1-0: AZ-1
+    + VDU1-1: AZ-1
+    + VDU2-0: AZ-2
+    + VDU2-1: AZ-3
+    + VDU2-2: AZ-4
+    + VDU2-3: AZ-1
+
+    .. note::
+      If there are no unselected availability zones left, randomly select
+      a reselection target from the selected availability zones.
+      In this case, Anti-Affinity cannot be satisfied.
 
 
 .. _detection-method:
@@ -274,7 +362,6 @@ The error message that indicates insufficient resources is extracted
 from the parameter "stack_status_reason" in the response.
 
 .. note::
-
   In the case of insufficient resources, the error occurs after "stack
   create/update" returns an acceptance response, so the "Show stack
   details" response is used to detect the cause.
@@ -325,73 +412,6 @@ messages as insufficient resource.
     Exhausted all hosts available for retrying build failures for
     instance(. \*). , Code: 500".
 
-5) AutoScalingGroup consideration
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In BaseHOT which includes AutoScalingGroup definitions, there is a
-constraint that each VNFC associated with a VDU under AutoScalingGroup
-cannot be set to Anti-Affinity for the availability zone.
-This constraint is due to the constraint in the HOT specification that
-availability zones can only be set for each VDU under the
-AutoScalingGroup.
-This constraint occurs not only at the time of reselection, but also at
-the time of initial execution.
-Therefore, BaseHOT which includes AutoScalingGroup definitions, ignores
-the PlacementConstraint for each VNFC associated with a VDU and
-reselects a single availability zone for each VDU under the
-AutoScalingGroup. (Always set to Affinity.)
-
-top HOT:
-
-.. code-block::
-
-  resources:
-    VDU1_scale_group:
-      type: OS::Heat::AutoScalingGroup
-      properties:
-        min_size: 1
-        max_size: 3
-        desired_capacity: { get_param: [ nfv, VDU, VDU1, desired_capacity ] }
-        resource:
-          type: VDU1.yaml
-          properties:
-            flavor: { get_param: [ nfv, VDU, VDU1, computeFlavourId ] }
-            image: { get_param: [ nfv, VDU, VDU1-VirtualStorage, vcImageId ] }
-            zone: { get_param: [ nfv, VDU, VDU1, locationConstraints] }
-            net1: { get_param: [ nfv, CP, VDU1_CP1, network] }
-            net2: { get_param: [ nfv, CP, VDU1_CP2, network ] }
-            subnet1: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet ]}
-            subnet2: { get_param: [nfv, CP, VDU1_CP2, fixed_ips, 0, subnet ]}
-            net3: { get_resource: internalVL1 }
-            net4: { get_resource: internalVL2 }
-            net5: { get_resource: internalVL3 }
-
-nested HOT:
-
-.. code-block::
-
-  resources:
-    VDU1:
-      type: OS::Nova::Server
-      properties:
-        flavor: { get_param: flavor }
-        name: VDU1
-        block_device_mapping_v2: [{"volume_id": { get_resource: VDU1-VirtualStorage }}]
-        networks:
-        - port:
-            get_resource: VDU1_CP1
-        - port:
-            get_resource: VDU1_CP2
-        - port:
-            get_resource: VDU1_CP3
-        - port:
-            get_resource: VDU1_CP4
-        - port:
-            get_resource: VDU1_CP5
-        availability_zone: { get_param: zone }
-
-As shown above, top HOT specifies a single "zone" (availability zone)
-for each VDU under the AutoScalingGroup, so each VNFC associated with a
-VDU under the AutoScalingGroup is in the same availability zone.
 
 .. _configuration-file:
 
@@ -403,10 +423,6 @@ Add the following definition to the ``tacker.conf`` file.
 + Boolean value of "GrantRequest.PlacementConstrains.fallbackBestEffort"
 
   Default value: "false"
-
-+ Whether or not to reselect availability zone
-
-  Default value: not to reselect
 
 + Regular expression for detecting insufficient resource error
 
