@@ -524,7 +524,20 @@ to download onboarded VNF package to its local file system.
 Data model impact
 -----------------
 
-None
+The `downloading` field is added to `VnfPackage` table.
+This field counts the number of conductors downloading VNF packages
+to determine whether all conductors could download or not.
+
+* | **Table**: VnfPackage
+
+  .. list-table::
+    :header-rows: 1
+    :widths: 18 10
+
+    * - Name
+      - Type
+    * - downloading
+      - int
 
 REST API impact
 ---------------
