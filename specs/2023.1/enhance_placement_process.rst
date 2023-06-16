@@ -201,12 +201,12 @@ flow:
 3) Availability zone reselection policy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Availability zones in error are excluded from the reselection
-candidates, and are reselected preferentially from unselected
-availability zones.
+candidates, and are reselected considering Anti-Affinity of
+PlacementConstraint.
 
 .. note::
-  Affinity/Anti-Affinity of PlacementConstraint and resource states of
-  availability zones are not considered during reselection.
+  Resource states of availability zones are not considered during
+  reselection.
 
 The availability zone in error can be identified in the following way.
 
@@ -261,7 +261,7 @@ VDU1-0/VDU1-1/VDU2-0/VDU2-1 are deployed
 
     .. note::
       The above is an example, and the reselection target is randomly
-      selected from unselected availability zones.
+      selected from availability zone candidates.
 
 + Heal(VDU1-1/VDU2-0)
 
@@ -346,8 +346,9 @@ VDU1-0/VDU1-1/VDU2-0/VDU2-1 are deployed
     + VDU2-3: AZ-1
 
     .. note::
-      If there are no unselected availability zones left, randomly select
-      a reselection target from the selected availability zones.
+      If there are no availability zone candidate considering
+      Anti-Affinity left, randomly select a reselection target from other
+      than the failed availability zones.
       In this case, Anti-Affinity cannot be satisfied.
 
 
@@ -355,19 +356,19 @@ VDU1-0/VDU1-1/VDU2-0/VDU2-1 are deployed
 
 4) Detection method of insufficient resource error
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-When "stack create/update" fails, it is detected from "Show stack details"
-[#Heat-API]_ of Heat-API response whether the failure is due to
+When "stack create/update" fails, it is detected from "List resource
+events" [#Heat-API]_ of Heat-API response whether the failure is due to
 insufficient resources.
 The error message that indicates insufficient resources is extracted
-from the parameter "stack_status_reason" in the response.
+from the parameter "resource_status_reason" in the response.
 
 .. note::
   In the case of insufficient resources, the error occurs after "stack
-  create/update" returns an acceptance response, so the "Show stack
-  details" response is used to detect the cause.
+  create/update" returns an acceptance response, so the "List resource
+  events" response is used to detect the cause.
 
 The following is an example of an error message stored in
-"stack_status_reason" when resources are insufficient.
+"resource_status_reason" when resources are insufficient.
 
 + ex1) Set the flavor defined in “OS::Nova::Server” to a large value
   that cannot be deployed (not enough storage/not enough vcpu/not enough
@@ -536,4 +537,4 @@ References
 
 .. [#Keystone-API_services] https://docs.openstack.org/api-ref/identity/v3/?expanded=list-services-detail#list-services
 
-.. [#Heat-API] https://docs.openstack.org/api-ref/orchestration/v1/index.html?expanded=show-stack-details-detail#show-stack-details
+.. [#Heat-API] https://docs.openstack.org/api-ref/orchestration/v1/index.html#list-resource-events
