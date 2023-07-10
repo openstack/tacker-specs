@@ -261,11 +261,11 @@ The change of VNF instance API processes include v1 and v2 versions.
        - vnf_instances,VnfInstanceV2
        - vim_connection_info/extra,vimConnectionInfo/extra
        - {"area": "tokyo@japan"}
-     * - namespace(CNF)
+     * - tenant
        - vnfInstanceId
        - vnf_instances,VnfInstanceV2
-       - vnf_metadata,metadata
-       - {"namespace": "default"}
+       - vnf_metadata,instantiatedVnfInfo/metadata
+       - {"tenant": "default"}
 
 Add the Tacker Policy Filter to the List API Processes
 ------------------------------------------------------
@@ -369,11 +369,10 @@ The List API Processes to be changed
         - vnf_instances,VnfInstanceV2
         - vim_connection_info/extra,vimConnectionInfo/extra
         - {"area": "tokyo@japan"}
-      * - namespace(CNF)
+      * - tenant
         - vnf_instances,VnfInstanceV2
-        - vnf_metadata,metadata
-        - {"namespace": "default"}
-
+        - vnf_metadata,instantiatedVnfInfo/metadata
+        - {"tenant": "default"}
 
 Convert Special Roles to API Attributes in Context
 --------------------------------------------------
@@ -403,10 +402,10 @@ following rules.
     - vendor value
     - all
     - VENDOR_vendor_A, VENDOR_all
-  * - NAMESPACE
-    - namespace value
+  * - TENANT
+    - tenant value
     - all
-    - NAMESPACE_default, NAMESPACE_all
+    - TENANT_default, TENANT_all
 
 .. note::
 
@@ -438,9 +437,9 @@ following rules:
       * - VENDOR
         - vendor
         - VENDOR_vendor_A -> {"vendor": ["vendor_A"]}
-      * - NAMESPACE
-        - namespace value
-        - NAMESPACE_default -> {"namespace": ["default"]}
+      * - TENANT
+        - tenant value
+        - TENANT_default -> {"tenant": ["default"]}
 
 #.  For special value in policy checker, the corresponding attribute value of
     resource will be assigned to user.
@@ -476,10 +475,10 @@ following rules:
         - vendor
         - all
         - {"vendor": "vendor_A"} -> {"vendor": ["vendor_A"]}
-      * - NAMESPACE
-        - namespace value
+      * - TENANT
+        - tenant value
         - all
-        - {"namespace": "default"} -> {"namespace": ["default"]}
+        - {"tenant": "default"} -> {"tenant": ["default"]}
 
 #.  For special value "all" in policy filter, the attribute will not be used as
     a filtering attribute. Note that the "area" attribute needs to be divided
@@ -511,7 +510,7 @@ effect.
 
   When enhanced_tacker_policy is False, special roles will not be converted to
   user attributes, then users will not have the enhanced policy attributes such
-  as area, vendor and namespace(CNF). At this time, if the enhanced policy
+  as area, vendor and tenant. At this time, if the enhanced policy
   attributes are used as comparison attributes in the policy rule, this rule
   will prevent users from accessing any resource as the comparison result is
   always false.
@@ -620,7 +619,7 @@ Policy Examples
   "vnflcm_inst_attrs_cmp": "vendor:%(vendor)s and rule:manager_and_owner"
 
   # vnflcm resource attributes compare rule.
-  "vnflcm_attrs_cmp": "area:%(area)s and vendor:%(vendor)s and namespace:%(namespace)s"
+  "vnflcm_attrs_cmp": "area:%(area)s and vendor:%(vendor)s and tenant:%(tenant)s"
 
   # Get API Versions.
   # GET  /vnflcm/v1/api_versions
@@ -796,9 +795,9 @@ Create the following roles:
 * VENDOR_vendor_A
 * VENDOR_vendor_B
 * VENDOR_all
-* NAMESPACE_default
-* NAMESPACE_namespace_A
-* NAMESPACE_all
+* TENANT_default
+* TENANT_tenant_A
+* TENANT_all
 
 The root user needs to be assigned the following roles:
 
@@ -806,14 +805,14 @@ The root user needs to be assigned the following roles:
 * manager
 * AREA_all@all
 * VENDOR_all
-* NAMESPACE_all
+* TENANT_all
 
 The region manager needs to be assigned the following roles:
 
 * manager
 * AREA_all@region_A (or AREA_all@region_B)
 * VENDOR_all
-* NAMESPACE_all
+* TENANT_all
 
 The area manager and the tenant (area) manager
 need to be assigned the following roles:
@@ -822,7 +821,7 @@ need to be assigned the following roles:
 * AREA_area_A@region_A (or AREA_area_B@region_A or
   AREA_area_A@region_B or AREA_area_B@region_B)
 * VENDOR_all
-* NAMESPACE_all
+* TENANT_all
 
 .. note::
   The difference between "area manager" and
@@ -835,14 +834,14 @@ The tenant manager needs to be assigned the following roles:
 * manager
 * AREA_all@all
 * VENDOR_all
-* NAMESPACE_all
+* TENANT_all
 
 The tenant user needs to be assigned the following roles:
 
 * member or reader
 * AREA_all@all
 * VENDOR_all
-* NAMESPACE_all
+* TENANT_all
 
 The tenant (area) user needs to be assigned the following roles:
 
@@ -850,13 +849,13 @@ The tenant (area) user needs to be assigned the following roles:
 * AREA_area_A@region_A (or AREA_area_B@region_A or
   AREA_area_A@region_B or AREA_area_B@region_B)
 * VENDOR_all
-* NAMESPACE_all
+* TENANT_all
 
 The vendor manager needs to be assigned the following roles:
 * manager
 * AREA_all@all
 * VENDOR_vendor_A (or VENDOR_vendor_B)
-* NAMESPACE_all
+* TENANT_all
 
 Alternatives
 ------------
