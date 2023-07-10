@@ -44,10 +44,15 @@ For more information about working with gerrit, see::
   https://docs.openstack.org/infra/manual/developers.html#development-workflow
 
 To validate that the specification is syntactically correct (i.e. get more
-confidence in the Jenkins result), please execute the following command::
+confidence in the Zuul result), please execute the following command::
 
   $ tox
+
+Note that you need to install Java such as openjdk_ in advance to run ``tox``
+as the plantUML which depends on Java is used inside some specs.
 
 After running ``tox``, the documentation will be available for viewing in HTML
 format in the ``doc/build/`` directory. Please do not checkin the generated
 HTML files as a part of your commit.
+
+.. _openjdk: https://openjdk.org/install/

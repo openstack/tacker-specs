@@ -12,6 +12,7 @@
 # serve to show the default.
 
 import datetime
+import os
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -32,6 +33,7 @@ extensions = [
               'sphinxcontrib.actdiag',
               'sphinxcontrib.seqdiag',
               'sphinxcontrib.nwdiag',
+              'sphinxcontrib.plantuml',
               'openstackdocstheme',
              ]
 
@@ -233,3 +235,5 @@ openstackdocs_repo_name = 'openstack/tacker-specs'
 openstackdocs_auto_name = False
 openstackdocs_bug_project = 'tacker'
 openstackdocs_bug_tag = 'doc'
+
+plantuml = f'java -jar {os.path.abspath(".")}/../../tools/plantuml.jar'

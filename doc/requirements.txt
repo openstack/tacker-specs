@@ -8,3 +8,4 @@ sphinxcontrib-actdiag # BSD
 sphinxcontrib-blockdiag # BSD
 sphinxcontrib-nwdiag # BSD
 sphinxcontrib-seqdiag # BSD
+sphinxcontrib-plantuml # BSD

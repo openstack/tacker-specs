@@ -110,6 +110,19 @@ seqdiag
   }
 
 
+* PlantUML examples
+
+.. uml::
+
+  @startuml
+
+  [First component]
+  [Another component] as Comp2
+  component Comp3
+  component [Last\ncomponent] as Comp4
+
+  @enduml
+
 
 Problem description
 ===================
