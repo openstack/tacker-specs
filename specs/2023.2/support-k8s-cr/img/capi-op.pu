@@ -1,0 +1,21 @@
+@startuml
+
+    actor User
+    package manifest
+    component ManagementCluster {
+        component "ClusterAPI" as capi
+        component "KubernetesAPI" as kapi1
+    }
+    component Infrastructure {
+        component WorkloadCluster {
+            component "KubernetesAPI" as kapi2
+        }
+    }
+
+    User --> manifest: 2. create
+    User -> kapi1: 3. apply manifest
+    kapi1->capi
+    capi -> WorkloadCluster: 4. create
+    User -> ManagementCluster: 1. create
+
+@enduml

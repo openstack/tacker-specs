@@ -1,0 +1,44 @@
+@startuml
+
+left to right direction
+
+component "Terraform infra-driver" as tfid
+folder "VNF Package A" as pkga
+folder "VNF Package B" as pkgb
+folder "Directory for VNF Instance A" as da {
+    file "Configuration" as ca
+    file "Variables" as va
+    file "State file A" as statea
+    file "State lock file A" as statelocka
+}
+folder "Directory for VNF Instance B" as db {
+    file "Configuration" as cb
+    file "Variables" as vb
+    file "State lock file B" as statelockb
+    file "State file B" as stateb
+}
+folder "Directory for VNF Instance C" as dc {
+    file "Configuration" as cc
+    file "Variables" as vc
+    file "State lock file C" as statelockc
+    file "State file C" as statec
+}
+dc -[hidden]> db
+db -[hidden]> da
+component "Terraform" as tf
+
+'# Relationships
+tfid -> tf: Execute
+tfid <-up- pkga: Download
+tfid <-up- pkgb: Download
+tfid ---> da: Copy VNF Package A
+tfid ---> db: Copy VNF Package A
+tfid ---> dc: Copy VNF Package B
+tf  --> statea: Create
+tf  --> statelocka: Create
+tf  --> stateb: Create
+tf  --> statelockb: Create
+tf  --> statec: Create
+tf  --> statelockc: Create
+
+@enduml

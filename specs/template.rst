@@ -36,7 +36,8 @@ Some notes about using this template:
 
 * If you would like to provide a diagram with your spec, text representations
   are preferred. http://asciiflow.com/ is a very nice tool to assist with
-  making ascii diagrams. blockdiag is another tool. These are described below.
+  making ascii diagrams. blockdiag and mermaid are another tools.
+  These are described below.
   If you require an image (screenshot) for your BP, attaching that to the BP
   and checking it in is also accepted. However, text representations are
   preferred.
@@ -95,7 +96,6 @@ nwdiag
     }
   }
 
-
 seqdiag
 
 .. seqdiag::
@@ -109,19 +109,57 @@ seqdiag
     browser <-- webserver;
   }
 
+mermaid Flowchart
 
-* PlantUML examples
+.. mermaid::
 
-.. uml::
+  flowchart LR
+    A -- text --> B -- text2 --> C
 
-  @startuml
+mermaid Sequence Diagram
 
-  [First component]
-  [Another component] as Comp2
-  component Comp3
-  component [Last\ncomponent] as Comp4
+.. mermaid::
 
-  @enduml
+  sequenceDiagram
+    participant Alice
+    participant John
+    Alice->>John: Hello John, how are you?
+    John-->>Alice: Great!
+    Alice-)John: See you later!
+
+mermaid State Diagram
+
+.. mermaid::
+
+  stateDiagram-v2
+    state if_state <<choice>>
+    [*] --> IsPositive
+    IsPositive --> if_state
+    if_state --> False: if n < 0
+    if_state --> True : if n >= 0
+
+mermaid C4 Diagram
+
+.. mermaid::
+
+  C4Component
+    Person(user, "User")
+    Component(cli, "CLI")
+    Boundary(services, "Services", ""){
+        Component(svc1, "Service1")
+        Component(svc2, "Service2")
+    }
+    Boundary(db, "DBs", ""){
+        ComponentDb(db1, "DB1")
+        ComponentDb(db2, "DB2")
+    }
+    Rel(user, cli, "")
+    Rel(cli, svc2, "")
+    Rel(svc2, db1, "")
+
+.. note::
+  C4 Diagram of mermaid is an experimental diagram for now.
+  The syntax and properties can change in future releases.
 
 
 Problem description

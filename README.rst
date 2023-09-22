@@ -48,11 +48,11 @@ confidence in the Zuul result), please execute the following command::
 
   $ tox
 
-Note that you need to install Java such as openjdk_ in advance to run ``tox``
-as the plantUML which depends on Java is used inside some specs.
-
 After running ``tox``, the documentation will be available for viewing in HTML
 format in the ``doc/build/`` directory. Please do not checkin the generated
 HTML files as a part of your commit.
 
-.. _openjdk: https://openjdk.org/install/
+Note that even if a syntax error occurs in ``mermaid``, it will not be an
+error in ``tox``.
+When using ``mermaid`` to create diagrams, you need to carefully check the
+built html file.

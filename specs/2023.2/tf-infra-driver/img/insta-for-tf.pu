@@ -1,0 +1,43 @@
+@startuml
+
+frame "python-tackerclient" {
+    component "tacker-client" as client {
+        package "VNF Package" as vnfpkg {
+            file "VNFD" as vnfd
+            file "Terraform\nconfiguration" as tffile
+            file "Terraform\nvariables\nfile" as tfvar
+        }
+        file "Instantiate\nparameters" as inst_param
+    }
+}
+
+vnfd -[hidden]> tffile
+tffile-[hidden]> tfvar
+
+frame "tacker" {
+    component "tacker-server" {
+        component "server" as serv
+    }
+    component "tacker-conductor" {
+        component "conductor" as cond
+        component "Terraform\ninfra-driver" as infra
+    }
+}
+
+node "Terraform"
+
+node "Target Service" as ts
+cloud "Hardware Resources" as hw {
+    node "VM" as ins1
+}
+
+'# Relationships
+vnfpkg --> serv: 1. Request\n create VNF
+inst_param --> serv: 2. Request\n instantiate VNF
+serv --> cond
+cond --> infra
+infra --> Terraform: 3. Execute Terraform command
+Terraform -right-> ts: 4. Call target\n service API
+ts --> ins1: 5. Create VM(s)
+
+@enduml

@@ -1,0 +1,47 @@
+@startuml
+
+frame "python-tackerclient" {
+    component "tacker-client" as client {
+    }
+}
+
+frame "tacker" {
+    component "tacker-server" {
+        component "Server" as serv
+    }
+    component "tacker-conductor" {
+        component "Conductor" as cond
+        component "Vnflcm driver" as vld
+        component "Kubernetes\ninfra-driver" as infra
+    }
+}
+
+frame "Management Cluster" as mgmt {
+    node "Control Plane" as k8s_m_m {
+        node "Cluster API" as capi
+    }
+    node "Worker" as k8s_m_w {
+        node "Cluster" as cluster
+    }
+}
+
+cloud "Hardware Resources" as hw_w {
+    frame "Workload Cluster" as wkld {
+        node "Control Plane" as k8s_w_m
+        node "Worker" as k8s_w_w
+        node "Worker" as k8s_w_w2
+    }
+}
+
+'# Relationships
+client --> serv: 1. Request\n scale VNF
+serv --> cond
+cond --> vld
+vld --> infra
+infra -right-> k8s_m_m: 2. Call Kubernetes\n API
+capi --> cluster: 3. Change a parameter\n for the number of worker nodes
+cluster --> wkld: 4. Change the number of worker nodes
+k8s_w_m -[hidden]-> k8s_w_w
+k8s_w_m -[hidden]-> k8s_w_w2
+
+@enduml

@@ -6,4 +6,6 @@ Tacker 2023.2 Specifications
    :glob:
    :maxdepth: 1
 
+   support-k8s-cr/*
+   tf-infra-driver/*
    *

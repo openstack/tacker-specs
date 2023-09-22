@@ -1,0 +1,63 @@
+@startuml
+
+component "Web Server" as w
+
+frame "python-tackerclient" {
+    component "tacker-client" as client {
+        package "VNF Package" as vnfpkg {
+            file "VNFD" as vnfd
+            file "CNF (k8s Cluster)\nDefinition" as cnfd
+            file "Scripts for\n Management Driver\n(Credentials Sender)" as mgmtd
+        }
+        file "Instantiate\nparameters" as inst_param
+    }
+}
+
+vnfd -[hidden]> cnfd
+cnfd -[hidden]> mgmtd
+
+frame "tacker" {
+    component "tacker-server" {
+        component "Server" as serv
+    }
+    component "tacker-conductor" {
+        component "Conductor" as cond
+        component "Vnflcm driver" as vld
+        component "Kubernetes\ninfra-driver" as infra
+    }
+}
+
+frame "Management Cluster" as mgmt {
+    node "Control Plane" as k8s_m_m {
+        node "Cluster API" as capi
+    }
+    node "Worker" as k8s_m_w {
+        node "Cluster" as cluster
+    }
+}
+
+component "Management Driver\n(Credentials Sender)" as mgmtdi
+
+cloud "Hardware Resources" as hw_w {
+    frame "Workload Cluster" as wkld {
+        node "Control Plane" as k8s_w_m
+        node "Worker" as k8s_w_w {
+        }
+    }
+}
+
+'# Relationships
+vnfpkg --> serv: 1. Request\n create VNF
+inst_param --> serv: 2. Request\n instantiate VNF
+serv --> cond
+cond --> vld
+vld --> infra
+infra -right-> k8s_m_m: 3. Call Kubernetes\n API
+capi --> cluster: 4. Create a Cluster Resource
+cluster --> wkld: 5. Create a Workload Cluster
+k8s_w_m -[hidden]-> k8s_w_w
+vld -right-> mgmtdi: 6. Execute management driver
+mgmtdi <--- mgmt: 7. Get credentials for Workload Cluster
+mgmtdi -> w: 8. Send credentials
+
+@enduml

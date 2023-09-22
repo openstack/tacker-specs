@@ -1,0 +1,22 @@
+@startuml
+
+actor "User" as user
+component "Terraform CLI" as cli
+component "Terraform" as tf
+component "Configuration file" as config
+component "Variables file" as vars
+component "Target Service" as svc
+file "State file" as state
+file "State lock file" as statelock
+
+'# Relationships
+user --> config: 1. Create Configuration file
+user --> vars: 1. Create Variables file
+user -> cli
+cli -> tf: 2. Init Terraform\n with configuration file\n and variables file
+tf --> statelock: 3. Create state lock file
+cli -> tf: 4. Apply Configuration file
+tf -> svc: 5. Call APIs
+tf --> state: 6. Create state file
+
+@enduml

@@ -1,0 +1,42 @@
+@startuml
+
+frame "python-tackerclient" {
+    component "tacker-client" as client {
+        package "VNF Package" as vnfpkg {
+            file "VNFD" as vnfd
+            file "CNF (Cluster API)\nDefinition" as cnfd
+        }
+        file "Instantiate\nparameters" as inst_param
+    }
+}
+
+frame "tacker" {
+    component "tacker-server" {
+        component "Server" as serv
+    }
+    component "tacker-conductor" {
+        component "Conductor" as cond
+        component "Vnflcm driver" as vld
+        component "Kubernetes\ninfra-driver" as infra
+    }
+}
+
+frame "Kubernetes Cluster" as k8s {
+    node "Control Plane" as k8s_m {
+        node "Cluster API" as capi
+    }
+    node "Worker" as k8s_w
+}
+
+'# Relationships
+vnfpkg --> serv: 1. Request\n create VNF
+inst_param --> serv: 2. Request\n instantiate VNF
+serv --> cond
+cond --> vld
+vld --> infra
+infra -right-> k8s_m: 3. Call Kubernetes\n API
+k8s_m -> capi: 4. Create a CRs\n for Cluster API
+
+capi -[hidden]-> k8s_w
+
+@enduml
