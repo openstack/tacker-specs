@@ -3,7 +3,7 @@
 # process, which may cause wedges in the gate later.
 sphinx>=2.0.0,!=2.1.0 # BSD
 openstackdocstheme>=2.2.1 # Apache-2.0
-pillow===9.5.0
+pillow===10.0.1
 sphinxcontrib-actdiag # BSD
 sphinxcontrib-blockdiag # BSD
 sphinxcontrib-nwdiag # BSD
