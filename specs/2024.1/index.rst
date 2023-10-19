@@ -8,4 +8,5 @@ Tacker 2024.1 Specifications
 
    v2-api-horizon/*
    intro-cilium/*
+   otel-monitoring/*
    *
