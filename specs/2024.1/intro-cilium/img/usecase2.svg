@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="400mm"
+   height="136mm"
+   viewBox="0 0 400 136"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="usecase2.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.77771465"
+     inkscape:cx="642.90932"
+     inkscape:cy="-108.65168"
+     inkscape:window-width="3370"
+     inkscape:window-height="1376"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="background"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline">
+    <rect
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.264582;stroke-opacity:1"
+       id="rect31"
+       width="361.85977"
+       height="114.32323"
+       x="14.25813"
+       y="11.435926" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="objects"
+     style="display:inline">
+    <rect
+       style="fill:#e2ffd0;fill-opacity:1;stroke:#000000;stroke-width:0.264584;stroke-opacity:1"
+       id="rect24951"
+       width="98.571419"
+       height="63.675594"
+       x="28.772045"
+       y="30.512058" />
+    <rect
+       style="fill:#fcf2c9;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       id="rect37945-9"
+       width="62.890297"
+       height="17.066786"
+       x="45.55378"
+       y="64.85141" />
+    <rect
+       style="display:inline;fill:#e2ffd0;fill-opacity:1;stroke:#000000;stroke-width:0.264584;stroke-opacity:1"
+       id="rect24951-3"
+       width="98.571419"
+       height="63.675594"
+       x="144.12704"
+       y="30.552101" />
+    <rect
+       style="display:inline;fill:#fcf2c9;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       id="rect37945-1"
+       width="62.890297"
+       height="21.807745"
+       x="160.31009"
+       y="42.024155" />
+    <rect
+       style="display:inline;fill:#e2ffd0;fill-opacity:1;stroke:#000000;stroke-width:0.264584;stroke-opacity:1"
+       id="rect24951-3-8"
+       width="98.571419"
+       height="63.675594"
+       x="260.98355"
+       y="30.662582" />
+    <rect
+       style="display:inline;fill:#fcf2c9;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       id="rect37945-1-8"
+       width="62.890297"
+       height="21.807745"
+       x="279.28329"
+       y="37.361324" />
+    <rect
+       style="display:inline;fill:#fcf2c9;fill-opacity:1;stroke:#000000;stroke-width:0.264584;stroke-opacity:1"
+       id="rect37945-9-8-9"
+       width="62.890297"
+       height="23.182524"
+       x="279.88199"
+       y="62.870537" />
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0"
+       d="M 12.590286,106.2005 H 447.31132"
+       id="path58765" />
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:0.999997;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 30.4,106.20051 H 357.36198"
+       id="path59262" />
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:0.999998;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 78.111874,93.805216 V 106.37818"
+       id="path59506" />
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:0.999998;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 313.13376,93.777296 V 106.35026"
+       id="path59506-8" />
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:0.999998;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 194.1718,93.751216 V 106.32417"
+       id="path59506-0" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="text"
+     style="display:inline">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="23.074253"
+       y="119.95037"
+       id="text4647"><tspan
+         sodipodi:role="line"
+         id="tspan4645"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         x="23.074253"
+         y="119.95037">host</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="37.045891"
+       y="22.710709"
+       id="text4647-47"><tspan
+         sodipodi:role="line"
+         id="tspan4645-2"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         x="37.045891"
+         y="22.710709">OpenStack Controller Node</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="153.57091"
+       y="22.749756"
+       id="text4647-47-9"><tspan
+         sodipodi:role="line"
+         id="tspan4645-2-9"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         x="153.57091"
+         y="22.749756">Kubernetes Master Node</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="270.13681"
+       y="21.951088"
+       id="text4647-47-6"><tspan
+         sodipodi:role="line"
+         id="tspan4645-2-2"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         x="270.13681"
+         y="21.951088">OpenStack Worker Node</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="34.753242"
+       y="89.841301"
+       id="text4647-4"><tspan
+         sodipodi:role="line"
+         id="tspan4645-8"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         x="34.753242"
+         y="89.841301">VM</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="57.462257"
+       y="75.50798"
+       id="text4647-4-6"><tspan
+         sodipodi:role="line"
+         id="tspan40041"
+         x="57.462257"
+         y="75.50798">OpenStack</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="150.10825"
+       y="89.877419"
+       id="text4647-4-4"><tspan
+         sodipodi:role="line"
+         id="tspan4645-8-3"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         x="150.10825"
+         y="89.877419">VM</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="173.20103"
+       y="49.831482"
+       id="text4647-4-6-9-8"><tspan
+         sodipodi:role="line"
+         x="173.20103"
+         y="49.831482"
+         id="tspan40116-6">Kubernetes</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="178.65144"
+       y="57.476128"
+       id="text4647-4-6-9-5-0"><tspan
+         sodipodi:role="line"
+         x="178.65144"
+         y="57.476128"
+         id="tspan40116-8-4">(Master)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="266.96475"
+       y="89.977097"
+       id="text4647-4-4-6"><tspan
+         sodipodi:role="line"
+         id="tspan4645-8-3-4"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         x="266.96475"
+         y="89.977097">VM</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="291.79047"
+       y="73.527107"
+       id="text4647-4-6-3-3"><tspan
+         sodipodi:role="line"
+         id="tspan40041-3-0"
+         x="291.79047"
+         y="73.527107">OpenStack</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="292.17422"
+       y="45.168644"
+       id="text4647-4-6-9-8-3"><tspan
+         sodipodi:role="line"
+         x="292.17422"
+         y="45.168644"
+         id="tspan40116-6-0">Kubernetes</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="297.62463"
+       y="52.813297"
+       id="text4647-4-6-9-5-0-9"><tspan
+         sodipodi:role="line"
+         x="297.62463"
+         y="52.813297"
+         id="tspan40116-8-4-2">(Worker)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="297.52002"
+       y="82.734367"
+       id="text4647-4-6-9-5-0-9-1"><tspan
+         sodipodi:role="line"
+         x="297.52002"
+         y="82.734367"
+         id="tspan40116-8-4-2-3">(Worker)</tspan></text>
+  </g>
+</svg>

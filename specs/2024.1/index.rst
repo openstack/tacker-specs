@@ -7,4 +7,5 @@ Tacker 2024.1 Specifications
    :maxdepth: 1
 
    v2-api-horizon/*
+   intro-cilium/*
    *
