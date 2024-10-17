@@ -744,5 +744,4 @@ References
 
 .. [#v2_api] https://docs.openstack.org/api-ref/nfv-orchestration/v2/vnflcm.html
 .. [#paper_using_tacker] Lakshmanan S, Zhang M, Majumdar S, Jarraya Y, Pourzandi M, Wang L. Caught-in-Translation (CiT): Detecting Cross-level Inconsistency Attacks in Network Functions Virtualization (NFV). IEEE Transactions on Dependable and Secure Computing. 2023 Sep 29.
-.. [#bp_horizon_testing] https://blueprints.launchpad.net/tacker/+spec/tacker-horizon-unittests
 .. [#tacker_cli] https://docs.openstack.org/tacker/latest/cli/index.html

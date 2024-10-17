@@ -303,4 +303,3 @@ References
 ==========
 
 .. [#first] https://opendev.org/openstack/networking-sfc/src/branch/master/doc/api_samples
-.. [#second] https://specs.openstack.org/openstack/tacker-specs/specs/newton/tacker-vnffg.html

@@ -455,5 +455,4 @@ Yes. We have to describe how to use containerized VNF's
 References
 ==========
 .. [#first] https://kubernetes.io/
-.. [#second] http://docs.oasis-open.org/tosca/tosca-nfv/v1.0/csd04/tosca-nfv-v1.0-csd04.html#_Toc482896065
 .. [#third] http://www.etsi.org/deliver/etsi_gs/NFV-SWA/001_099/001/01.01.01_60/gs_NFV-SWA001v010101p.pdf

@@ -937,7 +937,6 @@ References
 
 .. [#first] https://datatracker.ietf.org/doc/draft-ietf-sfc-nsh/?include_text=1
 .. [#second] https://github.com/pritesh/ovs/tree/nsh-v8
-.. [#third] https://wiki.openstack.org/wiki/Tacker/API
 .. [#fourth] https://github.com/openstack/networking-sfc/blob/master/doc/source/api.rst
 .. [#fifth] https://github.com/opendaylight/sfc
 .. [#sixth] https://tools.ietf.org/html/draft-ietf-netmod-acl-model-05

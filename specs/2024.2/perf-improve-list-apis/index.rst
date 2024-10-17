@@ -68,7 +68,7 @@ for considering the usage it actually.
 #. Refactor filtering
 
 Tacker supports a set of attributes for filtering as defined
-in ETSI NFV SOL013 [#sol013].
+in ETSI NFV SOL013 [#sol013]_.
 In the implementation of filtering for these attributes, it does not use any
 filtering of database, but is done in Tacker's side after retrieving all the
 entries from the database.

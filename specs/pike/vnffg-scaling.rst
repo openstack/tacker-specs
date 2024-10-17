@@ -15,7 +15,7 @@ Problem description
 Currently, Tacker has already supported scaling function for
 individual VNFs by using alarm driver. However, when doing
 scaling in or out, the new-added or deleted instances' CP
-cannot be added or removed to/from Neutron SFC port-pair group.[#second]_
+cannot be added or removed to/from Neutron SFC port-pair group [#second]_.
 
 This spec is supposed to provide scaling for VNFFG in single site,
 multi-sites support will be taken into account in the future. In addtition,

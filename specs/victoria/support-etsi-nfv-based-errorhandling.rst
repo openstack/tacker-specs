@@ -272,9 +272,6 @@ References
 ==========
 
 .. [#etsi_nfv] https://www.etsi.org/technologies-clusters/technologies/NFV
-.. [#NFV-SOL002]
-  https://www.etsi.org/deliver/etsi_gs/NFV-SOL/001_099/002/02.06.01_60/gs_nfv-sol002v020601p.pdf
-  (Chapter 5: VNF Lifecycle Management interface)
 .. [#NFV-SOL003]
   https://www.etsi.org/deliver/etsi_gs/NFV-SOL/001_099/003/02.06.01_60/gs_nfv-sol003v020601p.pdf
   (Chapter 5: VNF Lifecycle Management interface)
