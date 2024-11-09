@@ -1,0 +1,36 @@
+
+    seqdiag {
+        node_width = 80;
+        edge_length = 100;
+
+        "Test Class"
+        "User A"
+        "User B"
+        "Tacker"
+        "Subscription A"
+        "Subscription B"
+
+        "Test Class" -> "User A" [label = "Set User"];
+        "Test Class" <- "User A";
+
+        "Test Class" -> "User B" [label = "Set User"];
+        "Test Class" <- "User B";
+
+        "User A" -> "Tacker" [label = "Delete Subscription B"];
+        "User A" <-- "Tacker" [label = "Failed to delete Subscription B"];
+
+        "User B" -> "Tacker" [label = "Delete Subscription A"];
+        "User B" <-- "Tacker" [label = "Failed to delete Subscription A"];
+
+
+        "User A" -> "Tacker" [label = "Delete Subscription A"];
+            "Tacker" -> "Subscription A" [label = "Delete Subscription A"];
+            "Tacker" <- "Subscription A";
+        "User A" <-- "Tacker" [label = "Deleted Subscription A"];
+
+        "User B" -> "Tacker" [label = "Delete Subscription B"];
+            "Tacker" -> "Subscription B" [label = "Delete Subscription B"];
+            "Tacker" <- "Subscription B";
+        "User B" <-- "Tacker" [label = "Deleted Subscription B"];
+
+    }

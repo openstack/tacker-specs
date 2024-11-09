@@ -1,0 +1,15 @@
+
+  seqdiag {
+    User -> Tacker-db-manage [label = "tacker-db-manage migrate-to-v2 --mark-delete --api-ver v2 --vnf-id <vnf-id>"];
+    === Repeat related v2 tables ===
+    Tacker-db-manage -> SQL_Alchemy [label = "Search for related objects with the specified VNFID as a primary key or foreign key"];
+    Tacker-db-manage <- SQL_Alchemy [label = "Get object"];
+    Tacker-db-manage -> SQL_Alchemy [label = "Update the deleted field of gotten object to 1"];
+    Tacker-db-manage <-- SQL_Alchemy
+    Tacker-db-manage -> SQL_Alchemy [label = "Save gotten object"];
+    SQL_Alchemy -> Tacker_DB [label = "Update record"];
+    SQL_Alchemy <-- Tacker_DB;
+    Tacker-db-manage <-- SQL_Alchemy;
+    === End line of "Repeat related v2 tables" ===
+    User <-- Tacker-db-manage;
+  }

@@ -1,0 +1,91 @@
+
+    seqdiag {
+        node_width = 80;
+        edge_length = 100;
+
+        "Test Class"
+        "User A"
+        "User B"
+        "Tacker"
+        "VNF A"
+        "VNF B"
+        "VnfLcmOpOccs A"
+        "VnfLcmOpOccs B"
+        "Notification Server A"
+        "Notification Server B"
+
+        "Test Class" -> "User A" [label = "Set User"];
+        "Test Class" <- "User A";
+
+        "Test Class" -> "User B" [label = "Set User"];
+        "Test Class" <- "User B";
+
+        "User A" -> "Tacker" [label = "Terminate VNF B"];
+        "User A" <-- "Tacker" [label = "Failed to Terminate VNF B"];
+
+        "User B" -> "Tacker" [label = "Terminate VNF A"];
+        "User B" <-- "Tacker" [label = "Failed to Terminate VNF A"];
+
+        "User A" -> "Tacker" [label = "Terminate VNF A"];
+            "Tacker" -> "VNF A" [label = "Terminate VNF A"];
+            "Tacker" <- "VNF A";
+            "Tacker" -> "Notification Server A" [label = "send notification"];
+            "Tacker" <- "Notification Server A";
+        "User A" <-- "Tacker" [label = "Terminated VNF A"];
+
+        "User B" -> "Tacker" [label = "Terminate VNF B"];
+            "Tacker" -> "VNF B" [label = "Terminate VNF B"];
+            "Tacker" <- "VNF B";
+            "Tacker" -> "Notification Server B" [label = "send notification"];
+            "Tacker" <- "Notification Server B";
+        "User B" <-- "Tacker" [label = "Terminated VNF B"];
+
+        "User A" -> "Tacker" [label = "Get VnfLcmOpOccs List of only VNF A"];
+            "Tacker" -> "VnfLcmOpOccs A"
+                [label = "Return list of VnfLcmOpOccs"];
+            "Tacker" <- "VnfLcmOpOccs A";
+        "User A" <-- "Tacker" [label = "Get list of VnfLcmOpOccs"];
+
+        "User B" -> "Tacker" [label = "Get VnfLcmOpOccs List of only VNF B"];
+            "Tacker" -> "VnfLcmOpOccs B"
+                [label = "Return list of VnfLcmOpOccs"];
+            "Tacker" <- "VnfLcmOpOccs B";
+        "User B" <-- "Tacker" [label = "Get list of VnfLcmOpOccs"];
+
+        "User A" -> "Tacker" [label = "Show VnfLcmOpOccs A"];
+            "Tacker" -> "VnfLcmOpOccs A" [label = "Show VnfLcmOpOccs A"];
+            "Tacker" <- "VnfLcmOpOccs A";
+        "User A" <-- "Tacker" [label = "Showed VnfLcmOpOccs A"];
+
+        "User A" -> "Tacker" [label = "Show VnfLcmOpOccs B"];
+        "User A" <-- "Tacker" [label = "failed to show VnfLcmOpOccs B"];
+
+        "User B" -> "Tacker" [label = "Show VnfLcmOpOccs B"];
+            "Tacker" -> "VnfLcmOpOccs B" [label = "Show VnfLcmOpOccs B"];
+            "Tacker" <- "VnfLcmOpOccs B";
+        "User B" <-- "Tacker" [label = "Showed VnfLcmOpOccs B"];
+
+        "User B" -> "Tacker" [label = "Show VnfLcmOpOccs A"];
+        "User B" <-- "Tacker" [label = "failed to show VnfLcmOpOccs A"];
+
+        "User A" -> "Notification Server A"
+            [label = "Check the exist notification that Terminated VNF A"];
+        "User A" <-- "Notification Server A"
+            [label = "check existing notification that Terminated VNF A"];
+
+        "User B" -> "Notification Server B"
+            [label = "Check the not exist notification that Terminated VNF A"];
+        "User B" <-- "Notification Server B"
+            [label = "check not existing notification that Terminated VNF A"];
+
+        "User B" -> "Notification Server B"
+            [label = "Check the exist notification that Terminated VNF B"];
+        "User B" <-- "Notification Server B"
+            [label = "check existing notification that Terminated VNF B"];
+
+        "User A" -> "Notification Server A"
+            [label = "Check the not exist notification that Terminated VNF B"];
+        "User A" <-- "Notification Server A"
+            [label = "check not existing notification that Terminated VNF B"];
+
+    }

@@ -1,0 +1,6 @@
+
+  seqdiag {
+    Consumer -> VNFM [label = "1. POST .../vnf_instances"];
+    VNFM -->> VNFM [label = "2. Create VNF instance resource"];
+    Consumer <- VNFM [label = "3. 201 Created"];
+  }

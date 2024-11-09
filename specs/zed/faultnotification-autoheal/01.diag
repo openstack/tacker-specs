@@ -1,0 +1,187 @@
+
+  seqdiag {
+    node_width = 100;
+    edge_length = 150;
+
+    NFVO
+    VnflcmControllerV2
+    VnfServerNotificationController
+    NfvoClient
+    ConductorV2
+    VnfServerNotificationDriver
+    VnfLcmDriverV2
+    MgmtDriver
+    InfraDriver
+    ServerNotifier
+    VNF
+
+
+    "ServerNotifier" -> "VNF"
+      [label = "1. Fault events occurred in VNF"]
+    "ServerNotifier" <-- "VNF"
+      [label="return"]
+
+    "ServerNotifier" -> "VnfServerNotificationController"
+      [label = "2. POST <configured URI prefix>/vnf_instances/{vnf_instance_id}/servers/{server_id}/notify",
+      note="Multiple events \ncan be reported at the same time.\n
+      This is ignored if faultID is invalid."]
+
+        "VnfServerNotificationController" ->> "ConductorV2"
+          [label = "3. notify fault event"]
+        "ConductorV2" -> "VnfServerNotificationDriver"
+          [label = "4. fault event"]
+        "ServerNotifier" <-- "VnfServerNotificationController"
+          [label = "Response: 204"]
+        "VnfServerNotificationDriver" -> "VnfServerNotificationDriver"
+          [label = "5. Queueing fault event"]
+        "VnfServerNotificationDriver" -> "VnfServerNotificationDriver"
+          [label = "6. start packing timer"]
+        "ConductorV2" <-- "VnfServerNotificationDriver"
+          [label = "return"]
+        "VnfServerNotificationController" <-- "ConductorV2"
+          [style=none]
+
+    "ServerNotifier" -> "VnfServerNotificationController"
+      [label = "7. POST <configured URI prefix>/vnf_instances/{vnf_instance_id}/servers/{server_id}/notify",
+      note="This is ignored if faultID is invalid."]
+
+        "VnfServerNotificationController" ->> "ConductorV2"
+          [label = "8. notify fault event"]
+        "ConductorV2" -> "VnfServerNotificationDriver"
+          [label = "9. fault event"]
+        "ServerNotifier" <-- "VnfServerNotificationController"
+          [label = "Response: 204"]
+        "VnfServerNotificationDriver" -> "VnfServerNotificationDriver"
+          [label = "10. Queueing fault event"]
+        "ConductorV2" <-- "VnfServerNotificationDriver"
+          [label = "return"]
+        "VnfServerNotificationController" <-- "ConductorV2"
+          [style=none]
+
+
+    "ServerNotifier" -> "VnfServerNotificationController"
+      [label = "11. POST <configured URI prefix>/vnf_instances/{vnf_instance_id}/servers/{server_id}/notify",
+      note="This is ignored if faultID is invalid."]
+
+        "VnfServerNotificationController" ->> "ConductorV2"
+          [label = "12. notify fault event"]
+        "ConductorV2" -> "VnfServerNotificationDriver"
+          [label = "13. fault event"]
+        "ServerNotifier" <-- "VnfServerNotificationController"
+          [label = "Response: 204"]
+        "VnfServerNotificationDriver" -> "VnfServerNotificationDriver"
+          [label = "14. Queueing fault event"]
+        "ConductorV2" <-- "VnfServerNotificationDriver"
+          [label = "return"]
+        "VnfServerNotificationController" <-- "ConductorV2"
+          [style=none]
+
+    "VnfServerNotificationDriver" <-- "ServerNotifier"
+      [style=none]
+
+    "ConductorV2" -> "VnfServerNotificationDriver"
+      [style=none]
+
+      "VnfServerNotificationDriver" -> "VnfServerNotificationDriver"
+        [label = "15. packing timer is expired"]
+
+      "VnfServerNotificationDriver" -> "VnfServerNotificationDriver"
+        [label = "16. Multiple events are packed for a configured period of time"]
+
+      "VnfServerNotificationDriver" -> "VnflcmControllerV2"
+        [label = "17. POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/heal"]
+
+      "VnflcmControllerV2" -> "ConductorV2"
+        [label = "18. start_lcm_op"]
+
+      "VnfServerNotificationDriver" <-- "VnflcmControllerV2"
+        [label = "Response: 202"]
+
+    "ConductorV2" <-- "VnfServerNotificationDriver"
+      [style=none]
+
+    "ConductorV2" -> "NfvoClient"
+      [label = "19. send_lcmocc_notification"]
+      "NfvoClient" -> "NFVO"
+        [label="20. POST /VnfLcmOperationOccurrenceNotification(STARTING)"]
+      "NfvoClient" <-- "NFVO"
+        [label="Response: 204"]
+    "ConductorV2" <-- "NfvoClient"
+      [label="return"]
+
+    "ConductorV2" -> "NfvoClient"
+      [label = "21. grant"]
+      "NfvoClient" -> "NFVO"
+        [label="22. POST /grants"]
+      "NfvoClient" <-- "NFVO"
+        [label="Response: 201"]
+    "ConductorV2" <-- "NfvoClient"
+      [label="return"]
+
+      "ConductorV2" -> "NfvoClient"
+        [label = "23. send_lcmocc_notification"]
+        "NfvoClient" -> "NFVO"
+          [label="24. POST /VnfLcmOperationOccurrenceNotification(PROCESSING)"]
+        "NfvoClient" <-- "NFVO"
+          [label="Response: 204"]
+      "ConductorV2" <-- "NfvoClient"
+        [label="return"]
+
+    "ConductorV2" -> "VnfLcmDriverV2"
+      [label="25. perform healing"]
+
+      "VnfLcmDriverV2" -> "MgmtDriver"
+        [label="26. heal_start"]
+        "MgmtDriver" -> "VNF"
+          [label="27. DELETE v2/{tenant_id}/servers/{server_id}/alarms/{alarm_id}"]
+        "MgmtDriver" <-- "VNF"
+          [label="Response: 204"]
+      "VnfLcmDriverV2" <-- "MgmtDriver"
+        [label="return"]
+
+      "VnfLcmDriverV2" -> "InfraDriver"
+        [label = "28. heal"]
+
+        "InfraDriver" -> "VNF"
+          [label="29. Mark resource unhealthy via Heat"]
+        "InfraDriver" <-- "VNF"
+          [label="return"]
+
+        "InfraDriver" -> "VNF"
+          [label="30. Update stack via Heat"]
+        "InfraDriver" <-- "VNF"
+          [label="return"]
+
+        "InfraDriver" -> "VNF"
+          [label="31. Get updated resource data via Heat"]
+        "InfraDriver" <-- "VNF"
+          [label="return"]
+
+      "VnfLcmDriverV2" <-- "InfraDriver"
+        [label="return"]
+
+      "VnfLcmDriverV2" -> "MgmtDriver"
+        [label="32. heal_end"]
+        "MgmtDriver" -> "VNF"
+          [label="33. POST v2/{tenant_id}/servers/{server_id}/alarms"]
+        "MgmtDriver" <-- "VNF"
+          [label="Response: 201"]
+      "VnfLcmDriverV2" <-- "MgmtDriver"
+        [label="return"]
+
+    "ConductorV2" <-- "VnfLcmDriverV2"
+       [label="return"]
+
+    "ConductorV2" -> "NfvoClient"
+      [label = "34. send_lcmocc_notification"]
+      "NfvoClient" -> "NFVO"
+        [label="35. POST /VnfLcmOperationOccurrenceNotification(COMPLETED)"]
+      "NfvoClient" <-- "NFVO"
+        [label="Response: 204"]
+    "ConductorV2" <-- "NfvoClient"
+      [label="return"]
+
+    "VnflcmControllerV2" <-- "ConductorV2"
+      [style=none]
+
+  }

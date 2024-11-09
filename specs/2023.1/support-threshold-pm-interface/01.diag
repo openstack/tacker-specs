@@ -1,0 +1,65 @@
+
+  seqdiag {
+    node_width = 90;
+    edge_length = 100;
+
+    "Client"
+    "External Monitoring Tool"
+    "Prometheus-Plugin"
+    "Tacker-server"
+    "Tacker-conductor"
+    "VnfPmDriverV2"
+    "Tacker DB"
+
+    "Client" -> "Tacker-server"
+      [label = "1. Create a threshold"];
+    "Tacker-server" -> "Tacker-server"
+      [label = "Get the callback_uri in the threshold"];
+    "Tacker-server" -> "Client"
+      [label = "Send a GET request to the callback_uri in the Client."];
+    "Tacker-server" <-- "Client"
+      [label = "Response 204 No Content"];
+    "Tacker-server" -> "Tacker DB"
+      [label = "Save the subscription to DB"];
+    "Tacker-server" <-- "Tacker DB"
+    "Tacker-server" -> "Prometheus-Plugin"
+      [label = "2. Set a threshold to Prometheus-Plugin"];
+    "Prometheus-Plugin" -> "Prometheus-Plugin"
+      [label = "Convert to Prometheus format"];
+    "Prometheus-Plugin" -> "External Monitoring Tool"
+      [label = "Set a threshold"];
+    "Prometheus-Plugin" <-- "External Monitoring Tool"
+    "Tacker-server" <-- "Prometheus-Plugin"
+    "Tacker-server" -> "Tacker DB"
+      [label = "Save a threshold to DB"];
+    "Tacker-server" <-- "Tacker DB"
+    "Client" <-- "Tacker-server"
+      [label = "Response 201 Created"];
+    "External Monitoring Tool" -> "Prometheus-Plugin"
+      [label = "3. Send event to the specified URI"];
+    "Prometheus-Plugin" -> "Prometheus-Plugin"
+      [label = "4. Check items of prometheus_plugin from cfg.CONF.tacker", note = "If prometheus_plugin is False, asynchronous task is over"];
+    "Prometheus-Plugin" -> "Tacker DB"
+      [label = "5. Find the corresponding resource from the DB"];
+    "Prometheus-Plugin" <-- "Tacker DB"
+    "Prometheus-Plugin" -> "Prometheus-Plugin"
+      [label = "6. Evaluate a threshold crossing condition.", note = "If it does not match, the processing ends"];
+    "Prometheus-Plugin" -> "Tacker DB"
+      [label = "Update the corresponding resource from the DB"];
+    "Prometheus-Plugin" <-- "Tacker DB"
+    "Prometheus-Plugin" -> "VnfPmDriverV2"
+      [label = "7. execute VnfPmDriverV2"];
+    "VnfPmDriverV2" -> "Client"
+      [label = "8. Send a Notify Threshold event request to the Client"];
+    "VnfPmDriverV2" <-- "Client"
+      [label = "Response 204 No Content"];
+    "Prometheus-Plugin" <-- "VnfPmDriverV2"
+    "Client" -> "Client"
+      [label = "9. Get VNFC information from the notification.", note = "If no information is returned, the processing is over"];
+    "Client" -> "Tacker-server"
+      [label = "10. Scale"];
+    "Tacker-server" -> "Tacker-conductor"
+      [label = "11. Trigger asynchronous task", note = "The same with the default scale operation"];
+    "Client" <-- "Tacker-server"
+      [label = "Response 202 Accepted"];
+  }

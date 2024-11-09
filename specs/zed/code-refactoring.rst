@@ -86,422 +86,48 @@ by passing ``"stack_id"`` obtained when the process of each LCM operation.
 
   + Sequence before changing (Instantiate)
 
-  .. seqdiag::
-
-    seqdiag {
-      node_width = 100;
-      edge_length = 150;
-
-      "Client"
-      "Tacker-server"
-      "Tacker-conductor"
-      "Heat"
-
-      "Client" -> "Tacker-server"
-        [label = "POST /vnf_instances/{vnfInstanceId}/instantiate"];
-      "Tacker-server" -> "Tacker-conductor"
-        [label = "instantiate"];
-
-     ... ------------- Omitted from description ------------- ...
-
-      "Tacker-conductor" -> "Heat"
-        [label = "POST stacks"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "201 Created"];
-
-      === start of the checking of the resource status ===
-
-      === loop start (Repeat until 'CREATE_COMPLETE')===
-
-      "Tacker-conductor" -> "Heat"
-        [label = "GET stacks/{stack_name}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "302 Found"];
-
-      "Tacker-conductor" -> "Heat"
-        [label = "(Redirection) GET stacks/{stack_name}/{stack_id}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "200 OK"];
-
-      === loop end ===
-
-      === end of the checking of the resource status ===
-
-    }
+  .. image:: ./code-refactoring/01.png
 
 
   + Sequence after changing (Instantiate)
 
-  .. seqdiag::
-
-    seqdiag {
-      node_width = 100;
-      edge_length = 150;
-
-      "Client"
-      "Tacker-server"
-      "Tacker-conductor"
-      "Heat"
-
-      "Client" -> "Tacker-server"
-        [label = "POST /vnf_instances/{vnfInstanceId}/instantiate"];
-      "Tacker-server" -> "Tacker-conductor"
-        [label = "instantiate"];
-
-     ... ------------- Omitted from description ------------- ...
-
-      "Tacker-conductor" -> "Heat"
-        [label = "POST stacks"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "201 Created"];
-
-      "Tacker-conductor" -> "Tacker-conductor"
-        [note = "Get 'stack_id' parameter from Response and \nsave it to a local variable"];
-
-      === start of the checking of the resource status ===
-
-      === loop start (Repeat until 'CREATE_COMPLETE')===
-
-      "Tacker-conductor" -> "Heat"
-        [label = "GET stacks/{stack_name}/{stack_id}", leftnote="Can be sent with the Heat API without redirection"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "200 OK"];
-
-      === loop end ===
-
-      === end of the checking of the resource status ===
-
-    }
+  .. image:: ./code-refactoring/02.png
 
 
 + For Terminate
 
   + Sequence before changing (Terminate)
 
-  .. seqdiag::
-
-    seqdiag {
-      node_width = 100;
-      edge_length = 150;
-
-      "Client"
-      "Tacker-server"
-      "Tacker-conductor"
-      "Heat"
-
-      "Client" -> "Tacker-server"
-        [label = "POST /vnf_instances/{vnfInstanceId}/terminate"];
-      "Tacker-server" -> "Tacker-conductor"
-        [label = "terminate"];
-
-     ... ------------- Omitted from description ------------- ...
-
-      "Tacker-conductor" -> "Heat"
-        [label = "DELETE stacks/{stack_name}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "302 Found"];
-      "Tacker-conductor" -> "Heat"
-        [label = "(Redirection) DELETE stacks/{stack_name}/{stack_id}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "204 No Content"];
-
-      === start of the checking of the resource status ===
-
-      === loop start (Repeat until 'DELETE_COMPLETE')===
-
-      "Tacker-conductor" -> "Heat"
-        [label = "GET stacks/{stack_name}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "302 Found"];
-
-      "Tacker-conductor" -> "Heat"
-        [label = "(Redirection) GET stacks/{stack_name}/{stack_id}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "200 OK"];
-
-      === loop end ===
-
-      === end of the checking of the resource status ===
-
-    }
+  .. image:: ./code-refactoring/03.png
 
 
   + Sequence after changing (Terminate)
 
-  .. seqdiag::
-
-    seqdiag {
-      node_width = 100;
-      edge_length = 150;
-
-      "Client"
-      "Tacker-server"
-      "Tacker-conductor"
-      "Heat"
-
-      "Client" -> "Tacker-server"
-        [label = "POST /vnf_instances/{vnfInstanceId}/terminate"];
-      "Tacker-server" -> "Tacker-conductor"
-        [label = "terminate"];
-
-     ... ------------- Omitted from description ------------- ...
-
-      "Tacker-conductor" -> "Heat"
-        [label = "DELETE stacks/{stack_name}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "302 Found"];
-      "Tacker-conductor" -> "Heat"
-        [label = "(Redirection) DELETE stacks/{stack_name}/{stack_id}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "204 No Content"];
-
-      === start of the checking of the resource status ===
-
-      "Tacker-conductor" -> "Heat"
-        [label = "GET stacks/{stack_name}", leftnote = "First check of the resource status"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "302 Found"];
-
-      "Tacker-conductor" -> "Heat"
-        [label = "(Redirection) GET stacks/{stack_name}/{stack_id}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "200 OK"];
-
-      "Tacker-conductor" -> "Tacker-conductor"
-        [note = "Get 'stack_id' parameter from Response and \nsave it to a local variable"];
-
-      === loop start (Repeat until 'DELETE_COMPLETE')===
-
-      "Tacker-conductor" -> "Heat"
-        [label = "GET stacks/{stack_name}/{stack_id}", leftnote = "Second and subsequent check of resource state. \nCan be sent with the Heat API without redirection."];
-      "Tacker-conductor" <-- "Heat"
-        [label = "200 OK"];
-
-      === loop end ===
-
-      === end of the checking of the resource status ===
-
-    }
+  .. image:: ./code-refactoring/04.png
 
 
 + For Scale
 
   + Sequence before changing (Scale)
 
-  .. seqdiag::
-
-    seqdiag {
-      node_width = 100;
-      edge_length = 150;
-
-      "Client"
-      "Tacker-server"
-      "Tacker-conductor"
-      "Heat"
-
-      "Client" -> "Tacker-server"
-        [label = "POST /vnf_instances/{vnfInstanceId}/scale"];
-      "Tacker-server" -> "Tacker-conductor"
-        [label = "scale"];
-
-     ... ------------- Omitted from description ------------- ...
-
-      "Tacker-conductor" -> "Heat"
-        [label = "PATCH stacks/{stack_name}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "302 Found"];
-      "Tacker-conductor" -> "Heat"
-        [label = "(Redirection) PATCH stacks/{stack_name}/{stack_id}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "202 Accepted"];
-
-      === start of the checking of the resource status ===
-
-      === loop start (Repeat until 'UPDATE_COMPLETE')===
-
-      "Tacker-conductor" -> "Heat"
-        [label = "GET stacks/{stack_name}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "302 Found"];
-
-      "Tacker-conductor" -> "Heat"
-        [label = "(Redirection) GET stacks/{stack_name}/{stack_id}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "200 OK"];
-
-      === loop end ===
-
-      === end of the checking of the resource status ===
-
-    }
+  .. image:: ./code-refactoring/05.png
 
 
   + Sequence after changing (Scale)
 
-  .. seqdiag::
-
-    seqdiag {
-      node_width = 100;
-      edge_length = 150;
-
-      "Client"
-      "Tacker-server"
-      "Tacker-conductor"
-      "Heat"
-
-      "Client" -> "Tacker-server"
-        [label = "POST /vnf_instances/{vnfInstanceId}/scale"];
-      "Tacker-server" -> "Tacker-conductor"
-        [label = "scale"];
-
-     ... ------------- Omitted from description ------------- ...
-
-      "Tacker-conductor" -> "Heat"
-        [label = "PATCH stacks/{stack_name}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "302 Found"];
-      "Tacker-conductor" -> "Heat"
-        [label = "(Redirection) PATCH stacks/{stack_name}/{stack_id}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "202 Accepted"];
-
-      === start of the checking of the resource status ===
-
-      "Tacker-conductor" -> "Heat"
-        [label = "GET stacks/{stack_name}", leftnote = "First check of the resource status"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "302 Found"];
-
-      "Tacker-conductor" -> "Heat"
-        [label = "(Redirection) GET stacks/{stack_name}/{stack_id}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "200 OK"];
-
-      "Tacker-conductor" -> "Tacker-conductor"
-        [note = "Get 'stack_id' parameter from Response and \nsave it to a local variable"];
-
-      === loop start (Repeat until 'UPDATE_COMPLETE')===
-
-      "Tacker-conductor" -> "Heat"
-        [label = "GET stacks/{stack_name}/{stack_id}", leftnote = "Second and subsequent check of resource state. \nCan be sent with the Heat API without redirection."];
-      "Tacker-conductor" <-- "Heat"
-        [label = "200 OK"];
-
-      === loop end ===
-
-      === end of the checking of the resource status ===
-
-    }
+  .. image:: ./code-refactoring/06.png
 
 
 + For Heal
 
   + Sequence before changing (Heal)
 
-  .. seqdiag::
-
-    seqdiag {
-      node_width = 100;
-      edge_length = 150;
-
-      "Client"
-      "Tacker-server"
-      "Tacker-conductor"
-      "Heat"
-
-      "Client" -> "Tacker-server"
-        [label = "POST /vnf_instances/{vnfInstanceId}/heal"];
-      "Tacker-server" -> "Tacker-conductor"
-        [label = "heal"];
-
-     ... ------------- Omitted from description ------------- ...
-
-      "Tacker-conductor" -> "Heat"
-        [label = "PATCH stacks/{stack_name}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "302 Found"];
-      "Tacker-conductor" -> "Heat"
-        [label = "(Redirection) PATCH stacks/{stack_name}/{stack_id}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "202 Accepted"];
-
-      === start of the checking of the resource status ===
-
-      === loop start (Repeat until 'UPDATE_COMPLETE')===
-
-      "Tacker-conductor" -> "Heat"
-        [label = "GET stacks/{stack_name}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "302 Found"];
-
-      "Tacker-conductor" -> "Heat"
-        [label = "(Redirection) GET stacks/{stack_name}/{stack_id}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "200 OK"];
-
-      === loop end ===
-
-      === end of the checking of the resource status ===
-
-    }
+  .. image:: ./code-refactoring/07.png
 
 
   + Sequence after changing (Heal)
 
-  .. seqdiag::
-
-    seqdiag {
-      node_width = 100;
-      edge_length = 150;
-
-      "Client"
-      "Tacker-server"
-      "Tacker-conductor"
-      "Heat"
-
-      "Client" -> "Tacker-server"
-        [label = "POST /vnf_instances/{vnfInstanceId}/heal"];
-      "Tacker-server" -> "Tacker-conductor"
-        [label = "heal"];
-
-     ... ------------- Omitted from description ------------- ...
-
-      "Tacker-conductor" -> "Heat"
-        [label = "PATCH stacks/{stack_name}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "302 Found"];
-      "Tacker-conductor" -> "Heat"
-        [label = "(Redirection) PATCH stacks/{stack_name}/{stack_id}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "202 Accepted"];
-
-      === start of the checking of the resource status ===
-
-      "Tacker-conductor" -> "Heat"
-        [label = "GET stacks/{stack_name}", leftnote = "First check of the resource status"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "302 Found"];
-
-      "Tacker-conductor" -> "Heat"
-        [label = "(Redirection) GET stacks/{stack_name}/{stack_id}"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "200 OK"];
-
-      "Tacker-conductor" -> "Tacker-conductor"
-        [note = "Get 'stack_id' parameter from Response and \nsave it to a local variable"];
-
-      === loop start (Repeat until 'UPDATE_COMPLETE')===
-
-      "Tacker-conductor" -> "Heat"
-        [label = "GET stacks/{stack_name}/{stack_id}", leftnote = "Second and subsequent check of resource state. \nCan be sent with the Heat API without redirection."];
-      "Tacker-conductor" <-- "Heat"
-        [label = "200 OK"];
-
-      === loop end ===
-
-      === end of the checking of the resource status ===
-
-    }
+  .. image:: ./code-refactoring/08.png
 
 
 Option 2: Store "stack_id" in Tacker DB obtained during the Instantiate process
@@ -519,189 +145,22 @@ in the VnfInstanceV2.instantiatedVnfInfo.metadata field.
 
 + Sequence after changing (Instantiate)
 
-  .. seqdiag::
-
-    seqdiag {
-      node_width = 100;
-      edge_length = 150;
-
-      "Client"
-      "Tacker-server"
-      "Tacker-conductor"
-      "TackerDB"
-      "Heat"
-
-      "Client" -> "Tacker-server"
-        [label = "POST /vnf_instances/{vnfInstanceId}/instantiate"];
-      "Tacker-server" -> "Tacker-conductor"
-        [label = "instantiate"];
-
-      ... ------------- Omitted from description ------------- ...
-
-      "Tacker-conductor" -> "Heat"
-        [label = "POST stacks"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "201 Created"];
-
-      "Tacker-conductor" -> "Tacker-conductor"
-        [note = "Get 'stack_id' parameter from Response"];
-
-      "Tacker-conductor" -> "TackerDB"
-        [label = "Save 'stack_id' in TackerDB"];
-      "Tacker-conductor" <-- "TackerDB"
-
-      === start of the checking of the resource status ===
-
-      === loop start (Repeat until 'CREATE_COMPLETE')===
-
-      "Tacker-conductor" -> "Heat"
-        [label = "GET stacks/{stack_name}/{stack_id}", leftnote = "Can be sent with the Heat API without redirection"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "200 OK"];
-
-      === loop end ===
-
-      === end of the checking of the resource status ===
-
-    }
+  .. image:: ./code-refactoring/09.png
 
 
   + Sequence after changing (Terminate)
 
-  .. seqdiag::
-
-    seqdiag {
-      node_width = 100;
-      edge_length = 150;
-
-      "Client"
-      "Tacker-server"
-      "Tacker-conductor"
-      "TackerDB"
-      "Heat"
-
-      "Client" -> "Tacker-server"
-        [label = "POST /vnf_instances/{vnfInstanceId}/terminate"];
-      "Tacker-server" -> "Tacker-conductor"
-        [label = "terminate"];
-
-      ... ------------- Omitted from description ------------- ...
-
-      "Tacker-conductor" -> "TackerDB"
-        [label = "Get 'stack_id' in TackerDB", note = "Get 'stack_id' \n from the VnfInstanceV2.instantiatedVnfInfo.metadata field"];
-      "Tacker-conductor" <-- "TackerDB"
-
-      "Tacker-conductor" -> "Heat"
-        [label = "DELETE stacks/{stack_name}/{stack_id}", leftnote = "Can be sent with the Heat API without redirection"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "204 No Content"];
-
-      === start of the checking of the resource status ===
-
-      === loop start (Repeat until 'DELETE_COMPLETE')===
-
-      "Tacker-conductor" -> "Heat"
-        [label = "GET stacks/{stack_name}/{stack_id}", leftnote = "Can be sent with the Heat API without redirection"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "200 OK"];
-
-      === loop end ===
-
-      === end of the checking of the resource status ===
-
-    }
+  .. image:: ./code-refactoring/10.png
 
 
   + Sequence after changing (Scale)
 
-  .. seqdiag::
-
-    seqdiag {
-      node_width = 100;
-      edge_length = 150;
-
-      "Client"
-      "Tacker-server"
-      "Tacker-conductor"
-      "TackerDB"
-      "Heat"
-
-      "Client" -> "Tacker-server"
-        [label = "POST /vnf_instances/{vnfInstanceId}/scale"];
-      "Tacker-server" -> "Tacker-conductor"
-        [label = "scale"];
-
-      ... ------------- Omitted from description ------------- ...
-
-      "Tacker-conductor" -> "TackerDB"
-        [label = "Get 'stack_id' in TackerDB", note = "Get 'stack_id' \n from the VnfInstanceV2.instantiatedVnfInfo.metadata field"];
-      "Tacker-conductor" <-- "TackerDB"
-
-      "Tacker-conductor" -> "Heat"
-        [label = "PATCH stacks/{stack_name}/{stack_id}", leftnote = "Can be sent with the Heat API without redirection"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "202 Accepted"];
-
-      === start of the checking of the resource status ===
-
-      === loop start (Repeat until 'UPDATE_COMPLETE')===
-
-      "Tacker-conductor" -> "Heat"
-        [label = "GET stacks/{stack_name}/{stack_id}", leftnote = "Can be sent with the Heat API without redirection"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "200 OK"];
-
-      === loop end ===
-
-      === end of the checking of the resource status ===
-
-    }
+  .. image:: ./code-refactoring/11.png
 
 
   + Sequence after changing (Heal)
 
-  .. seqdiag::
-
-    seqdiag {
-      node_width = 100;
-      edge_length = 150;
-
-      "Client"
-      "Tacker-server"
-      "Tacker-conductor"
-      "TackerDB"
-      "Heat"
-
-      "Client" -> "Tacker-server"
-        [label = "POST /vnf_instances/{vnfInstanceId}/heal"];
-      "Tacker-server" -> "Tacker-conductor"
-        [label = "heal"];
-
-      ... ------------- Omitted from description ------------- ...
-
-      "Tacker-conductor" -> "TackerDB"
-        [label = "Get 'stack_id' in TackerDB", note = "Get 'stack_id' \n from the VnfInstanceV2.instantiatedVnfInfo.metadata field"];
-      "Tacker-conductor" <-- "TackerDB"
-
-      "Tacker-conductor" -> "Heat"
-        [label = "PATCH stacks/{stack_name}/{stack_id}", leftnote = "Can be sent with the Heat API without redirection"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "202 Accepted"];
-
-      === start of the checking of the resource status ===
-
-      === loop start (Repeat until 'UPDATE_COMPLETE')===
-
-      "Tacker-conductor" -> "Heat"
-        [label = "GET stacks/{stack_name}/{stack_id}", leftnote = "Can be sent with the Heat API without redirection"];
-      "Tacker-conductor" <-- "Heat"
-        [label = "200 OK"];
-
-      === loop end ===
-
-      === end of the checking of the resource status ===
-
-    }
+  .. image:: ./code-refactoring/12.png
 
   + | Similar performance improvements can be made during other LCM operations.
     | For example, in the "Rollback" process for Instantiate,
@@ -751,34 +210,7 @@ to send Notifications related to specific vnfdId.
 The following shows the flow of Notify communication processing
 with the Subscription filter by vnfdId.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 100;
-    edge_length = 150;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "TackerDB"
-
-    "Client" -> "Tacker-server"
-      [label = "Trigger operation sending notification"];
-    "Tacker-server" -> "Tacker-conductor"
-      [label = "send_notification"];
-    "Tacker-conductor" -> "TackerDB"
-      [label = "Get specific vnf instance id"];
-    "Tacker-conductor" <-- "TackerDB"
-      [label = "vnf instance id"];
-    "Tacker-conductor" -> "Tacker-conductor"
-      [label = "Filters the subscriptions by a specific vnfdid"];
-    "Client" <- "Tacker-conductor"
-      [label = "Sends Notify filtered on a specific vnfdid."];
-    "Client" --> "Tacker-conductor"
-      [label = "response"];
-    "Tacker-server" <-- "Tacker-conductor"
-      [label = "return"];
-  }
+.. image:: ./code-refactoring/13.png
 
 3. Refactor the Tacker Output Logs (for Tacker v1/v2 API)
 ---------------------------------------------------------

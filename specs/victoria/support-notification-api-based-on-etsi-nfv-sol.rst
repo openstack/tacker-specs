@@ -49,45 +49,21 @@ The operation provided through the interfaces are:
 
 * Register subscription
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = " POST /subscriptions"];
-    "tacker-server" -> "tacker-server"
-      [label = " generate subscription_id (uuid)"];
-    Client <-- "tacker-server" [label = " Resonse 201 Created"];
-  }
+.. image:: ./support-notification-api-based-on-etsi-nfv-sol/01.png
 
 
 * Delete subscription
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server"
-      [label = " DELETE /subscriptions/{subscriptionId}"];
-    Client <-- "tacker-server" [label = " Resonse 204 No Content"];
-  }
+.. image:: ./support-notification-api-based-on-etsi-nfv-sol/02.png
 
 
 * Show subscription
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = " GET /subscriptions/{subscriptionId}"];
-    Client <-- "tacker-server" [label = " Resonse 200 OK"];
-  }
+.. image:: ./support-notification-api-based-on-etsi-nfv-sol/03.png
 
 * List subscription
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = " GET /subscriptions"];
-    "tacker-server" -> "tacker-server" [label = "request validation"];
-    Client <-- "tacker-server" [label = " Resonse 200 OK"];
-  }
+.. image:: ./support-notification-api-based-on-etsi-nfv-sol/04.png
 
 
 * VNFM holds the Callback URL sent by consumer via "Subscription API"
@@ -126,90 +102,17 @@ related to VNF lifecycle management.
 * Heal VNF
 * Terminate VNF
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = "LCM Operation Request"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (STARTING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "trriger asynchronous task"];
-    NFVO <- "tacker-conductor" [label = "POST /grants"];
-    NFVO --> "tacker-conductor" [label = "201 Created"];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute MgmtDriver"];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (COMPLETED)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-notification-api-based-on-etsi-nfv-sol/05.png
 
 
 * Modify VNF
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = "LCM Operation Request"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "trriger asynchronous task"];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-      [label = "POST {callback URI} (PROCESSING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute MgmtDriver"];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-      [label = "POST {callback URI} (COMPLETED)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-notification-api-based-on-etsi-nfv-sol/06.png
 
 
 * Rollback
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 100;
-    edge_length = 160;
-
-    Client -> "tacker-server"
-      [label = "POST /vnf_lcm_op_occs/{vnfLcmOpOccId}/rollback"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "trriger asynchronous task"];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-      [label = "POST {callback URI} (ROLLING_BACK)"];
-    Client --> "tacker-conductor"
-      [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "MgmtDriver" [label = "execute MgmtDriver"];
-    "tacker-conductor" <-- "MgmtDriver" [label = ""];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-      [label = "POST {callback URI} (ROLLED_BACK)"];
-    Client --> "tacker-conductor"
-      [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-notification-api-based-on-etsi-nfv-sol/07.png
 
 
 4) Flow of VNF instance resource with notification
@@ -217,53 +120,12 @@ related to VNF lifecycle management.
 
 * CereateVNFRequest
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = "POST /vnf_instances/"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Create VNF instance resource"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "execute vnf_package list process{filter}"];
-    NFVO <- "tacker-conductor"
-      [label = "GET /vnf_packages/ with attribute filter(vnfdId)"];
-    NFVO --> "tacker-conductor"
-      [label = "Response 200 OK with VnfPkgInfo"];
-    "tacker-server" <<- "tacker-conductor" [label = "(VnfPkgInfo)"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Update VNF instance resource(VnfPkgInfo)"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "execute vnf_package content process{vnfPkgId}"];
-    NFVO <- "tacker-conductor"
-      [label = "GET /vnf_packages/{vnfPkgId}/package_content "];
-    NFVO --> "tacker-conductor"
-      [label = "Response 200 OK with VNF package file"];
-    "tacker-server" <<- "tacker-conductor"
-      [label = "(VNF package content file)"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Store received package file"];
-    Client <-- "tacker-server" [label = " Resonse 201 Created"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI}"];
-    Client --> "tacker-conductor" [label = "Responce 204 No Content"];
-  }
+.. image:: ./support-notification-api-based-on-etsi-nfv-sol/08.png
 
 
 * DeleteVNFRequest
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = "DELETE /vnf_instances/{vnfInstanceId} "];
-    "tacker-server" ->> "tacker-server"
-      [label = "Delete VNF instance resource"];
-    Client <-- "tacker-server" [label = " Resonse 204 No Content"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI}"];
-    Client --> "tacker-conductor" [label = "Responce 204 No Content"];
-  }
+.. image:: ./support-notification-api-based-on-etsi-nfv-sol/09.png
 
 
 5）Flow of Getting Operation Status
@@ -271,12 +133,7 @@ related to VNF lifecycle management.
 
 Operation status can be obtained from VNFM.
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = " GET /vnf_lcm_op_occs/{vnfLcmOpOccId}"];
-    Client <-- "tacker-server" [label = " Resonse 200 OK"];
-  }
+.. image:: ./support-notification-api-based-on-etsi-nfv-sol/10.png
 
 
 * The transmission source node specifies the vnfLcmOpOccId issued at the time

@@ -1,0 +1,41 @@
+
+    seqdiag {
+      node_width = 100;
+      edge_length = 150;
+
+      "Client"
+      "Tacker-server"
+      "Tacker-conductor"
+      "TackerDB"
+      "Heat"
+
+      "Client" -> "Tacker-server"
+        [label = "POST /vnf_instances/{vnfInstanceId}/terminate"];
+      "Tacker-server" -> "Tacker-conductor"
+        [label = "terminate"];
+
+      ... ------------- Omitted from description ------------- ...
+
+      "Tacker-conductor" -> "TackerDB"
+        [label = "Get 'stack_id' in TackerDB", note = "Get 'stack_id' \n from the VnfInstanceV2.instantiatedVnfInfo.metadata field"];
+      "Tacker-conductor" <-- "TackerDB"
+
+      "Tacker-conductor" -> "Heat"
+        [label = "DELETE stacks/{stack_name}/{stack_id}", leftnote = "Can be sent with the Heat API without redirection"];
+      "Tacker-conductor" <-- "Heat"
+        [label = "204 No Content"];
+
+      === start of the checking of the resource status ===
+
+      === loop start (Repeat until 'DELETE_COMPLETE')===
+
+      "Tacker-conductor" -> "Heat"
+        [label = "GET stacks/{stack_name}/{stack_id}", leftnote = "Can be sent with the Heat API without redirection"];
+      "Tacker-conductor" <-- "Heat"
+        [label = "200 OK"];
+
+      === loop end ===
+
+      === end of the checking of the resource status ===
+
+    }

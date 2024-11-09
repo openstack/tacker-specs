@@ -1,0 +1,33 @@
+
+  seqdiag {
+    node_width = 90;
+    edge_length = 130;
+
+    "Client"
+    "Tacker-server"
+    "Tacker-conductor"
+    "VnfLcmDriver"
+    "InfraDriver(Kubernetes)"
+    "IdP"
+    "VIM(Kubernetes)"
+
+    "Client" -> "Tacker-server"
+      [label = "1. instantiate vnf"];
+    "Client" <-- "Tacker-server"
+      [label = "response"];
+    "Tacker-server" ->> "Tacker-conductor"
+      [label = "2. instantiate"];
+    "Tacker-conductor" -> "VnfLcmDriver"
+      [label = "3. instantiate_vnf"];
+    "VnfLcmDriver" -> "InfraDriver(Kubernetes)"
+      [label = "4. instantiate_vnf"];
+    "InfraDriver(Kubernetes)" -> "IdP"
+      [label = "5. get token"];
+    "InfraDriver(Kubernetes)" <-- "IdP";
+    "InfraDriver(Kubernetes)" -> "VIM(Kubernetes)"
+      [label = "6. call Kubernetes APIs"];
+    "InfraDriver(Kubernetes)" <-- "VIM(Kubernetes)"
+      [label = "response"];
+    "VnfLcmDriver" <-- "InfraDriver(Kubernetes)";
+    "Tacker-conductor" <-- "VnfLcmDriver";
+  }

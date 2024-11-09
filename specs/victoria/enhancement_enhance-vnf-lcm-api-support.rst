@@ -44,56 +44,7 @@ For backward compatibility, VNFM supports following features:
 1-1) Flow of Create VNF Request
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. seqdiag::
-
-  seqdiag {
-    Client; NFVO; tacker-server; tacker-conductor;
-
-    Client -> "tacker-server" [label = "POST /vnf_instances/"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Create VNF instance resource"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "execute vnf_package list process{filter}"];
-    NFVO <- "tacker-conductor"
-      [label = "GET /vnf_packages/ with attribute filter(vnfdId)"];
-    NFVO --> "tacker-conductor" [label = "Response 200 OK with VnfPkgInfo"];
-    "tacker-server" <<- "tacker-conductor" [label = "(VnfPkgInfo)"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Update VNF instance resource(VnfPkgInfo)"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "execute vnf_package content process{vnfPkgId}"];
-    NFVO <- "tacker-conductor"
-      [label = "GET /vnf_packages/{vnfPkgId}/package_content "];
-    NFVO --> "tacker-conductor"
-      [label = "Response 200 OK with VNF package file"];
-    "tacker-server" <<- "tacker-conductor"
-      [label = "(VNF package content file)"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Store received package file"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "execute vnf_package vnfd process{vnfPkgId}"];
-    NFVO <- "tacker-conductor"
-    [label =
-    "GET /vnf_packages/{vnfPkgId}/vnfd
-    with 'Accept' header contains 'text/plain'"];
-    NFVO --> "tacker-conductor" [label = "Response 200 OK with VNFD contents"];
-    "tacker-server" <<- "tacker-conductor" [label = "(VNFD)"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Update VNF instance resource(VNFD)"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "execute vnf_package artifact process{vnfPkgId}"];
-    NFVO <- "tacker-conductor"
-      [label = "GET /vnf_packages/{vnfPkgId}/artifacts/{artifactPath}"];
-    NFVO --> "tacker-conductor" [label = "Response 200 OK with artifact file"];
-    "tacker-server" <<- "tacker-conductor" [label = "(artifact file)"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Store received package file"];
-    Client <- "tacker-server" [label = " Resonse 201 Created(vnfPkgId)"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI}"];
-    Client --> "tacker-conductor" [label = "Responce 204 No Content"];
-  }
+.. image:: ./enhancement_enhance-vnf-lcm-api-support/01.png
 
 
 VNFM sends a GET request filtered by "vnfdId" to NFVO in order to query
@@ -113,86 +64,21 @@ in the payload body.
 1-2) Flow of Query VNF Request
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = " GET /vnf_instantces/{vnfInstanceId}"];
-    Client <-- "tacker-server" [label = " Resonse 200 OK (vnfPkgId)"];
-  }
+.. image:: ./enhancement_enhance-vnf-lcm-api-support/02.png
 
 VNFM returns a "200 OK" response that includes "vnfPkgId" in the payload body.
 
 1-3) Flow of List VNF Request
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = " GET /vnf_instantces"];
-    Client <-- "tacker-server" [label = " Resonse 200 OK (vnfPkgId)"];
-  }
+.. image:: ./enhancement_enhance-vnf-lcm-api-support/03.png
 
 VNFM returns a "200 OK" response that includes "vnfPkgId" in the payload body.
 
 1-4) Flow of Modify VNF Request
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. seqdiag::
-
-  seqdiag {
-    Client; NFVO; tacker-server; tacker-conductor;
-
-    Client -> "tacker-server"
-      [label = "PATCH /vnf_instances/{vnfInstanceId} (vnfPkgId)"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "execute Individual vnf_package process{vnfPkgId}"];
-    NFVO <- "tacker-conductor"
-      [label = "GET /vnf_packages/ with attribute filter(vnfdId)"];
-    NFVO --> "tacker-conductor" [label = "Response 200 OK with VnfPkgInfo"];
-    "tacker-server" <<- "tacker-conductor" [label = "(VnfPkgInfo)"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Update VNF instance resource(VnfPkgInfo , vnfPkgId)"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "execute vnf_package content process{vnfPkgId}"];
-    NFVO <- "tacker-conductor"
-      [label = "GET /vnf_packages/{vnfPkgId}/package_content "];
-    NFVO --> "tacker-conductor"
-      [label = "Response 200 OK with VNF package file"];
-    "tacker-server" <<- "tacker-conductor"
-      [label = "(VNF package content file)"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Store received package file"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "execute vnf_package vnfd process{vnfPkgId}"];
-    NFVO <- "tacker-conductor"
-    [label =
-    "GET /vnf_packages/{vnfPkgId}/vnfd
-    with 'Accept' header contains 'text/plain'"];
-    NFVO --> "tacker-conductor" [label = "Response 200 OK with VNFD contents"];
-    "tacker-server" <<- "tacker-conductor" [label = "(VNFD)"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Update VNF instance resource(VNFD)"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "execute vnf_package artifact process{vnfPkgId}"];
-    NFVO <- "tacker-conductor"
-      [label = "GET /vnf_packages/{vnfPkgId}/artifacts/{artifactPath}"];
-    NFVO --> "tacker-conductor" [label = "Response 200 OK with artifact file"];
-    "tacker-server" <<- "tacker-conductor" [label = "(artifact file)"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Store received package file"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "trriger asynchronous task"];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "VNF Modification"];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (COMPLETED)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./enhancement_enhance-vnf-lcm-api-support/04.png
 
 
 Client sends a modify VNF Information request which includes "vnfPkgId"

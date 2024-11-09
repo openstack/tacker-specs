@@ -59,23 +59,7 @@ in FAILED_TEMP state.
 LCM operation that can perform Retry operation are Instantiation,
 Termination, Healing, Scaling, and ChangeExternalConnectivity.
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server"
-      [label = "POST /vnf_lcm_op_occs/{vnfLcmOpOccId}/retry"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "trigger asynchronous task"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "start retry procedure"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "end retry procedure"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (COMPLETED or FAILED_TEMP)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-error-handling-based-on-ETSI-NFV/01.png
 
 #. The Client sends a POST request with an empty body to the "Retry operation task"
    resource.
@@ -100,19 +84,7 @@ FAILED_TEMP state.
 LCM operation that can perform Fail operation are Instantiation,
 Termination, Healing, Scaling, and ChangeExternalConnectivity.
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server"
-      [label = "POST /vnf_lcm_op_occs/{vnfLcmOpOccId}/fail"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "trigger asynchronous task"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "mark operation as failed"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (FAILED)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    Client <-- "tacker-server" [label = "Response 200 OK"];
-  }
+.. image:: ./support-error-handling-based-on-ETSI-NFV/02.png
 
 The procedure consists of the following steps as illustrated in above sequence:
 

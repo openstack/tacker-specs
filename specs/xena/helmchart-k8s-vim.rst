@@ -157,61 +157,7 @@ When MgmtDriver invokes ``instantiate_end``, following steps are added:
 Following sequence diagram describes the components involved and the flow of
 install Helm with MgmtDriver operation:
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfLcmDriver"
-    "MgmtDriver"
-    "OpenStackInfraDriver"
-    "MasterNode"
-    "TackerDB"
-
-    Client -> "Tacker-server"
-      [label = "POST /vnf_instances/{vnfInstanceId}/instantiate"];
-    "Tacker-server" -> "Tacker-conductor"
-      [label = "Trigger asynchronous task"];
-    Client <-- "Tacker-server"
-      [label = "Response 202 Accepted"];
-    "Tacker-conductor" -> "VnfLcmDriver"
-      [label = "Execute VnfLcmDriver"];
-    "VnfLcmDriver" -> "OpenStackInfraDriver"
-      [label = "instantiate_vnf()"];
-    "OpenStackInfraDriver" -> "Heat"
-      [label = "Create stack"];
-    "OpenStackInfraDriver" <-- "Heat"
-      [label = "Return stack id"];
-    "VnfLcmDriver" <-- "OpenStackInfraDriver"
-      [label = "return instance_id"];
-    "VnfLcmDriver" -> "MgmtDriver"
-      [label = "instantiate_end()"];
-    "MgmtDriver" -> "Heat"
-      [label = "Get ssh ip address and Kubernetes address using stack id"];
-    "MgmtDriver" <-- "Heat"
-      [label = ""];
-    "MgmtDriver" -> "MasterNode"
-      [label = "Install Kubernetes by script"];
-    "MgmtDriver" <-- "MasterNode"
-      [label = ""];
-    "MgmtDriver" -> "MasterNode"
-      [label = "Install Helm by script"];
-    "MgmtDriver" <-- "MasterNode"
-      [label = ""];
-    "MgmtDriver"-> "TackerDB"
-      [label = "Add MasterNode access information to vim_connection_info table"]
-    "MgmtDriver" <-- "TackerDB"
-      [label = ""];
-    "VnfLcmDriver" <-- "MgmtDriver"
-      [label = ""];
-    "Tacker-conductor" <-- "VnfLcmDriver"
-      [label = ""];
-
-  }
+.. image:: ./helmchart-k8s-vim/01.png
 
 The procedure consists of the following steps as illustrated in above sequence.
 
@@ -445,73 +391,7 @@ The diagram below shows the Instantiate operation with Helm chart:
 
 Following sequence diagram describes CNF instantiation with Helm chart:
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfLcmDriver"
-    "KubernetesInfraDriver"
-    "TackerDB"
-    "Kubernetes client"
-    "Helm(MasterNode)"
-
-    Client -> "Tacker-server"
-      [label = "POST /vnf_instances/{vnfInstanceId}/instantiate"];
-    "Tacker-server" -> "Tacker-conductor"
-      [label = "trigger asynchronous task"];
-    Client <-- "Tacker-server"
-      [label = "Response 202 Accepted"];
-    "Tacker-conductor" -> "VnfLcmDriver"
-      [label = "execute VnfLcmDriver"];
-    "VnfLcmDriver" -> "KubernetesInfraDriver"
-      [label = "execute KubernetesInfraDriver"];
-    "KubernetesInfraDriver" -> "TackerDB"
-      [label = "get package info"];
-    "KubernetesInfraDriver" <-- "TackerDB"
-      [label = "return package info"];
-    "KubernetesInfraDriver" -> "TackerDB"
-      [label = "get MasterNode access information"];
-    "KubernetesInfraDriver" <-- "TackerDB"
-      [label = "return MasterNode access information"];
-    "KubernetesInfraDriver" -> "Helm(MasterNode)"
-      [label = "put Helm chart"];
-    "KubernetesInfraDriver" <-- "Helm(MasterNode)"
-      [label = ""];
-    "KubernetesInfraDriver" -> "Helm(MasterNode)"
-      [label = "create repository of Helm chart"];
-    "KubernetesInfraDriver" <-- "Helm(MasterNode)"
-      [label = ""];
-    "KubernetesInfraDriver" -> "Helm(MasterNode)"
-      [label = "Kubernetes resource create by helm chart"];
-    "KubernetesInfraDriver" <-- "Helm(MasterNode)"
-      [label = ""]
-    "KubernetesInfraDriver" -> "Helm(MasterNode)"
-      [label = "get manifest information"]
-    "KubernetesInfraDriver" <-- "Helm(MasterNode)"
-      [label = "return manifest information"]
-    "KubernetesInfraDriver" -> "TackerDB"
-      [label = "save manifest information"]
-    "KubernetesInfraDriver" <-- "TackerDB"
-      [label = ""]
-    "KubernetesInfraDriver" -> "Kubernetes client"
-      [label = "get pod status"]
-    "KubernetesInfraDriver" <-- "Kubernetes client"
-      [label = "return pod status"]
-    "KubernetesInfraDriver" -> "TackerDB"
-      [label = "save pod information"]
-    "KubernetesInfraDriver" <-- "TackerDB"
-      [label = ""]
-    "VnfLcmDriver" <-- "KubernetesInfraDriver"
-      [label = ""];
-    "Tacker-conductor" <-- "VnfLcmDriver"
-      [label = ""];
-
-  }
+.. image:: ./helmchart-k8s-vim/02.png
 
 
 #. The Client sends an instantiate request.

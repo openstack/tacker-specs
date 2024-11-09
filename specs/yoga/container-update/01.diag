@@ -1,0 +1,48 @@
+
+  seqdiag {
+    node_width = 80;
+    edge_length = 100;
+
+    "Client"
+    "Tacker-server"
+    "Tacker-conductor"
+    "VnfLcmDriver"
+    "MgmtDriver"
+    "TackerDB"
+    "VIM(Kubernetes)"
+
+    Client -> "Tacker-server"
+      [label = "1. PATCH /vnflcm/v1/vnf_instances/{vnfInstanceId}"];
+    Client <-- "Tacker-server"
+      [label = "Response 202 Accepted"];
+    "Tacker-server" -> "Tacker-conductor"
+      [label = ""];
+    "Tacker-conductor" -> "VnfLcmDriver"
+      [label = "2. modify_vnf"];
+    "VnfLcmDriver" -> "MgmtDriver"
+      [label = "3. modify_start"];
+    "VnfLcmDriver" <-- "MgmtDriver"
+      [label = ""];
+    "VnfLcmDriver" -> "TackerDB"
+      [label = "4. Update vnfdid"];
+    "VnfLcmDriver" <-- "TackerDB"
+      [label = ""];
+    "VnfLcmDriver" -> "MgmtDriver"
+      [label = "5. modify_end"];
+    "MgmtDriver" -> "VIM(Kubernetes)"
+      [label = "5-1. replace config"];
+    "MgmtDriver" <-- "VIM(Kubernetes)"
+      [label = ""];
+    "MgmtDriver" -> "VIM(Kubernetes)"
+      [label = "5-2. recreate Pod"];
+    "MgmtDriver" <-- "VIM(Kubernetes)"
+      [label = ""];
+    "VnfLcmDriver" <-- "MgmtDriver"
+      [label = ""];
+    "VnfLcmDriver" -> "TackerDB"
+      [label = "6. Update resourceid"];
+    "VnfLcmDriver" <-- "TackerDB"
+      [label = ""];
+    "Tacker-conductor" <-- "VnfLcmDriver"
+      [label = ""];
+  }

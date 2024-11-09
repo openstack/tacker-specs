@@ -168,19 +168,7 @@ transions of these three states.
 Flow of uploading of VNF package content
 ----------------------------------------
 
-.. seqdiag::
-
-  seqdiag {
-    Consumer -> NFVO [label = "1. PUT .../vnf_packages/{vnfPkgId} package_content (VNF Package file)"];
-    NFVO -> tosca-parser [label = "Parse the CSAR zip file"]
-    NFVO <- tosca-parser [label = "Parsed CSAR successfully"]
-    Consumer <- NFVO [label = "2. 202 Accepted"];
-    NFVO -> NFVO [label = "NFVO continues processing VNF package"]
-    NFVO -> NFVO [label = "Set VNF package
-                           onboardingState=ONBOARDED,
-                           operationalState=ENABLED and
-                           usageState=NOT_IN_USE"]
-  }
+.. image:: ./vnf_package_support/01.png
 
 Precondition: The individual VNF package resource has been created with
 the value of "onboardingState" attribute equals to "CREATED".

@@ -1,0 +1,66 @@
+
+    seqdiag {
+        node_width = 80;
+        edge_length = 100;
+
+        "Test Class"
+        "User A"
+        "User B"
+        "Tacker"
+        "VNF Package A"
+        "VNF Package B"
+
+        "Test Class" -> "User A" [label = "Set User"];
+        "Test Class" <- "User A";
+
+        "Test Class" -> "User B" [label = "Set User"];
+        "Test Class" <- "User B";
+
+        "User A" -> "Tacker" [label = "Create VNF Package A"];
+            "Tacker" -> "VNF Package A" [label = "Create VNF Package A"];
+            "Tacker" <- "VNF Package A";
+        "User A" <-- "Tacker" [label = "Created VNF Package A"];
+
+        "User A" -> "Tacker" [label = "Upload VNF Package A"];
+            "Tacker" -> "VNF Package A" [label = "Upload VNF Package A"];
+            "Tacker" <- "VNF Package A";
+        "User A" <-- "Tacker" [label = "Uploaded VNF Package A"];
+
+        "User B" -> "Tacker" [label = "Create VNF Package B"];
+            "Tacker" -> "VNF Package B" [label = "Create VNF Package B"];
+            "Tacker" <- "VNF Package B";
+        "User B" <-- "Tacker" [label = "Created VNF Package B"];
+
+        "User B" -> "Tacker" [label = "Upload VNF Package B"];
+            "Tacker" -> "VNF Package B" [label = "Upload VNF Package B"];
+            "Tacker" <- "VNF Package B";
+        "User B" <-- "Tacker" [label = "Uploaded VNF Package B"];
+
+        "User A" -> "Tacker" [label = "Get VNF Package List of VNF Package A"];
+            "Tacker" -> "VNF Package A"
+                [label = "Return list of only VNF Package A"];
+            "Tacker" <- "VNF Package A";
+        "User A" <-- "Tacker" [label = "Get list of VNF Package A"];
+
+        "User B" -> "Tacker" [label = "Get VNF Package List of VNF Package B"];
+            "Tacker" -> "VNF Package B"
+                [label = "Return list of only VNF Package B"];
+            "Tacker" <- "VNF Package B";
+        "User B" <-- "Tacker" [label = "Get list of VNF Package B"];
+
+        "User A" -> "Tacker" [label = "Show VNF Package A"];
+            "Tacker" -> "VNF Package A" [label = "Show VNF Package A"];
+            "Tacker" <- "VNF Package A";
+        "User A" <-- "Tacker" [label = "Showed VNF Package A"];
+
+        "User A" -> "Tacker" [label = "Show VNF Package B"];
+        "User A" <-- "Tacker" [label = "Fail to showed VNF Package B"];
+
+        "User B" -> "Tacker" [label = "Show VNF Package B"];
+            "Tacker" -> "VNF Package B" [label = "Return of VNF Package B"];
+            "Tacker" <- "VNF Package B";
+        "User B" <-- "Tacker" [label = "Showed VNF Package B"];
+
+        "User B" -> "Tacker" [label = "Show VNF Package A"];
+        "User B" <-- "Tacker" [label = "Fail to showed VNF Package A"];
+    }

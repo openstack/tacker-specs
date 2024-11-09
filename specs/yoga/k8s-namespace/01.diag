@@ -1,0 +1,45 @@
+
+  seqdiag {
+    node_width = 80;
+    edge_length = 100;
+
+    "Client"
+    "Tacker-server"
+    "Tacker-conductor"
+    "VnfLcmDriver"
+    "KubernetesInfraDriver"
+    "Heat"
+    "TackerDB"
+    "k8s client"
+
+    Client -> "Tacker-server"
+      [label = "POST /vnf_instances/{vnfInstanceId}/instantiate"];
+    "Tacker-server" -> "Tacker-conductor"
+      [label = "trigger asynchronous task"];
+    Client <-- "Tacker-server"
+      [label = "Response 202 Accepted"];
+   "Tacker-conductor" -> "VnfLcmDriver"
+      [label = "execute VnfLcmDriver"];
+    "VnfLcmDriver" -> "KubernetesInfraDriver"
+      [label = "execute KubernetesInfraDriver"];
+    "KubernetesInfraDriver" -> "TackerDB"
+      [label = "get package info"];
+    "KubernetesInfraDriver" <-- "TackerDB"
+      [label = "return package info"];
+    "KubernetesInfraDriver" -> "TackerDB"
+      [label = "Save the namespace to the vnf_resources table"]
+    "KubernetesInfraDriver" <-- "TackerDB"
+      [label = ""]
+    "KubernetesInfraDriver" -> "k8s client"
+      [label = "create Kubernetes resource"]
+    "KubernetesInfraDriver" <-- "k8s client"
+      [label = ""]
+    "KubernetesInfraDriver" -> "TackerDB"
+      [label = "save pod information"]
+    "KubernetesInfraDriver" <-- "TackerDB"
+      [label = ""]
+    "VnfLcmDriver" <-- "KubernetesInfraDriver"
+      [label = ""];
+    "Tacker-conductor" <-- "VnfLcmDriver"
+      [label = ""];
+  }

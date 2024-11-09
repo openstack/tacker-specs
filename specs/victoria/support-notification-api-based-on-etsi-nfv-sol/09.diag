@@ -1,0 +1,11 @@
+
+  seqdiag {
+    Client -> "tacker-server" [label = "DELETE /vnf_instances/{vnfInstanceId} "];
+    "tacker-server" ->> "tacker-server"
+      [label = "Delete VNF instance resource"];
+    Client <-- "tacker-server" [label = " Resonse 204 No Content"];
+    "tacker-server" ->> "tacker-conductor"
+      [label = "execute notification process"];
+    Client <- "tacker-conductor" [label = "POST {callback URI}"];
+    Client --> "tacker-conductor" [label = "Responce 204 No Content"];
+  }

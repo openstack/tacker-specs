@@ -1,0 +1,58 @@
+
+    seqdiag {
+        node_width = 80;
+        edge_length = 100;
+
+        "Test Class"
+        "User A"
+        "User B"
+        "Tacker"
+        "Subscription A"
+        "Subscription B"
+
+        "Test Class" -> "User A" [label = "Set User"];
+        "Test Class" <- "User A";
+
+        "Test Class" -> "User B" [label = "Set User"];
+        "Test Class" <- "User B";
+
+        "User A" -> "Tacker" [label = "Register Subscription"];
+            "Tacker" -> "Subscription A" [label = "Registered Subscription"];
+            "Tacker" <- "Subscription A";
+        "User A" <-- "Tacker" [label = "Registered OK"];
+
+        "User B" -> "Tacker" [label = "Register Subscription"];
+            "Tacker" -> "Subscription B" [label = "Registered Subscription"];
+            "Tacker" <- "Subscription B";
+        "User B" <-- "Tacker" [label = "Registered OK"];
+
+        "User A" -> "Tacker"
+            [label = "Get subscription List of Subscription A"];
+            "Tacker" -> "Subscription A"
+                [label = "Return list of only Subscription A"];
+            "Tacker" <- "Subscription A";
+        "User A" <-- "Tacker" [label = "Get list of Subscription A"];
+
+        "User B" -> "Tacker"
+            [label = "Get subscription List of Subscription B"];
+            "Tacker" -> "Subscription B"
+                [label = "Return list of only Subscription B"];
+            "Tacker" <- "Subscription B";
+        "User B" <-- "Tacker" [label = "Get list of Subscription B"];
+
+        "User A" -> "Tacker" [label = "Show subscription of Subscription A"];
+            "Tacker" -> "Subscription A" [label = "Return of Subscription A"];
+            "Tacker" <- "Subscription A";
+        "User A" <-- "Tacker" [label = "Showed Subscription A"];
+
+        "User A" -> "Tacker" [label = "Show subscription of Subscription B"];
+        "User A" <-- "Tacker" [label = "Fail to showed Subscription A"];
+
+        "User B" -> "Tacker" [label = "Show subscription of Subscription B"];
+            "Tacker" -> "Subscription B" [label = "Return of Subscription B"];
+            "Tacker" <- "Subscription B";
+        "User B" <-- "Tacker" [label = "Showed Subscription B"];
+
+        "User B" -> "Tacker" [label = "Show subscription of Subscription A"];
+        "User B" <-- "Tacker" [label = "Fail to showed Subscription A"];
+    }

@@ -1,0 +1,45 @@
+
+    seqdiag {
+      node_width = 100;
+      edge_length = 150;
+
+      "Client"
+      "Tacker-server"
+      "Tacker-conductor"
+      "Heat"
+
+      "Client" -> "Tacker-server"
+        [label = "POST /vnf_instances/{vnfInstanceId}/scale"];
+      "Tacker-server" -> "Tacker-conductor"
+        [label = "scale"];
+
+     ... ------------- Omitted from description ------------- ...
+
+      "Tacker-conductor" -> "Heat"
+        [label = "PATCH stacks/{stack_name}"];
+      "Tacker-conductor" <-- "Heat"
+        [label = "302 Found"];
+      "Tacker-conductor" -> "Heat"
+        [label = "(Redirection) PATCH stacks/{stack_name}/{stack_id}"];
+      "Tacker-conductor" <-- "Heat"
+        [label = "202 Accepted"];
+
+      === start of the checking of the resource status ===
+
+      === loop start (Repeat until 'UPDATE_COMPLETE')===
+
+      "Tacker-conductor" -> "Heat"
+        [label = "GET stacks/{stack_name}"];
+      "Tacker-conductor" <-- "Heat"
+        [label = "302 Found"];
+
+      "Tacker-conductor" -> "Heat"
+        [label = "(Redirection) GET stacks/{stack_name}/{stack_id}"];
+      "Tacker-conductor" <-- "Heat"
+        [label = "200 OK"];
+
+      === loop end ===
+
+      === end of the checking of the resource status ===
+
+    }

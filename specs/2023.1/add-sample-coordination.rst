@@ -405,59 +405,7 @@ The following diagram shows the rolling update using coordinateVNF script.
 
 Sequence for Rolling update operation
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfLcmDriver"
-    "InfraDriver"
-    "CoordinateVNF script"
-    "VIM (OpenStack)"
-    "VNF"
-    "EM"
-
-    "Client" -> "Tacker-server"
-      [label = "1. POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/change_vnfpkg"];
-    "Client" <-- "Tacker-server"
-      [label = "Response 202 Accepted"];
-    "Tacker-server" ->> "Tacker-conductor"
-      [label = "2. ChangeCurrentVNFPackage"];
-    "Tacker-conductor" -> "VnfLcmDriver"
-      [label = "change_vnfpkg"];
-    "VnfLcmDriver" -> "InfraDriver"
-      [label = "3. change_vnfpkg_process"];
-    "InfraDriver" -> "VIM (OpenStack)"
-      [label = "4. Get stack resource to update"];
-    "InfraDriver" <-- "VIM (OpenStack)"
-      [label = ""];
-    "InfraDriver" -> "VIM (OpenStack)"
-      [label = "5. update_stack"];
-    "InfraDriver" <-- "VIM (OpenStack)"
-      [label = ""];
-    "InfraDriver" -> "CoordinateVNF script"
-      [label = "6. CoordinateVNF"];
-    "CoordinateVNF script" -> "VNF"
-      [label = "7. Coordinate resource"];
-    "CoordinateVNF script" <-- "VNF"
-      [label = ""];
-    "CoordinateVNF script" -> "EM"
-      [label = "8. Coordination request"];
-    "CoordinateVNF script" <-- "EM"
-      [label = "Coordination result"];
-    "InfraDriver" <-- "CoordinateVNF script"
-      [label = ""];
-    "InfraDriver" -> "InfraDriver"
-      [label = "9. Repeat steps 5 through 8 for each VNFC"];
-    "VnfLcmDriver" <-- "InfraDriver"
-      [label = ""];
-    "Tacker-conductor" <-- "VnfLcmDriver"
-      [label = ""];
-  }
+.. image:: ./add-sample-coordination/01.png
 
 
 #. The Client sends a ChangeCurrentVNFPackage request to the "Individual VNF instance" resource.

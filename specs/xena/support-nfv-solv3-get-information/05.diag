@@ -1,0 +1,9 @@
+
+  seqdiag {
+    Client -> "tacker-server" [label = " POST /vnflcm/v2/subscriptions"];
+    "tacker-server" -> Client [label = " GET {callback URI}"];
+    "tacker-server" <-- Client [label = " Response 204 No Content"];
+    "tacker-server" -> "tacker-server"
+      [label = " generate subscription_id (uuid)"];
+    Client <-- "tacker-server" [label = " Response 201 Created"];
+  }

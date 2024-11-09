@@ -1,0 +1,40 @@
+
+  seqdiag {
+    node_width = 100;
+    edge_length = 115;
+
+    Client -> WSGIMiddleware [label =
+        "POST /vnflcm/v1/vnf_instances"];
+    Client <-- WSGIMiddleware [label = "200 Success"];
+    Client -> WSGIMiddleware [label =
+        "POST /vnflcm/v1/vnf_instances/{id}/instantiate"];
+    WSGIMiddleware -->> WSGIMiddleware [label = "request validation"];
+    Client <-- WSGIMiddleware [label = "202 Accepted"];
+
+    NFVOPlugin;
+    WSGIMiddleware -> VnfLcmDriver [label = "Trigger asynchronous task "];
+    VnfLcmDriver --> NFVOPlugin [label = "get VNF Package"];
+    VnfLcmDriver <-- NFVOPlugin;
+    VnfLcmDriver -->> VnfLcmDriver [label = "create VIM connection object"];
+
+    VnfLcmDriver -> KubernetesDriver [label = "pre_instantiation_vnf()"];
+    KubernetesDriver -->> KubernetesDriver [label = "No Action"];
+    VnfLcmDriver <-- KubernetesDriver;
+
+    VnfLcmDriver --> KubernetesDriver [label =
+        "instantiate_vnf()"];
+    KubernetesDriver --> KubernetesDriver [label = "1 create()"]
+    VnfLcmDriver <-- KubernetesDriver [label = "instance_id"];
+    VnfLcmDriver --> KubernetesDriver [label ="create_wait()"];
+    KubernetesDriver -> KubernetesPythonClient [label =
+        "check deployment status"];
+    KubernetesPythonClient -> Kubernetes [label = "get deployment status"];
+    KubernetesPythonClient <-- Kubernetes [label = "status"];
+    KubernetesDriver <-- KubernetesPythonClient;
+    VnfLcmDriver <-- KubernetesDriver;
+
+    VnfLcmDriver -> KubernetesDriver [label = "post_vnf_instantiation()"];
+    KubernetesDriver -->> KubernetesDriver[label =
+        "2. Update DB for VNFC resources[TBD]"];
+    VnfLcmDriver <-- KubernetesDriver;
+  }

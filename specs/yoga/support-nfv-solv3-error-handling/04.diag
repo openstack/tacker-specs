@@ -1,0 +1,35 @@
+
+  seqdiag {
+    node_width = 75;
+    edge_length = 100;
+
+    Client -> "tacker-server"
+      [label = "POST /vnflcm/v2/vnf_lcm_op_occs/{vnfLcmOpOccId}/rollback"];
+    Client <-- "tacker-server" [label = "Response 202 Accepted"];
+    "tacker-server" ->> "tacker-conductor"
+      [label = "trigger asynchronous task"];
+    "tacker-conductor" -> "tacker-database"
+      [label = "mark operation as ROLLING_BACK"];
+    "tacker-conductor" <-- "tacker-database"
+    "tacker-conductor" ->> "tacker-conductor"
+      [label = "execute notification process"];
+    Client <- "tacker-conductor"
+      [label = "POST {callback URI} (ROLLING_BACK)"];
+    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
+    "tacker-conductor" -> "VnfLcmDriver" [label = "execute LCM operation"];
+    "VnfLcmDriver" -> "openstackDriver" [label = "execute openstackDriver"];
+    "openstackDriver" -> "heat" [label = "mark stack unhealthy (PATCH /v1/{tenant_id}/stacks/{stack_name}/{stack_id}/resources/{resource_name_or_physical_id})"];
+    "openstackDriver" <-- "heat" [label = ""];
+    "openstackDriver" -> "heat" [label = "update stack (PATCH /v1/{tenant_id}/stacks/{stack_name}/{stack_id})"];
+    "openstackDriver" <-- "heat" [label = ""];
+    "VnfLcmDriver" <-- "openstackDriver" [label = ""];
+    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
+    "tacker-conductor" -> "tacker-database"
+      [label = "mark operation as ROLLED_BACK"];
+    "tacker-conductor" <-- "tacker-database"
+    "tacker-conductor" ->> "tacker-conductor"
+      [label = "execute notification process"];
+    Client <- "tacker-conductor"
+      [label = "POST {callback URI} (ROLLED_BACK or FAILED_TEMP)"];
+    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
+  }

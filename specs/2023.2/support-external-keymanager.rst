@@ -125,55 +125,13 @@ of authentication credentials in VNF LCM operations under consideration.
 The following is a flow of Instantiation of a VNF instance
 with barbican under consideration.
 
-.. seqdiag::
-
-  seqdiag {
-    Client; NFVO; tacker-server; tacker-conductor; VnfLcmDriver; TackerDB; Barbican;
-
-    Client -> "tacker-server"
-      [label = "POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/instantiate"];
-    Client <-- "tacker-server" [label = "202 Accepted"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "trigger asynchronous task"];
-    NFVO <- "tacker-conductor" [label = "POST /grants"];
-    NFVO --> "tacker-conductor" [label = "201 Created"];
-    "tacker-conductor" -> "tacker-conductor" [label = "encrypt auth credentials"];
-    "tacker-conductor" -> "Barbican" [label = "register the encryption key"];
-    "tacker-conductor" <-- "Barbican" [label = "200 Successful Request"];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "TackerDB" [label = "store encrypted auth credentials"];
-    "tacker-conductor" <-- "TackerDB" [label = ""];
-
-  }
+.. image:: ./support-external-keymanager/01.png
 
 
 The following is a flow of Termination of a VNF instance
 with barbican.
 
-.. seqdiag::
-
-  seqdiag {
-    Client; NFVO; tacker-server; tacker-conductor; VnfLcmDriver; TackerDB; Barbican;
-
-    Client -> "tacker-server"
-      [label = "POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/terminate"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "trigger asynchronous task"];
-    NFVO <- "tacker-conductor" [label = "POST /grants"];
-    NFVO --> "tacker-conductor" [label = "201 Created"];
-    "tacker-conductor" -> "TackerDB" [label = "load encrypted auth credentials"];
-    "tacker-conductor" <-- "TackerDB" [label = ""];
-    "tacker-conductor" -> "Barbican" [label = "get the encryption key"];
-    "tacker-conductor" <-- "Barbican" [label = "200 Successful Request"];
-    "tacker-conductor" -> "tacker-conductor" [label = "decrypt the encrypted auth credentials"];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "Barbican" [label = "delete the encryption key"];
-    "tacker-conductor" <-- "Barbican" [label = "204 No Content"];
-
-  }
+.. image:: ./support-external-keymanager/02.png
 
 
 Add configuration options

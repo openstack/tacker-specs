@@ -351,64 +351,7 @@ Request data(BaseHOT/TOSCA)
 Following sequence diagram describes the components involved and the flow of
 instantiate VNF operation in which new Worker-node is set label of ``zone``:
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfLcmDriver"
-    "OpenstackDriver"
-    "Heat"
-    "MgmtDriver"
-    "VnfInstance(Tacker DB)"
-    "RemoteCommandExecutor"
-
-    Client -> "Tacker-server"
-      [label = "POST /vnf_instances/{vnfInstanceId}/instantiate"];
-    Client <-- "Tacker-server"
-      [label = "Response 202 Accepted"];
-    "Tacker-server" -> "Tacker-conductor"
-      [label = "trigger asynchronous task"];
-
-   "Tacker-conductor" -> "VnfLcmDriver"
-      [label = "execute VnfLcmDriver"];
-    "VnfLcmDriver" -> "OpenstackDriver"
-      [label = "execute OpenstackDriver"];
-    "OpenstackDriver" -> "Heat"
-      [label = "create stack"];
-    "OpenstackDriver" <-- "Heat"
-      [label = "return stack id"];
-    "VnfLcmDriver" <-- "OpenstackDriver"
-      [label = "return instance_id"];
-
-    "VnfLcmDriver" -> "MgmtDriver"
-      [label = "instantiate_end"];
-    "MgmtDriver" -> "VnfInstance(Tacker DB)"
-      [label = "get stack id"];
-    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
-      [label = ""];
-    "MgmtDriver" -> "Heat"
-      [label = "get ssh ipaddress and Kubernetes address using stack id"];
-    "MgmtDriver" <-- "Heat"
-      [label = ""];
-    "MgmtDriver" -> "RemoteCommandExecutor"
-      [label = "install Kubernetes on the new Worker-node"];
-    "MgmtDriver" <-- "RemoteCommandExecutor"
-      [label = ""];
-    "MgmtDriver" -> "RemoteCommandExecutor"
-      [label = "sets label of compute server"];
-    "MgmtDriver" <-- "RemoteCommandExecutor"
-      [label = ""];
-    "VnfLcmDriver" <-- "MgmtDriver"
-      [label = ""];
-    "Tacker-conductor" <-- "VnfLcmDriver"
-      [label = ""];
-
-  }
+.. image:: ./hardware-aware-pod-affinity/01.png
 
 The procedure consists of the following steps as illustrated in above sequence.
 

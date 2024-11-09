@@ -1,0 +1,5 @@
+
+  seqdiag {
+    Client -> "tacker-server" [label = " GET /vnf_instantces"];
+    Client <-- "tacker-server" [label = " Resonse 200 OK (vnfPkgId)"];
+  }

@@ -1,0 +1,33 @@
+
+  seqdiag {
+    node_width = 100;
+    edge_length = 115;
+
+    Client -> WSGIMiddleware [label = "Terminate VNF"];
+    WSGIMiddleware -->> WSGIMiddleware [label = "request validation"];
+    Client <-- WSGIMiddleware [label = "202 Accepted"];
+    WSGIMiddleware -> TackerConductor [label = "Trigger asynchronous task"];
+    TackerConductor --> VnfLcmDriver
+      [label = "terminate_vnf(vnf_instance, terminate_vnf_request)"];
+    VnfLcmDriver --> KubernetesDriver
+      [label = "delete(context, instance_id, access_info)"];
+    KubernetesDriver -->> KubernetesDriver
+      [label = "get deployment infromation"];
+    KubernetesDriver --> KubernetesPythonClient [label = "delete deployment"];
+    KubernetesPythonClient --> Kubernetes [label = "delete deployment"];
+    KubernetesPythonClient <-- Kubernetes [label = "deployment deleted"];
+    KubernetesDriver <-- KubernetesPythonClient;
+    VnfLcmDriver <-- KubernetesDriver;
+    VnfLcmDriver --> KubernetesDriver
+      [label = "delete_wait(context, instance_id, access_info)"];
+    KubernetesDriver --> KubernetesPythonClient
+      [label = "get deployment status"];
+    KubernetesPythonClient --> Kubernetes [label = "get deployment status"];
+    KubernetesPythonClient <-- Kubernetes [label = "deployment status"];
+    KubernetesDriver <-- KubernetesPythonClient
+      [label = "deployment status(deleted)"];
+    VnfLcmDriver <-- KubernetesDriver [label = "resources removed"];
+    TackerConductor <-- VnfLcmDriver
+      [label = "request successfully completed"];
+    TackerConductor -->> TackerConductor [label = "update DB"];
+  }

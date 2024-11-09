@@ -1,0 +1,16 @@
+
+  seqdiag {
+    Client -> Keystonemiddleware [label = "request"];
+    Keystonemiddleware -> "API Process" [label = "1. Request with user info"];
+    "API Process" -> TackerDB [label = "2. Get the accessed \nresources from the TackerDB"]
+    "API Process" <-- TackerDB [label = "return the accessed\n resources"];
+    "API Process" -> "API Process" [label = "3. Get required \nresource \nattributes \nfrom accessed \nresources"];
+    "API Process" -> Context [label = "4. Invoke policy check function with accessed resource\n attributes"];
+    Context -> Context [label = "5. Convert special \nroles to user\n attributes"];
+    Context -> oslo.policy [label = "6. Invoke policy enforcer\n with resource attributes\n and user attributes"];
+    Context <-- oslo.policy;
+    "API Process" <-- Context;
+    === 7. Operate the accessed resource. ===
+    Keystonemiddleware <-- "API Process" [label = "response"];
+    Client <-- Keystonemiddleware [label = "response"];
+  }

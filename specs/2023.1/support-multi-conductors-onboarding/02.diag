@@ -1,0 +1,46 @@
+
+  seqdiag {
+    node_width = 80; edge_length = 100;
+
+    "Client" "DB" "Tacker-server" "Backend Storage" "Messaging Queue" "Tacker-conductor 1" "Tacker-conductor 2" "Tacker-conductor 3"
+
+    Client -> "Tacker-server"
+    [label = "1. POST /vnfpkgm/v1/vnf_packages/{vnf_package_id}/package_content/upload_from_uri"];
+
+    "Tacker-server" -> "DB"
+    [label = "2. Update onboardingState to UPLOADING"]
+
+    "Tacker-server" <- "DB"
+    [label = ""]
+
+    "Tacker-server" -> "Messaging Queue"
+    [label = "3. Send a rpc message of 'Upload VNF Package from uri' with fanout=False"]
+
+    Client <- "Tacker-server"
+    [label = "response 202 Accepted"]
+
+    "Messaging Queue" -> "Tacker-conductor 1"
+    [label = ""]
+
+    "Tacker-conductor 1" -> "Backend Storage"
+    [label = "4. Upload CSAR file"]
+
+    "Tacker-conductor 1" <- "Backend Storage"
+    [label = ""]
+
+    "Tacker-conductor 1" -> "Backend Storage"
+    [label = "5. Send a request to download the CSAR file"]
+
+    "Tacker-conductor 1" <- "Backend Storage"
+    [label = "Download the CSAR file from Backend Storage to the local file system"]
+
+    "Tacker-conductor 1" -> "DB"
+    [label = "6. Update onboardingState to ONBOARDED"]
+
+    "Tacker-conductor 1" <- "DB"
+    [label = ""]
+
+    "Messaging Queue" <- "Tacker-conductor 1"
+    [label = ""]
+
+  }

@@ -78,72 +78,13 @@ operation normally while it is terminated.
 When the rollback operation is executed during VNF instantiation, VNFM
 removes all VMs and resources.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 105;
-    edge_length = 130;
-
-    Client -> "tacker-server"
-      [label = "POST /vnf_lcm_op_occs/{vnfLcmOpOccId}/rollback"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "trriger asynchronous task"];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-     [label = "POST {callback URI} (ROLLING_BACK)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
-    "VnfLcmDriver" -> "openstackDriver" [label = "execute openstackDriver"];
-    "openstackDriver" -> "heat" [label = "delete stack"];
-    "openstackDriver" <-- "heat" [label = ""];
-    "VnfLcmDriver" <-- "openstackDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-      [label = "POST {callback URI} (ROLLED_BACK)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-etsi-nfv-based-errorhandling/01.png
 
 
 When the rollback operation is executed for Scale-out, VNFM deletes all VMs
 and resources specified in the middle of Scale-out operation.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 72;
-    edge_length = 100;
-
-    Client -> "tacker-server"
-      [label = "POST /vnf_lcm_op_occs/{vnfLcmOpOccId}/rollback"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "trriger asynchronous task"];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-      [label = "POST {callback URI} (ROLLING_BACK)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "MgmtDriver" [label = "execute MgmtDriver"];
-    "MgmtDriver" -> vnf [label = "VNF Configuration"];
-    "MgmtDriver" <-- vnf [label = ""];
-    "tacker-conductor" <-- "MgmtDriver" [label = ""];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
-    "VnfLcmDriver" -> "openstackDriver" [label = "execute openstackDriver"];
-    "openstackDriver" -> "heat" [label = "resourse signal"];
-    "openstackDriver" -> "heat" [label = "update stack"];
-    "openstackDriver" <-- "heat" [label = ""];
-    "VnfLcmDriver" <-- "openstackDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-      [label = "POST {callback URI} (ROLLED_BACK)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-etsi-nfv-based-errorhandling/02.png
 
 
 User needs to separately implement Rollback sub-operation by VNF Configuration.

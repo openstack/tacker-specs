@@ -352,36 +352,7 @@ Sequence for operation in Polling mode
 The following describes the processing flow of the Tacker after
 the Alertmanager sends the alert.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 100;
-    edge_length = 150;
-
-    "Alertmanager"
-    "Prometheus-Plugin"
-    "VnfFmDriver"
-    "Tacker DB"
-
-    "Alertmanager" -> "Prometheus-Plugin"
-      [label = "1. Send alert to the specified URL"];
-    "Prometheus-Plugin" -> "Prometheus-Plugin"
-      [label = "2. Check items of prometheus_plugin from cfg.CONF.tacker", note = "If prometheus_plugin is False, asynchronous task is over"];
-    "Prometheus-Plugin" -> "Prometheus-Plugin"
-      [label = "3. Determine whether the alert is AutoHeal or AutoScale", note = "If it is scale, refer to the processing flow of AutoScale"];
-    "Prometheus-Plugin" -> "Tacker DB"
-      [label = "4. Find the corresponding ComputeResource from the DB"];
-    "Prometheus-Plugin" <-- "Tacker DB"
-      [label = "InstantiatedVnfInfo.vnfcResourceInfo.computeResource"];
-    "Prometheus-Plugin" -> "Prometheus-Plugin"
-      [label = "5. Convert received alert to alarm"];
-    "Prometheus-Plugin" -> "VnfFmDriver"
-      [label = "6. Execute VnfFmDriver"];
-    "VnfFmDriver" -> "Tacker DB"
-      [label = "7. Save alarm to DB"];
-    "VnfFmDriver" <-- "Tacker DB"
-    "Prometheus-Plugin" <-- "VnfFmDriver"
-  }
+.. image:: ./prometheus-plugin-heal/01.png
 
 1. Alertmanager receives alert sent from Prometheus Server and inform the
    alert to specified URL(Tacker Server).
@@ -416,43 +387,7 @@ the Alertmanager sends the alert.
 The following describes the Client's processing flow for
 Tacker using Polling mode to AutoHeal.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 100;
-    edge_length = 150;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfFmDriver"
-    "Tacker DB"
-
-    "Client" -> "Tacker-server"
-      [label = "8. Query alarms"];
-    "Tacker-server" -> "Tacker-conductor"
-      [label = "9. Trigger synchronization task"];
-    "Tacker-conductor" -> "VnfFmDriver"
-      [label = "10. Query alarms"];
-    "VnfFmDriver" -> "Tacker DB"
-      [label = "11. Get alarms from DB according to conditions"];
-    "VnfFmDriver" <-- "Tacker DB"
-      [label = "Alarms"];
-    "Tacker-conductor" <-- "VnfFmDriver"
-      [label = "Alarms"];
-    "Tacker-server" <-- "Tacker-conductor"
-      [label = "Alarms"];
-    "Client" <-- "Tacker-server"
-      [label = "Alarms"];
-    "Client" -> "Client"
-      [label = "12. Get VNFC information from alarm", note = "If no alarm is returned, the processing is over"];
-    "Client" -> "Tacker-server"
-      [label = "13. Heal specified vnfc"];
-    "Tacker-server" -> "Tacker-conductor"
-      [label = "14. Trigger asynchronous task", note = "The same with the default heal operation"];
-    "Client" <-- "Tacker-server"
-      [label = "Response 202 Accepted"];
-  }
+.. image:: ./prometheus-plugin-heal/02.png
 
 
 8. The Client sends a request to the Tacker to query
@@ -565,75 +500,7 @@ Sequence for operation in Notify mode
 The following describes the Client's processing flow for
 Tacker using Notify mode to AutoHeal.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 90;
-    edge_length = 100;
-
-    "Client"
-    "Alertmanager"
-    "Prometheus-Plugin"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfFmDriver"
-    "Tacker DB"
-
-    "Client" -> "Tacker-server"
-      [label = "1. Create subscription"];
-    "Tacker-server" -> "Tacker-conductor"
-      [label = "Trigger synchronization task"];
-    "Tacker-conductor" -> "VnfFmDriver"
-      [label = "execute VnfFmDriver"];
-    "VnfFmDriver" -> "VnfFmDriver"
-      [label = "Get the callback_uri in the subscription"];
-    "VnfFmDriver" -> "Client"
-      [label = "Send a GET request to the callback_uri in the Client."];
-    "VnfFmDriver" <-- "Client"
-      [label = "Response 204 No Content"];
-    "VnfFmDriver" -> "Tacker DB"
-      [label = "Save subscription to DB"];
-    "VnfFmDriver" <-- "Tacker DB"
-    "Tacker-conductor" <-- "VnfFmDriver"
-    "Tacker-server" <-- "Tacker-conductor"
-    "Client" <-- "Tacker-server"
-      [label = "Response 201 Created"];
-    "Alertmanager" -> "Prometheus-Plugin"
-      [label = "2. Send alert to the specified URL"];
-    "Prometheus-Plugin" -> "Prometheus-Plugin"
-      [label = "3. Check items of prometheus_plugin from cfg.CONF.tacker", note = "If prometheus_plugin is False, asynchronous task is over"];
-    "Prometheus-Plugin" -> "Prometheus-Plugin"
-      [label = "4. Determine whether the alert is AutoHeal or AutoScale", note = "If it is scale, refer to the processing flow of AutoScale"];
-    "Prometheus-Plugin" -> "Tacker DB"
-      [label = "5. Find the corresponding ComputeResource from the DB"];
-    "Prometheus-Plugin" <-- "Tacker DB"
-      [label = "InstantiatedVnfInfo.vnfcResourceInfo.computeResource"];
-    "Prometheus-Plugin" -> "Prometheus-Plugin"
-      [label = "6. Convert received alert to alarm"];
-    "Prometheus-Plugin" -> "VnfFmDriver"
-      [label = "7. execute VnfFmDriver"];
-    "VnfFmDriver" -> "Tacker DB"
-      [label = "8. Save alarm to DB"];
-    "VnfFmDriver" <-- "Tacker DB"
-    "VnfFmDriver" -> "Tacker DB"
-      [label = "9. Get subscriptions from DB"];
-    "VnfFmDriver" <-- "Tacker DB"
-    "VnfFmDriver" -> "VnfFmDriver"
-      [label = "10. Determine whether the alarm matches the subscriptions.", note = "If it does not match, the processing ends"];
-    "VnfFmDriver" -> "Client"
-      [label = "11. Send a Notify Alarm request to the Client"];
-    "VnfFmDriver" <-- "Client"
-      [label = "Response 204 No Content"];
-    "Prometheus-Plugin" <-- "VnfFmDriver"
-    "Client" -> "Client"
-      [label = "12. Get VNFC information from alarm", note = "If no alarm is returned, the processing is over"];
-    "Client" -> "Tacker-server"
-      [label = "13. Heal specified vnfc"];
-    "Tacker-server" -> "Tacker-conductor"
-      [label = "14. Trigger asynchronous task", note = "The same with the default heal operation"];
-    "Client" <-- "Tacker-server"
-      [label = "Response 202 Accepted"];
-  }
+.. image:: ./prometheus-plugin-heal/03.png
 
 * 1.The Client sends a request to create a subscription to the Tacker.
   After Tacker receives the subscription, it will get the callback_uri in it.

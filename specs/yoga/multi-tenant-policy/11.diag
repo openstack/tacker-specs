@@ -1,0 +1,77 @@
+
+    seqdiag {
+        node_width = 80;
+        edge_length = 100;
+
+        "Test Class"
+        "User A"
+        "User B"
+        "Tacker"
+        "VIM A"
+        "VIM B"
+        "VNF A"
+        "VNF B"
+
+        "Test Class" -> "User A" [label = "Set User"];
+        "Test Class" <- "User A";
+
+        "Test Class" -> "User B" [label = "Set User"];
+        "Test Class" <- "User B";
+
+        "User A" -> "Tacker" [label = "Register VIM A"];
+            "Tacker" -> "VIM A" [label = "Register VIM A"];
+            "Tacker" <- "VIM A";
+        "User A" <-- "Tacker" [label = "Registered VIM A"];
+
+        "User B" -> "Tacker" [label = "Register VIM B"];
+            "Tacker" -> "VIM B" [label = "Register VIM B"];
+            "Tacker" <- "VIM B";
+        "User A" <-- "Tacker" [label = "Registered VIM B"];
+
+        "User A" -> "Tacker" [label = "Create VNF A"];
+            "Tacker" -> "VNF A" [label = "Create VNF A"];
+            "Tacker" <- "VNF A";
+        "User A" <-- "Tacker" [label = "Created VNF A"];
+
+        "User B" -> "Tacker" [label = "Create VNF B"];
+            "Tacker" -> "VNF B" [label = "Create VNF B"];
+            "Tacker" <- "VNF B";
+        "User B" <-- "Tacker" [label = "Created VNF B"];
+
+        "User A" -> "Tacker" [label = "Instantiate VNF A with VIM B"];
+        "User A" <-- "Tacker" [label = "Failed to Instantiate VNF A"];
+
+        "User B" -> "Tacker" [label = "Instantiate VNF B with VIM A"];
+        "User B" <-- "Tacker" [label = "Failed to Instantiate VNF B"];
+
+        "User A" -> "Tacker" [label = "Instantiate VNF A"];
+            "Tacker" -> "VNF A" [label = "Instantiate VNF A"];
+            "Tacker" <- "VNF A";
+        "User A" <-- "Tacker" [label = "Instantiated VNF A"];
+
+        "User B" -> "Tacker" [label = "Instantiate VNF B"];
+            "Tacker" -> "VNF B" [label = "Instantiate VNF B"];
+            "Tacker" <- "VNF B";
+        "User B" <-- "Tacker" [label = "Instantiated VNF B"];
+
+        "User A" -> "Tacker" [label = "Terminate VNF A"];
+            "Tacker" -> "VNF A" [label = "Terminate VNF A"];
+            "Tacker" <- "VNF A";
+        "User A" <-- "Tacker" [label = "Terminated VNF A"];
+
+        "User B" -> "Tacker" [label = "Terminate VNF B"];
+            "Tacker" -> "VNF B" [label = "Terminate VNF B"];
+            "Tacker" <- "VNF B";
+        "User B" <-- "Tacker" [label = "Terminated VNF B"];
+
+        "User A" -> "Tacker" [label = "Delete VNF A"];
+            "Tacker" -> "VNF A" [label = "Delete VNF A"];
+            "Tacker" <- "VNF A";
+        "User A" <-- "Tacker" [label = "Deleted VNF A"];
+
+        "User B" -> "Tacker" [label = "Delete VNF B"];
+            "Tacker" -> "VNF B" [label = "Delete VNF B"];
+            "Tacker" <- "VNF B";
+        "User B" <-- "Tacker" [label = "Deleted VNF B"];
+
+    }

@@ -1,0 +1,41 @@
+
+  seqdiag {
+    node_width = 100;
+    edge_length = 115;
+
+    Client -> WSGIMiddleware [label =
+        "POST /vnflcm/v1/vnf_instances/{id}/instantiate"];
+    WSGIMiddleware -->> WSGIMiddleware [label = "Request validation"];
+    Client <-- WSGIMiddleware [label = "202 Accepted"];
+
+    NFVOPlugin;
+    WSGIMiddleware -> VnfLcmDriver [label = "Trigger asynchronous task "];
+    VnfLcmDriver --> NFVOPlugin [label = "Get VNF Package"];
+    VnfLcmDriver <-- NFVOPlugin;
+    VnfLcmDriver -->> VnfLcmDriver [label = "Create VIM connection object"];
+
+    VnfLcmDriver -> KubernetesDriver [label = "pre_instantiation_vnf()"];
+    KubernetesDriver -->> KubernetesDriver [label = "No change needed"];
+    VnfLcmDriver <-- KubernetesDriver;
+
+    VnfLcmDriver --> KubernetesDriver
+      [label = "instantiate_vnf()"];
+    KubernetesDriver --> KubernetesDriver [label = "create()"]
+    KubernetesDriver -> KubernetesDriver [label = "No change needed"];
+    VnfLcmDriver <-- KubernetesDriver [label = "instance_id"];
+
+    VnfLcmDriver --> KubernetesDriver [label ="create_wait()"];
+    KubernetesDriver -> KubernetesDriver [label = "No change needed"];
+    VnfLcmDriver <-- KubernetesDriver;
+
+    VnfLcmDriver -> KubernetesDriver [label = "post_vnf_instantiation()"];
+    KubernetesDriver -> KubernetesPythonClient
+      [label = "Read Kubernetes resources data"];
+    KubernetesPythonClient -> Kubernetes
+      [label = "Execute read API"];
+    KubernetesPythonClient <-- Kubernetes [label = ""];
+    KubernetesDriver <-- KubernetesPythonClient;
+    KubernetesDriver -->> KubernetesDriver
+      [label = "Update DB for VNFC resources"];
+    VnfLcmDriver <-- KubernetesDriver;
+  }

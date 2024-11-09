@@ -1,0 +1,27 @@
+
+  seqdiag {
+    Client; NFVO; tacker-server; tacker-conductor;
+
+    Client -> "tacker-server" [label = "LCM Operation Request"];
+    Client <-- "tacker-server" [label = "Response 202 Accepted"];
+    "tacker-server" ->> "tacker-conductor"
+      [label = "execute notification process"];
+    Client <- "tacker-conductor" [label = "POST {callback URI} (STARTING)"];
+    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
+    "tacker-server" -> "tacker-conductor"
+      [label = "trriger asynchronous task"];
+    NFVO <- "tacker-conductor" [label = "POST /grants"];
+    NFVO --> "tacker-conductor" [label = "201 Created"];
+    "tacker-conductor" ->> "tacker-conductor"
+      [label = "execute notification process"];
+    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
+    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
+    "tacker-conductor" -> "VnfLcmDriver" [label = "execute MgmtDriver"];
+    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
+    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
+    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
+    "tacker-conductor" ->> "tacker-conductor"
+      [label = "execute notification process"];
+    Client <- "tacker-conductor" [label = "POST {callback URI} (COMPLETED)"];
+    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
+  }

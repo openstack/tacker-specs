@@ -56,47 +56,7 @@ Rollback for Instantiation
 There is no change from the current implementation except for
 InfraDriver (KubernetesDriver) processing.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 100;
-    edge_length = 120;
-
-    Client -> "tacker-server"
-      [label = "POST /vnf_lcm_op_occs/{vnfLcmOpOccId}/rollback"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "trigger asynchronous task"];
-    "tacker-conductor" -> "tacker-database"
-      [label = "mark operation as ROLLING_BACK"];
-    "tacker-conductor" <-- "tacker-database"
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-      [label = "POST {callback URI} (ROLLING_BACK)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
-    "VnfLcmDriver" -> "KubernetesDriver" [label = "execute KubernetesDriver"];
-    "KubernetesDriver" -> "Kubernetes"
-      [label = "call Read API to check the existence of resources"];
-    "KubernetesDriver" <-- "Kubernetes" [label = "resource information if it exists"];
-    "KubernetesDriver" -> "Kubernetes"
-      [label = "call Delete API if resources exist"];
-    "KubernetesDriver" <-- "Kubernetes" [label = ""];
-    "KubernetesDriver" -> "Kubernetes"
-      [label = "call Read API to check the status of resources"];
-    "KubernetesDriver" <-- "Kubernetes" [label = "resource information"];
-    "VnfLcmDriver" <-- "KubernetesDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "tacker-database"
-      [label = "mark operation as ROLLED_BACK"];
-    "tacker-conductor" <-- "tacker-database"
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-      [label = "POST {callback URI} (ROLLED_BACK or FAILED_TEMP)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-v2-cnf-rollback/01.png
 
 
 The procedure consists of the following steps as illustrated in above sequence:
@@ -193,49 +153,7 @@ Rollback for Scale-out
 There is no change from the current implementation except for
 InfraDriver processing.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 100;
-    edge_length = 120;
-
-    Client -> "tacker-server"
-      [label = "POST /vnf_lcm_op_occs/{vnfLcmOpOccId}/rollback"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "trigger asynchronous task"];
-    "tacker-conductor" -> "tacker-database"
-      [label = "mark operation as ROLLING_BACK"];
-    "tacker-conductor" <-- "tacker-database"
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-      [label = "POST {callback URI} (ROLLING_BACK)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute LCM operation"];
-    "VnfLcmDriver" -> "KubernetesDriver" [label = "execute KubernetesDriver"];
-    "KubernetesDriver" -> "Kubernetes"
-      [label = "call Read API to check the replicas of the resources"];
-    "KubernetesDriver" <-- "Kubernetes" [label = "the value of replicas"];
-    "KubernetesDriver" -> "Kubernetes"
-      [label = "call Update API to update the replicas
-       to the one before scaling-out
-       if replicas has been updated by failed scale-out operation"];
-    "KubernetesDriver" <-- "Kubernetes" [label = ""];
-    "KubernetesDriver" -> "Kubernetes"
-      [label = "call Read API to check the status of resources"];
-    "KubernetesDriver" <-- "Kubernetes" [label = ""];
-    "VnfLcmDriver" <-- "KubernetesDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "tacker-database"
-      [label = "mark operation as ROLLED_BACK"];
-    "tacker-conductor" <-- "tacker-database"
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-      [label = "POST {callback URI} (ROLLED_BACK or FAILED_TEMP)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-v2-cnf-rollback/02.png
 
 The procedure consists of the following steps as illustrated in above sequence:
 

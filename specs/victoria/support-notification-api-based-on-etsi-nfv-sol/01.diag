@@ -1,0 +1,7 @@
+
+  seqdiag {
+    Client -> "tacker-server" [label = " POST /subscriptions"];
+    "tacker-server" -> "tacker-server"
+      [label = " generate subscription_id (uuid)"];
+    Client <-- "tacker-server" [label = " Resonse 201 Created"];
+  }

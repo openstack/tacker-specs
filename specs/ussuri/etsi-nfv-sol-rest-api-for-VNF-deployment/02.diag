@@ -1,0 +1,35 @@
+
+  seqdiag {
+    Client -> WSGIMiddleware [label = "instantiate VNF"];
+    WSGIMiddleware -->> WSGIMiddleware [label = "request validation"];
+    Client <-- WSGIMiddleware [label = "202 Accepted"];
+    WSGIMiddleware -> TackerConductor [label = "Trigger asynchronous task"];
+    TackerConductor --> VnfLcmDriver [label = "instantiate_vnf(vnf_instance,
+        instantiate_vnf_request)"];
+    VnfLcmDriver --> ToscaParser [label = "read csar"];
+    VnfLcmDriver <-- ToscaParser [label = "tosca object"];
+    VnfLcmDriver -->> VnfLcmDriver [label = "get VNFD, prepare resource request"];
+    VnfLcmDriver --> OpenstackDriver [label = "1. pre_instantiate_vnf(resources)"];
+    OpenstackDriver --> Glance [label = "createImage"]
+    OpenstackDriver <-- Glance [label = "image created"]
+    VnfLcmDriver <-- OpenstackDriver [label = " resource  created"];
+    VnfLcmDriver --> OpenstackDriver [label = "instantiate_vnf(vnf_instance,
+        instantiate_vnf_request, vnfd_dict, resource_list)"];
+    OpenstackDriver --> HeatClient [label = "create Heat Client"];
+    OpenstackDriver <-- HeatClient [label = "Heat Client"];
+
+    OpenstackDriver --> TranslateTemplate [label = "convert Tosca to HOT"];
+    TranslateTemplate --> ToscaParser [label = "get tosca template"];
+    TranslateTemplate <-- ToscaParser [label = "tosca template"];
+    TranslateTemplate --> HeatTranslator [label = "Tosca to HOT"];
+    TranslateTemplate <-- HeatTranslator [label = "HOT"];
+    TranslateTemplate --> ToscaUtil [label = "post processing HOT using
+        resource info and instantiateVnf request"];
+    TranslateTemplate <-- ToscaUtil [label = "HOT"];
+    OpenstackDriver <-- TranslateTemplate [label = "HOT"];
+    OpenstackDriver --> Heat [label = "2. create stack"];
+    OpenstackDriver <-- Heat [label = "stack created"];
+    VnfLcmDriver <-- OpenstackDriver [label = "return stack id"];
+    VnfLcmDriver -->> VnfLcmDriver [label = "3 update DB"];
+    TackerConductor <-- VnfLcmDriver [label = "instantiation completed"];
+  }

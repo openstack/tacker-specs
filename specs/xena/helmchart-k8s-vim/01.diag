@@ -1,0 +1,54 @@
+
+  seqdiag {
+    node_width = 80;
+    edge_length = 100;
+
+    "Client"
+    "Tacker-server"
+    "Tacker-conductor"
+    "VnfLcmDriver"
+    "MgmtDriver"
+    "OpenStackInfraDriver"
+    "MasterNode"
+    "TackerDB"
+
+    Client -> "Tacker-server"
+      [label = "POST /vnf_instances/{vnfInstanceId}/instantiate"];
+    "Tacker-server" -> "Tacker-conductor"
+      [label = "Trigger asynchronous task"];
+    Client <-- "Tacker-server"
+      [label = "Response 202 Accepted"];
+    "Tacker-conductor" -> "VnfLcmDriver"
+      [label = "Execute VnfLcmDriver"];
+    "VnfLcmDriver" -> "OpenStackInfraDriver"
+      [label = "instantiate_vnf()"];
+    "OpenStackInfraDriver" -> "Heat"
+      [label = "Create stack"];
+    "OpenStackInfraDriver" <-- "Heat"
+      [label = "Return stack id"];
+    "VnfLcmDriver" <-- "OpenStackInfraDriver"
+      [label = "return instance_id"];
+    "VnfLcmDriver" -> "MgmtDriver"
+      [label = "instantiate_end()"];
+    "MgmtDriver" -> "Heat"
+      [label = "Get ssh ip address and Kubernetes address using stack id"];
+    "MgmtDriver" <-- "Heat"
+      [label = ""];
+    "MgmtDriver" -> "MasterNode"
+      [label = "Install Kubernetes by script"];
+    "MgmtDriver" <-- "MasterNode"
+      [label = ""];
+    "MgmtDriver" -> "MasterNode"
+      [label = "Install Helm by script"];
+    "MgmtDriver" <-- "MasterNode"
+      [label = ""];
+    "MgmtDriver"-> "TackerDB"
+      [label = "Add MasterNode access information to vim_connection_info table"]
+    "MgmtDriver" <-- "TackerDB"
+      [label = ""];
+    "VnfLcmDriver" <-- "MgmtDriver"
+      [label = ""];
+    "Tacker-conductor" <-- "VnfLcmDriver"
+      [label = ""];
+
+  }

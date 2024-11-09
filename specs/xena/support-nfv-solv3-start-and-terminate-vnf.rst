@@ -53,14 +53,7 @@ The following are sample APIs supported by this interface.
 
 1) Flow of creation of a VNF instance resource
 ----------------------------------------------
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = "POST /vnflcm/v2/vnf_instances"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Create VNF instance resource"];
-    Client <-- "tacker-server" [label = "Response 201 Created"];
-  }
+.. image:: ./support-nfv-solv3-start-and-terminate-vnf/01.png
 
 #. Client sends a Create VNF request with the API major version included
    in URI is "v2".
@@ -76,23 +69,7 @@ process as described in the SPEC `support-notification-api-based-on-etsi-nfv-sol
 2) Flow of Instantiation of a VNF instance
 ------------------------------------------
 
-.. seqdiag::
-
-  seqdiag {
-    Client; NFVO; tacker-server; tacker-conductor; MgmtDriver; VnfLcmDriver;
-
-    Client -> "tacker-server"
-      [label = "POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/instantiate"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "trriger asynchronous task"];
-    NFVO <- "tacker-conductor" [label = "POST /grants"];
-    NFVO --> "tacker-conductor" [label = "201 Created"];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "MgmtDriver" [label = "execute MgmtDriver"];
-    "tacker-conductor" <-- "MgmtDriver" [label = ""];
-  }
+.. image:: ./support-nfv-solv3-start-and-terminate-vnf/02.png
 
 #. Client sends an Instantiate VNF request with the API major version included
    in URI is "v2".
@@ -107,23 +84,7 @@ If necessary, VNFM performs the notification process as described in the SPEC
 3) Flow of Termination of a VNF instance
 ----------------------------------------
 
-.. seqdiag::
-
-  seqdiag {
-    Client; NFVO; tacker-server; tacker-conductor; MgmtDriver; VnfLcmDriver;
-
-    Client -> "tacker-server"
-      [label = "POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/terminate"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "trriger asynchronous task"];
-    NFVO <- "tacker-conductor" [label = "POST /grants"];
-    NFVO --> "tacker-conductor" [label = "201 Created"];
-    "tacker-conductor" -> "MgmtDriver" [label = "execute MgmtDriver"];
-    "tacker-conductor" <-- "MgmtDriver" [label = ""];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-  }
+.. image:: ./support-nfv-solv3-start-and-terminate-vnf/03.png
 
 #. Client sends a Terminate VNF request with the API major version included
    in URI is "v2".
@@ -138,15 +99,7 @@ If necessary, VNFM performs the notification process as described in the SPEC
 4) Flow of deletion of a VNF instance resource
 ----------------------------------------------
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server"
-      [label = "DELETE /vnflcm/v2/vnf_instances/{vnfInstanceId}"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Delete VNF instance resource"];
-    Client <-- "tacker-server" [label = "Response 204 No Content"];
-  }
+.. image:: ./support-nfv-solv3-start-and-terminate-vnf/04.png
 
 #. Client sends a Delete VNF request with the API major version included
    in URI is "v2".

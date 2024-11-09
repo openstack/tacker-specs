@@ -350,48 +350,7 @@ During the operation of Instantiate CNF, it needs to store above VNFC resource
 information. The following sequence diagram describes the components involved
 and the flow of CNF instantiation operation:
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 100;
-    edge_length = 115;
-
-    Client -> WSGIMiddleware [label =
-        "POST /vnflcm/v1/vnf_instances/{id}/instantiate"];
-    WSGIMiddleware -->> WSGIMiddleware [label = "Request validation"];
-    Client <-- WSGIMiddleware [label = "202 Accepted"];
-
-    NFVOPlugin;
-    WSGIMiddleware -> VnfLcmDriver [label = "Trigger asynchronous task "];
-    VnfLcmDriver --> NFVOPlugin [label = "Get VNF Package"];
-    VnfLcmDriver <-- NFVOPlugin;
-    VnfLcmDriver -->> VnfLcmDriver [label = "Create VIM connection object"];
-
-    VnfLcmDriver -> KubernetesDriver [label = "pre_instantiation_vnf()"];
-    KubernetesDriver -->> KubernetesDriver [label = "No change needed"];
-    VnfLcmDriver <-- KubernetesDriver;
-
-    VnfLcmDriver --> KubernetesDriver
-      [label = "instantiate_vnf()"];
-    KubernetesDriver --> KubernetesDriver [label = "create()"]
-    KubernetesDriver -> KubernetesDriver [label = "No change needed"];
-    VnfLcmDriver <-- KubernetesDriver [label = "instance_id"];
-
-    VnfLcmDriver --> KubernetesDriver [label ="create_wait()"];
-    KubernetesDriver -> KubernetesDriver [label = "No change needed"];
-    VnfLcmDriver <-- KubernetesDriver;
-
-    VnfLcmDriver -> KubernetesDriver [label = "post_vnf_instantiation()"];
-    KubernetesDriver -> KubernetesPythonClient
-      [label = "Read Kubernetes resources data"];
-    KubernetesPythonClient -> Kubernetes
-      [label = "Execute read API"];
-    KubernetesPythonClient <-- Kubernetes [label = ""];
-    KubernetesDriver <-- KubernetesPythonClient;
-    KubernetesDriver -->> KubernetesDriver
-      [label = "Update DB for VNFC resources"];
-    VnfLcmDriver <-- KubernetesDriver;
-  }
+.. image:: ./support-cnf-heal/01.png
 
 #. Tacker receives POST request for instantiate CNF, and Kubernetes resources
    are created and validated creation which processing is implemented in
@@ -432,59 +391,7 @@ The following is a sample of healing request body:
 The following sequence diagram describes the components involved and the flow
 of the CNF heal operation:
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 100;
-    edge_length = 115;
-
-    "Client" -> "Tacker-server"
-      [label = "POST /vnf_instances/{vnfInstanceId}/heal"];
-    "Client" <-- "Tacker-server" [label = "Response 202 Accepted"];
-    "Tacker-server" --> "Tacker-conductor" [label = "Trigger asynchronous task"]
-    "Tacker-conductor" -> "VnfLcmDriver" [label = "Call VnfLcmDriver"];
-
-    "VnfLcmDriver" -> "KubernetesDriver" [label = "heal_vnf()"];
-    "KubernetesDriver" -> "KubernetesPythonClient"
-      [label = "Execute delete API"];
-    "KubernetesPythonClient" -> "Kubernetes" [label = "Execute delete API"];
-    "KubernetesPythonClient" <-- "Kubernetes" [label = ""];
-    "KubernetesDriver" <-- "KubernetesPythonClient" [label = ""];
-    "KubernetesDriver" -> "KubernetesPythonClient"
-      [label = "Execute read API for check successful deletion"];
-    "KubernetesPythonClient" -> "Kubernetes" [label = "Execute read API"];
-    "KubernetesPythonClient" <-- "Kubernetes" [label = ""];
-    "KubernetesDriver" <-- "KubernetesPythonClient" [label = ""];
-    "KubernetesDriver" -->> "KubernetesDriver"
-      [label = "Translate into target Kubernetes object"];
-    "KubernetesDriver" -> "KubernetesPythonClient"
-      [label = "Execute create API"];
-    "KubernetesPythonClient" -> "Kubernetes" [label = "Execute create API"];
-    "KubernetesPythonClient" <-- "Kubernetes" [label = ""];
-    "KubernetesDriver" <-- "KubernetesPythonClient" [label = ""];
-    "VnfLcmDriver" <-- "KubernetesDriver" [label = ""];
-
-    "VnfLcmDriver" -> "KubernetesDriver" [label = "heal_vnf_wait()"];
-    "KubernetesDriver" -> "KubernetesPythonClient"
-      [label = "Execute read API for check successful creation"];
-    "KubernetesPythonClient" -> "Kubernetes" [label = "Execute read API"];
-    "KubernetesPythonClient" <-- "Kubernetes" [label = ""];
-    "KubernetesDriver" <-- "KubernetesPythonClient" [label = ""];
-    "VnfLcmDriver" <-- "KubernetesDriver" [label = ""];
-
-    "VnfLcmDriver" -> "KubernetesDriver" [label = "post_heal_vnf()"];
-    "KubernetesDriver" -> "KubernetesPythonClient"
-      [label = "read Kubernetes resources data"];
-    "KubernetesPythonClient" -> "Kubernetes" [label = "Execute read API"];
-    "KubernetesPythonClient" <-- "Kubernetes" [label = ""];
-    "KubernetesDriver" <-- "KubernetesPythonClient" [label = ""];
-    "KubernetesDriver" -->> "KubernetesDriver"
-      [label = "Update vnfc resource information"];
-    "VnfLcmDriver" <-- "KubernetesDriver" [label = ""];
-
-    "Tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-
-  }
+.. image:: ./support-cnf-heal/02.png
 
 
 #. Client sends a POST request to the Heal CNF Instance resource.

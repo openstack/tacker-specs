@@ -61,23 +61,7 @@ involved in error handling of lifecycle management operation.
 LCM operations that can perform Retry operation are Instantiation,
 Termination, Healing, Scaling, Modify and ChangeExternalConnectivity.
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server"
-      [label = "POST /vnflcm/v2/vnf_lcm_op_occs/{vnfLcmOpOccId}/retry"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "trigger asynchronous task"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "start retry procedure"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "end retry procedure"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (COMPLETED or FAILED_TEMP)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-nfv-solv3-error-handling/01.png
 
 The procedure consists of the following steps as illustrated in above sequence:
 
@@ -109,22 +93,7 @@ FAILED_TEMP, COMPLETED.
 LCM operations that can perform Fail operation are Instantiation,
 Termination, Healing, Scaling, Modify and ChangeExternalConnectivity.
 
-.. seqdiag::
-
-  seqdiag {
-    Client; tacker-server; tacker-conductor; tacker-database;
-    Client -> "tacker-server"
-      [label = "POST /vnflcm/v2/vnf_lcm_op_occs/{vnfLcmOpOccId}/fail"];
-    "tacker-server" -> "tacker-database"
-      [label = "mark operation as failed"];
-    "tacker-server" <-- "tacker-database"
-    "tacker-server" ->> "tacker-conductor"
-      [label = "trigger asynchronous task"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (FAILED)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    Client <-- "tacker-server" [label = "Response 200 OK"];
-  }
+.. image:: ./support-nfv-solv3-error-handling/02.png
 
 The procedure consists of the following steps as illustrated in above sequence:
 
@@ -153,154 +122,25 @@ flow of rollback for each VNF lifecycle management operation.
 When the rollback operation is executed during VNF instantiation, VNFM
 removes all VMs and resources.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 90;
-    edge_length = 130;
-
-    Client -> "tacker-server"
-      [label = "POST /vnflcm/v2/vnf_lcm_op_occs/{vnfLcmOpOccId}/rollback"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "trigger asynchronous task"];
-    "tacker-conductor" -> "tacker-database"
-      [label = "mark operation as ROLLING_BACK"];
-    "tacker-conductor" <-- "tacker-database"
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-     [label = "POST {callback URI} (ROLLING_BACK)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
-    "VnfLcmDriver" -> "openstackDriver" [label = "execute openstackDriver"];
-    "openstackDriver" -> "heat" [label = "delete stack if exists"];
-    "openstackDriver" <-- "heat" [label = ""];
-    "VnfLcmDriver" <-- "openstackDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "tacker-database"
-      [label = "mark operation as ROLLED_BACK"];
-    "tacker-conductor" <-- "tacker-database"
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-      [label = "POST {callback URI} (ROLLED_BACK or FAILED_TEMP)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-nfv-solv3-error-handling/03.png
 
 
 When the rollback operation is executed for scale-out VNF operation, VNFM reverts changes of VMs
 and resources specified in the middle of scale-out operation.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 75;
-    edge_length = 100;
-
-    Client -> "tacker-server"
-      [label = "POST /vnflcm/v2/vnf_lcm_op_occs/{vnfLcmOpOccId}/rollback"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "trigger asynchronous task"];
-    "tacker-conductor" -> "tacker-database"
-      [label = "mark operation as ROLLING_BACK"];
-    "tacker-conductor" <-- "tacker-database"
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-      [label = "POST {callback URI} (ROLLING_BACK)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute LCM operation"];
-    "VnfLcmDriver" -> "openstackDriver" [label = "execute openstackDriver"];
-    "openstackDriver" -> "heat" [label = "mark stack unhealthy (PATCH /v1/{tenant_id}/stacks/{stack_name}/{stack_id}/resources/{resource_name_or_physical_id})"];
-    "openstackDriver" <-- "heat" [label = ""];
-    "openstackDriver" -> "heat" [label = "update stack (PATCH /v1/{tenant_id}/stacks/{stack_name}/{stack_id})"];
-    "openstackDriver" <-- "heat" [label = ""];
-    "VnfLcmDriver" <-- "openstackDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "tacker-database"
-      [label = "mark operation as ROLLED_BACK"];
-    "tacker-conductor" <-- "tacker-database"
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-      [label = "POST {callback URI} (ROLLED_BACK or FAILED_TEMP)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-nfv-solv3-error-handling/04.png
 
 
 When the rollback operation is executed during modifying VNF Information, VNFM
 simply updates the state of operation.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 90;
-    edge_length = 130;
-
-    Client -> "tacker-server"
-      [label = "POST /vnflcm/v2/vnf_lcm_op_occs/{vnfLcmOpOccId}/rollback"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "trigger asynchronous task"];
-    "tacker-conductor" -> "tacker-database"
-      [label = "mark operation as ROLLING_BACK"];
-    "tacker-conductor" <-- "tacker-database"
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-     [label = "POST {callback URI} (ROLLING_BACK)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "tacker-database"
-      [label = "mark operation as ROLLED_BACK"];
-    "tacker-conductor" <-- "tacker-database"
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-      [label = "POST {callback URI} (ROLLED_BACK or FAILED_TEMP)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-nfv-solv3-error-handling/05.png
 
 
 When the rollback operation is executed during changing external VNF connectivity, VNFM
 reverts changes of the external connectivity for VNF instances.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 90;
-    edge_length = 130;
-
-    Client -> "tacker-server"
-      [label = "POST /vnflcm/v2/vnf_lcm_op_occs/{vnfLcmOpOccId}/rollback"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "trigger asynchronous task"];
-    "tacker-conductor" -> "tacker-database"
-      [label = "mark operation as ROLLING_BACK"];
-    "tacker-conductor" <-- "tacker-database"
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-     [label = "POST {callback URI} (ROLLING_BACK)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute LCM operation"];
-    "VnfLcmDriver" ->> "VnfLcmDriver" [label = "recreated stack parameters using instantiatedVnfInfo"];
-    "VnfLcmDriver" -> "openstackDriver" [label = "execute openstackDriver"];
-    "openstackDriver" -> "heat" [label = "update stack (PATCH /v1/{tenant_id}/stacks/{stack_name}/{stack_id})"];
-    "openstackDriver" <-- "heat" [label = ""];
-    "VnfLcmDriver" <-- "openstackDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "tacker-database"
-      [label = "mark operation as ROLLED_BACK"];
-    "tacker-conductor" <-- "tacker-database"
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor"
-      [label = "POST {callback URI} (ROLLED_BACK or FAILED_TEMP)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-nfv-solv3-error-handling/06.png
 
 
 The procedure consists of the following steps as illustrated in above sequences:

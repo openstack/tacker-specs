@@ -1,0 +1,20 @@
+
+  seqdiag {
+    Client -> WSGIMiddleware [label = "1. Scale VNF"];
+    WSGIMiddleware -->> WSGIMiddleware [label = "request validation"];
+    Client <-- WSGIMiddleware [label = "202 Accepted"];
+    WSGIMiddleware -> TackerConductor [label = "Trigger asynchronous task"];
+    TackerConductor --> VnfLcmDriver [label = "scale_vnf(vnf_instance, scale_vnf_request)"];
+    VnfLcmDriver --> OpenstackDriver [note = "Determine the following:\n 1. If UserData Class is specified in Instantiate.\n 2. Scale exists in the specified class.\n 3. If Scale does not exist in the UserData Class, do existing process."];
+    OpenstackDriver --> OpenstackDriver [note = "Execute heal of UserData Class based on the HOT info,\n VNFD info, Stack parameter info and VNF info, \n and create Parameter"]
+    OpenstackDriver --> Heat [label = "2. update stack"];
+    OpenstackDriver <-- Heat [label = "stack updated"];
+    VnfLcmDriver <-- OpenstackDriver;
+    VnfLcmDriver --> OpenstackDriver [label = "post_scale_vnf(vnf_instance, vim_connection_info,scale_vnf_request)"];
+    OpenstackDriver --> Heat [label = "3. get updated resource data"];
+    OpenstackDriver <-- Heat [label = "resources"];
+    VnfLcmDriver <-- OpenstackDriver;
+    VnfLcmDriver -->> VnfLcmDriver [label = "5. update DB"];
+    TackerConductor <-- VnfLcmDriver [label = "request successfully completed"];
+
+   }

@@ -1,0 +1,22 @@
+
+  seqdiag {
+    Client; NFVO; tacker-server; tacker-conductor; VnfLcmDriver; TackerDB; Barbican;
+
+    Client -> "tacker-server"
+      [label = "POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/terminate"];
+    Client <-- "tacker-server" [label = "Response 202 Accepted"];
+    "tacker-server" -> "tacker-conductor"
+      [label = "trigger asynchronous task"];
+    NFVO <- "tacker-conductor" [label = "POST /grants"];
+    NFVO --> "tacker-conductor" [label = "201 Created"];
+    "tacker-conductor" -> "TackerDB" [label = "load encrypted auth credentials"];
+    "tacker-conductor" <-- "TackerDB" [label = ""];
+    "tacker-conductor" -> "Barbican" [label = "get the encryption key"];
+    "tacker-conductor" <-- "Barbican" [label = "200 Successful Request"];
+    "tacker-conductor" -> "tacker-conductor" [label = "decrypt the encrypted auth credentials"];
+    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
+    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
+    "tacker-conductor" -> "Barbican" [label = "delete the encryption key"];
+    "tacker-conductor" <-- "Barbican" [label = "204 No Content"];
+
+  }

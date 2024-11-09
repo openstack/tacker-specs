@@ -138,66 +138,7 @@ The diagram below shows the CNF instantiation using Helm Chart.
 
 Following sequence diagram describes CNF instantiation with Helm Chart:
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfLcmDriver(V1/V2)"
-    "KubernetesInfraDriver"
-    "TackerDB"
-    "Kubernetes client"
-    "Helm(MasterNode)"
-
-    Client -> "Tacker-server"
-      [label = "1. POST /vnf_instances/{vnfInstanceId}/instantiate with instantiationLevelId"];
-    "Tacker-server" -> "Tacker-conductor"
-      [label = "2. trigger asynchronous task"];
-    Client <-- "Tacker-server"
-      [label = "Response 202 Accepted"];
-    "Tacker-conductor" -> "VnfLcmDriver(V1/V2)"
-      [label = "3. execute VnfLcmDriver"];
-    "VnfLcmDriver(V1/V2)" -> "KubernetesInfraDriver"
-      [label = "4. execute KubernetesInfraDriver"];
-    "KubernetesInfraDriver" -> "TackerDB"
-      [label = "5. get package information"];
-    "KubernetesInfraDriver" <-- "TackerDB"
-      [label = "return package information"];
-    "KubernetesInfraDriver" -> "KubernetesInfraDriver"
-      [label = "6. calculates the number of pods to launch from the InstantiationLevelId"];
-    "KubernetesInfraDriver" -> "TackerDB"
-      [label = "7. get MasterNode access information"];
-    "KubernetesInfraDriver" <-- "TackerDB"
-      [label = "return MasterNode access information"];
-    "KubernetesInfraDriver" -> "Helm(MasterNode)"
-      [label = "8. send Helm Chart Files and deployment instructions"];
-    "KubernetesInfraDriver" <-- "Helm(MasterNode)"
-      [label = ""];
-    "KubernetesInfraDriver" -> "Helm(MasterNode)"
-      [label = "9. get manifest information"]
-    "KubernetesInfraDriver" <-- "Helm(MasterNode)"
-      [label = "return manifest information"]
-    "KubernetesInfraDriver" -> "TackerDB"
-      [label = "10. save manifest information"]
-    "KubernetesInfraDriver" <-- "TackerDB"
-      [label = ""];
-    "KubernetesInfraDriver" -> "Kubernetes client"
-      [label = "11. get pod status"];
-    "KubernetesInfraDriver" <-- "Kubernetes client"
-      [label = "return pod status"];
-    "KubernetesInfraDriver" -> "TackerDB"
-      [label = "12. save pod information"];
-    "KubernetesInfraDriver" <-- "TackerDB"
-      [label = ""]
-    "VnfLcmDriver(V1/V2)" <-- "KubernetesInfraDriver"
-      [label = ""];
-    "Tacker-conductor" <-- "VnfLcmDriver(V1/V2)"
-      [label = ""];
-  }
+.. image:: ./enhance-cnf-operations/01.png
 
 #. Tacker-server receives an Instantiate VNF request with
    ``instantiationLevelId`` in its parameter.

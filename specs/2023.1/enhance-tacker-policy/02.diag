@@ -1,0 +1,15 @@
+
+  seqdiag {
+    Client -> Keystonemiddleware [label = "request"];
+    Keystonemiddleware -> "API Process" [label = "1. Request with user info"];
+    "API Process" -> Context [label = "2. Invoke policy check\n function without resource \nattributes"];
+    "API Process" <-- Context;
+    "API Process" -> TackerDB [label = "3. Get the accessed resources from the database"];
+    "API Process" <-- TackerDB [label = "return accessed resources"];
+    "API Process" -> Context [label = "4. Get user attributes"];
+    Context -> Context [label = "5. Convert special \nroles to user\n attributes"];
+    "API Process" <-- Context [label = "return user attributes"];
+    "API Process" -> "API Process" [label = "6. Filter the list\n operation results \nbased on policy\n rules"];
+    Keystonemiddleware <-- "API Process" [label = "7. Return the filtered\n result to user"];
+    Client <-- Keystonemiddleware [label = "response"];
+  }

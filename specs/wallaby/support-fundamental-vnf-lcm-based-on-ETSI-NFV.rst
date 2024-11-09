@@ -49,16 +49,7 @@ The operations provided through additional attributes in this specification are 
 1) Flow of Notification endpoint (GET)
 --------------------------------------
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = " POST /subscriptions"];
-    "tacker-server" -> Client [label = " GET {callback URI}"];
-    "tacker-server" <-- Client [label = " Response 204 No Content"];
-    "tacker-server" -> "tacker-server"
-      [label = " generate subscription_id (uuid)"];
-    Client <-- "tacker-server" [label = " Response 201 Created"];
-  }
+.. image:: ./support-fundamental-vnf-lcm-based-on-ETSI-NFV/01.png
 
 The procedure consists of the following steps as illustrated in the above sequence:
 
@@ -71,13 +62,7 @@ The procedure consists of the following steps as illustrated in the above sequen
 2) Flow of VNF LCM operation occurrence (GET)
 ---------------------------------------------
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = " GET /vnf_lcm_op_occs"];
-    "tacker-server" -> "tacker-server" [label = "request validation"];
-    Client <-- "tacker-server" [label = " Response 200 OK"];
-  }
+.. image:: ./support-fundamental-vnf-lcm-based-on-ETSI-NFV/02.png
 
 The procedure consists of the following steps as illustrated in the above sequence:
 
@@ -90,12 +75,7 @@ The procedure consists of the following steps as illustrated in the above sequen
 3) Flow of individual VNF LCM operation occurrences (GET)
 ---------------------------------------------------------
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = " GET /vnf_lcm_op_occs/{vnfLcmOpOccId}"];
-    Client <-- "tacker-server" [label = " Response 200 OK"];
-  }
+.. image:: ./support-fundamental-vnf-lcm-based-on-ETSI-NFV/03.png
 
 #. The Client sends a GET request to the "Individual VNF LCM operation occurrence" resource,
    addressed by the appropriate VNF LCM operation occurrence identifier in its resource URI.
@@ -107,16 +87,7 @@ The procedure consists of the following steps as illustrated in the above sequen
 4) Flow of Subscriptions (POST)
 -------------------------------
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = " POST /subscriptions"];
-    "tacker-server" -> Client [label = " GET {callback URI}"];
-    "tacker-server" <-- Client [label = " Response 204 No Content"];
-    "tacker-server" -> "tacker-server"
-      [label = " generate subscription_id (uuid)"];
-    Client <-- "tacker-server" [label = " Response 201 Created"];
-  }
+.. image:: ./support-fundamental-vnf-lcm-based-on-ETSI-NFV/04.png
 
 #. The Client sends a POST request to the "Subscriptions" resource including in the
    payload body a data structure of type "LccnSubscriptionRequest".
@@ -133,13 +104,7 @@ The procedure consists of the following steps as illustrated in the above sequen
 5) Flow of Subscriptions (GET)
 ------------------------------
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = " GET /subscriptions"];
-    "tacker-server" -> "tacker-server" [label = "request validation"];
-    Client <-- "tacker-server" [label = " Response 200 OK"];
-  }
+.. image:: ./support-fundamental-vnf-lcm-based-on-ETSI-NFV/05.png
 
 #. The Client sends a GET request to the resource representing the subscriptions.
 #. VNFM returns a 200 OK response that contains zero or more representations of all existing
@@ -150,12 +115,7 @@ The procedure consists of the following steps as illustrated in the above sequen
 6) Flow of Individual subscriptions (GET)
 -----------------------------------------
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = " GET /subscriptions/{subscriptionId}"];
-    Client <-- "tacker-server" [label = " Response 200 OK"];
-  }
+.. image:: ./support-fundamental-vnf-lcm-based-on-ETSI-NFV/06.png
 
 #. The Client sends a GET request to the resource representing the individual subscription.
 #. VNFM returns a 200 OK response that contains a representation of that individual

@@ -1,0 +1,63 @@
+
+  seqdiag {
+    node_width = 80;
+    edge_length = 100;
+
+    "Client"
+    "Tacker-server"
+    "Tacker-conductor"
+    "VnfLcmDriver"
+    "InfraDriver"
+    "CoordinateVNF script"
+    "TackerDB"
+    "VIM (OpenStack)"
+    "VNF"
+    "LB"
+
+    Client -> "Tacker-server"
+      [label = "1. POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/change_vnfpkg"];
+    Client <-- "Tacker-server"
+      [label = "Response 202 Accepted"];
+    "Tacker-server" ->> "Tacker-conductor"
+      [label = "2. ChangeCurrentVNFPackage"];
+    "Tacker-conductor" -> "VnfLcmDriver"
+      [label = "change_vnfpkg"];
+    "VnfLcmDriver" -> "InfraDriver"
+      [label = "3. create_newVNF"];
+    "InfraDriver" -> "VIM (OpenStack)"
+      [label = "4. create_newVNF"];
+    "InfraDriver" <-- "VIM (OpenStack)"
+      [label = ""];
+    "VnfLcmDriver" <-- "InfraDriver"
+      [label = ""];
+    "VnfLcmDriver" -> "CoordinateVNF script"
+      [label = "5. CoordinateVNF"];
+    "CoordinateVNF script" -> "VNF"
+      [label = "6. Coordinate new VNF"];
+    "CoordinateVNF script" <-- "VNF"
+      [label = ""];
+    "CoordinateVNF script" -> "LB"
+      [label = "7. update_loadbalancer"];
+    "CoordinateVNF script" <-- "LB"
+      [label = ""];
+    "CoordinateVNF script" -> "VNF"
+      [label = "8. Coordinate old VNF"];
+    "CoordinateVNF script" <-- "VNF"
+      [label = ""];
+    "VnfLcmDriver" <-- "CoordinateVNF script"
+      [label = ""];
+    "VnfLcmDriver" -> "InfraDriver"
+      [label = "9. terminate_oldVNF"];
+    "InfraDriver" -> "VIM (OpenStack)"
+      [label = "10. terminate_oldVNF"];
+    "InfraDriver" <-- "VIM (OpenStack)"
+      [label = ""];
+    "VnfLcmDriver" <-- "InfraDriver"
+      [label = ""];
+    "VnfLcmDriver" -> "TackerDB"
+      [label = "11. Update_DB"];
+    "VnfLcmDriver" <-- "TackerDB"
+      [label = ""];
+    "Tacker-conductor" <-- "VnfLcmDriver"
+      [label = ""];
+  }

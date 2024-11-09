@@ -46,43 +46,7 @@ The operation provided through this interface is:
 
 Precondition: VNF instance in INSTANTIATED state.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    Client -> "tacker-server"
-      [label = "POST /vnf_instances/{vnfInstanceId}/scale"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (STARTING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "trriger asynchronous task"];
-    Client <- "tacker-conductor" [label = "POST /grants"];
-    Client --> "tacker-conductor" [label = "201 Created"];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
-    "VnfLcmDriver" -> "openstackDriver" [label = "execute openstackDriver"];
-    "openstackDriver" -> "heat" [label = "resourse signal"];
-    "openstackDriver" -> "heat" [label = "update stack"];
-    "openstackDriver" <-- "heat" [label = ""];
-    "VnfLcmDriver" <-- "openstackDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "MgmtDriver" [label = "execute MgmtDriver"];
-    "MgmtDriver" -> "VNF" [label = "VNF Configuration"];
-    "MgmtDriver" <-- "VNF" [label = ""];
-    "tacker-conductor" <-- "MgmtDriver" [label = ""];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (COMPLETED)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-scale-api-based-on-etsi-nfv-sol/01.png
 
 
 The procedure consists of the following steps as illustrated in above sequence:
@@ -120,43 +84,7 @@ scaled.
 
 Precondition: VNF instance in INSTANTIATED state.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    Client -> "tacker-server"
-      [label = "POST /vnf_instances/{vnfInstanceId}/scale"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (STARTING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "trriger asynchronous task"];
-    Client <- "tacker-conductor" [label = "POST /grants"];
-    Client --> "tacker-conductor" [label = "201 Created"];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "MgmtDriver" [label = "execute MgmtDriver"];
-    "MgmtDriver" -> "VNF" [label = "VNF Configuration"];
-    "MgmtDriver" <-- "VNF" [label = ""];
-    "tacker-conductor" <-- "MgmtDriver" [label = ""];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
-    "VnfLcmDriver" -> "openstackDriver" [label = "execute openstackDriver"];
-    "openstackDriver" -> "heat" [label = "resourse signal"];
-    "openstackDriver" -> "heat" [label = "update stack"];
-    "openstackDriver" <-- "heat" [label = ""];
-    "VnfLcmDriver" <-- "openstackDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (COMPLETED)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-scale-api-based-on-etsi-nfv-sol/02.png
 
 
 The procedure consists of the following steps as illustrated in above sequence:

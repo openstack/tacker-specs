@@ -67,55 +67,7 @@ involved in getting information of lifecycle management operation.
 1) Flow of Scale VNF
 --------------------
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 72;
-    edge_length = 100;
-
-    Client; NFVO; tacker-server; tacker-conductor; VnfLcmDriver; MgmtDriver; openstackDriver; heat; VNF;
-
-    Client -> "tacker-server"
-      [label = "POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/scale"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "trigger asynchronous task"];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (STARTING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    NFVO <- "tacker-conductor" [label = "POST /grants"];
-    NFVO --> "tacker-conductor" [label = "201 Created"];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute preamble operation"];
-    "VnfLcmDriver" -> "MgmtDriver" [label = "execute preamble operation"];
-    "MgmtDriver" -> "VNF" [label = "VNF Configuration"];
-    "MgmtDriver" <-- "VNF" [label = ""];
-    "VnfLcmDriver" <-- "MgmtDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute LCM operation"];
-    "VnfLcmDriver" ->> "VnfLcmDriver" [label = "calculate the number of VMs to scale-out or scale-in"];
-    "VnfLcmDriver" -> "openstackDriver" [label = "execute openstackDriver"];
-    "openstackDriver" -> "heat" [label = "[only for scale-in] mark stack unhealthy (PATCH /v1/{tenant_id}/stacks/{stack_name}/{stack_id}/resources/{resource_name_or_physical_id})"];
-    "openstackDriver" <-- "heat" [label = ""];
-    "openstackDriver" -> "heat" [label = "update stack (PATCH /v1/{tenant_id}/stacks/{stack_name}/{stack_id})"];
-    "openstackDriver" <-- "heat" [label = ""];
-    "VnfLcmDriver" <-- "openstackDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute postamble operation"];
-    "VnfLcmDriver" -> "MgmtDriver" [label = "execute postamble operation"];
-    "MgmtDriver" -> "VNF" [label = "VNF Configuration"];
-    "MgmtDriver" <-- "VNF" [label = ""];
-    "VnfLcmDriver" <-- "MgmtDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (COMPLETED or FAILED_TEMP)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./enhance-nfv-solv3-lcm-operation/01.png
 
 The procedure consists of the following steps as illustrated in above sequence:
 
@@ -193,54 +145,7 @@ combining terminate vnf and instantiate vnf.
 
 The following shows the sequence of patterns A-1, A-2, and B-1.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 72;
-    edge_length = 100;
-
-    Client; NFVO; tacker-server; tacker-conductor; VnfLcmDriver; MgmtDriver; openstackDriver; heat; VNF;
-
-    Client -> "tacker-server"
-      [label = "POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/heal"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "trigger asynchronous task"];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (STARTING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "NFVO" <- "tacker-conductor" [label = "POST /grants"];
-    "NFVO" --> "tacker-conductor" [label = "201 Created"];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute preamble operation"];
-    "VnfLcmDriver" -> "MgmtDriver" [label = "execute preamble operation"];
-    "MgmtDriver" -> "VNF" [label = "VNF Configuration"];
-    "MgmtDriver" <-- "VNF" [label = ""];
-    "VnfLcmDriver" <-- "MgmtDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute LCM operation"];
-    "VnfLcmDriver" -> "openstackDriver" [label = "execute openstackDriver"];
-    "openstackDriver" -> "heat" [label = "mark stack unhealthy (PATCH /v1/{tenant_id}/stacks/{stack_name}/{stack_id}/resources/{resource_name_or_physical_id})"];
-    "openstackDriver" <-- "heat" [label = ""];
-    "openstackDriver" -> "heat" [label = "update stack (PATCH /v1/{tenant_id}/stacks/{stack_name}/{stack_id})"];
-    "openstackDriver" <-- "heat" [label = ""];
-    "VnfLcmDriver" <-- "openstackDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute postamble operation"];
-    "VnfLcmDriver" -> "MgmtDriver" [label = "execute postamble operation"];
-    "MgmtDriver" -> "VNF" [label = "VNF Configuration"];
-    "MgmtDriver" <-- "VNF" [label = ""];
-    "VnfLcmDriver" <-- "MgmtDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (COMPLETED or FAILED_TEMP)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./enhance-nfv-solv3-lcm-operation/02.png
 
 The procedure consists of the following steps as illustrated in above sequence:
 
@@ -274,25 +179,7 @@ Postcondition: VNF instance in "INSTANTIATED" state, and healed.
 3) Flow of the Modify VNF Information
 -------------------------------------
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 140;
-    edge_length = 340;
-
-    Client; tacker-server; tacker-conductor;
-
-    Client -> "tacker-server" [label = "PATCH vnflcm/v2/vnf_instances/{vnfInstanceId}"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" -> "tacker-conductor" [label = "trigger asynchronous task"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "VNF Modification"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (COMPLETED or FAILED_TEMP)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./enhance-nfv-solv3-lcm-operation/03.png
 
 
 Precondition: The resource representing the VNF instance has been created.
@@ -315,52 +202,7 @@ is updated.
 4) Flow of Change external VNF connectivity
 -------------------------------------------
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 72;
-    edge_length = 100;
-
-    Client; NFVO; tacker-server; tacker-conductor; VnfLcmDriver; MgmtDriver; openstackDriver; heat; VNF;
-
-    Client -> "tacker-server"
-      [label = "POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/change_ext_conn"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "trigger asynchronous task"];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (STARTING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "NFVO" <- "tacker-conductor" [label = "POST /grants"];
-    "NFVO" --> "tacker-conductor" [label = "201 Created"];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute preamble operation"];
-    "VnfLcmDriver" -> "MgmtDriver" [label = "execute preamble operation"];
-    "MgmtDriver" -> "VNF" [label = "VNF Configuration"];
-    "MgmtDriver" <-- "VNF" [label = ""];
-    "VnfLcmDriver" <-- "MgmtDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute LCM operation"];
-    "VnfLcmDriver" -> "openstackDriver" [label = "execute openstackDriver"];
-    "openstackDriver" -> "heat" [label = "update stack (PUT /v1/{tenant_id}/stacks/{stack_name}/{stack_id})"];
-    "openstackDriver" <-- "heat" [label = ""];
-    "VnfLcmDriver" <-- "openstackDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute postamble operation"];
-    "VnfLcmDriver" -> "MgmtDriver" [label = "execute postamble operation"];
-    "MgmtDriver" -> "VNF" [label = "VNF Configuration"];
-    "MgmtDriver" <-- "VNF" [label = ""];
-    "VnfLcmDriver" <-- "MgmtDriver" [label = ""];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (COMPLETED or FAILED_TEMP)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./enhance-nfv-solv3-lcm-operation/04.png
 
 
 The procedure consists of the following steps as illustrated in above sequence:

@@ -1,0 +1,8 @@
+
+  seqdiag {
+    user  -> nfvoplugin [label = "register_vim"];
+    nfvoplugin -> nfvoplugin [label = "generate workflow with auto generated action id"];
+    nfvoplugin -> nfvoplugin [label = "update vim with monitor action id"];
+    nfvoplugin -> mistral [label = "run the workflow"];
+    mistral_vim_monitor_action -> conductor [label = "update_vim"]
+  }

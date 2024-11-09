@@ -62,29 +62,7 @@ Flow of the Stack update process
 
 * Heal VNF instance (POST /vnf_instances/(vnfinstanceId)/heal)
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> WSGIMiddleware [label = "1. HEAL VNF"];
-    WSGIMiddleware -->> WSGIMiddleware [label = "request validation"];
-    Client <-- WSGIMiddleware [label = "202 Accepted"];
-    WSGIMiddleware -> TackerConductor [label = "Trigger asynchronous task"];
-    TackerConductor --> VnfLcmDriver [label = "heal_vnf(vnf_instance, heal_vnf_request)"];
-    VnfLcmDriver --> OpenstackDriver [note = "Determine the following:\n 1. If UserData Class is specified in Instantiate.\n 2. heal exists in the specified class.\n 3. If heal does not exist in the UserData Class, do existing process."];
-    OpenstackDriver --> OpenstackDriver [note = "Execute heal of UserData Class based on the HOT info,\n VNFD info, Stack parameter info and VNF info, \n and create Parameter"]
-    OpenstackDriver --> Heat [label = "2. Mark resource unhealthy"];
-    OpenstackDriver <-- Heat;
-    OpenstackDriver --> Heat [label = "3. update stack"];
-    OpenstackDriver <-- Heat [label = "stack updated"];
-    VnfLcmDriver <-- OpenstackDriver;
-    VnfLcmDriver --> OpenstackDriver [label = "post_heal_vnf(vnf_instance, vim_connection_info,heal_vnf_request)"];
-    OpenstackDriver --> Heat [label = "4. get updated resource data"];
-    OpenstackDriver <-- Heat [label = "resources"];
-    VnfLcmDriver <-- OpenstackDriver;
-    VnfLcmDriver -->> VnfLcmDriver [label = "5. update DB"];
-    TackerConductor <-- VnfLcmDriver [label = "request successfully completed"];
-
-  }
+.. image:: ./support-heal-scale-in-user_lcm/01.png
 
 
 Precondition: The resource representing the VNF instance has been created and instantiated.
@@ -93,27 +71,7 @@ Precondition: The resource representing the VNF instance has been created and in
 * Scale VNF instance (POST /vnf_instances/{vnfInstanceId}/scale)
 
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> WSGIMiddleware [label = "1. Scale VNF"];
-    WSGIMiddleware -->> WSGIMiddleware [label = "request validation"];
-    Client <-- WSGIMiddleware [label = "202 Accepted"];
-    WSGIMiddleware -> TackerConductor [label = "Trigger asynchronous task"];
-    TackerConductor --> VnfLcmDriver [label = "scale_vnf(vnf_instance, scale_vnf_request)"];
-    VnfLcmDriver --> OpenstackDriver [note = "Determine the following:\n 1. If UserData Class is specified in Instantiate.\n 2. Scale exists in the specified class.\n 3. If Scale does not exist in the UserData Class, do existing process."];
-    OpenstackDriver --> OpenstackDriver [note = "Execute heal of UserData Class based on the HOT info,\n VNFD info, Stack parameter info and VNF info, \n and create Parameter"]
-    OpenstackDriver --> Heat [label = "2. update stack"];
-    OpenstackDriver <-- Heat [label = "stack updated"];
-    VnfLcmDriver <-- OpenstackDriver;
-    VnfLcmDriver --> OpenstackDriver [label = "post_scale_vnf(vnf_instance, vim_connection_info,scale_vnf_request)"];
-    OpenstackDriver --> Heat [label = "3. get updated resource data"];
-    OpenstackDriver <-- Heat [label = "resources"];
-    VnfLcmDriver <-- OpenstackDriver;
-    VnfLcmDriver -->> VnfLcmDriver [label = "5. update DB"];
-    TackerConductor <-- VnfLcmDriver [label = "request successfully completed"];
-
-   }
+.. image:: ./support-heal-scale-in-user_lcm/02.png
 
 Precondition: The resource representing the VNF instance has been created and instantiated.
 

@@ -1,0 +1,75 @@
+
+  seqdiag {
+    node_width = 80;
+    edge_length = 100;
+
+    "Client"
+    "Tacker-server"
+    "Tacker-conductor"
+    "VnfLcmDriver"
+    "OpenstackDriver"
+    "Heat"
+    "MgmtDriver"
+    "VnfInstance(Tacker DB)"
+    "RemoteCommandExecutor"
+
+    Client -> "Tacker-server"
+      [label = "POST /vnf_instances/{vnfInstanceId}/heal"];
+    Client <-- "Tacker-server"
+      [label = "Response 202 Accepted"];
+    "Tacker-server" -> "Tacker-conductor"
+      [label = "trigger asynchronous task"];
+
+    "Tacker-conductor" -> "MgmtDriver"
+      [label = "heal_start"];
+    "MgmtDriver" -> "VnfInstance(Tacker DB)"
+      [label = "get the vim connection info"];
+    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
+      [label = ""];
+    "MgmtDriver" -> "MgmtDriver"
+      [label = "get the vm info to be deleted by the request data"];
+    "MgmtDriver" -> "RemoteCommandExecutor"
+      [label = "try evacuating the pod running on the failed VM to another
+      worker node"];
+    "MgmtDriver" <-- "RemoteCommandExecutor"
+      [label = ""];
+    "MgmtDriver" -> "RemoteCommandExecutor"
+      [label = "Notify the Master-node of the failed VM"];
+    "MgmtDriver" <-- "RemoteCommandExecutor"
+      [label = ""];
+    "Tacker-conductor" <-- "MgmtDriver"
+      [label = ""];
+
+    "Tacker-conductor" -> "VnfLcmDriver"
+      [label = "execute VnfLcmDriver"];
+    "VnfLcmDriver" -> "OpenstackDriver"
+      [label = "execute OpenstackDriver"];
+    "OpenstackDriver" -> "Heat"
+      [label = "resource signal"];
+    "OpenstackDriver" -> "Heat"
+      [label = "update stack"];
+    "OpenstackDriver" <-- "Heat"
+      [label = ""];
+    "VnfLcmDriver" <-- "OpenstackDriver"
+      [label = ""];
+    "Tacker-conductor" <-- "VnfLcmDriver"
+      [label = ""];
+
+    "Tacker-conductor" -> "MgmtDriver"
+      [label = "heal_end"];
+    "MgmtDriver" -> "VnfInstance(Tacker DB)"
+      [label = "get the vim connection info"];
+    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
+      [label = ""];
+    "MgmtDriver" -> "Heat"
+      [label = "get the new vm info created by Heal operation."];
+    "MgmtDriver" <-- "Heat"
+      [label = ""];
+    "MgmtDriver" -> "RemoteCommandExecutor"
+      [label = "Install Kubernetes on the new Worker-node"];
+    "MgmtDriver" <-- "RemoteCommandExecutor"
+      [label = ""];
+
+    "Tacker-conductor" <-- "MgmtDriver"
+      [label = ""];
+  }

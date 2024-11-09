@@ -1,0 +1,55 @@
+
+  seqdiag {
+    Client; NFVO; tacker-server; tacker-conductor;
+
+    Client -> "tacker-server"
+      [label = "PATCH /vnf_instances/{vnfInstanceId} (vnfPkgId)"];
+    Client <-- "tacker-server" [label = "Response 202 Accepted"];
+    "tacker-server" -> "tacker-conductor"
+      [label = "execute Individual vnf_package process{vnfPkgId}"];
+    NFVO <- "tacker-conductor"
+      [label = "GET /vnf_packages/ with attribute filter(vnfdId)"];
+    NFVO --> "tacker-conductor" [label = "Response 200 OK with VnfPkgInfo"];
+    "tacker-server" <<- "tacker-conductor" [label = "(VnfPkgInfo)"];
+    "tacker-server" ->> "tacker-server"
+      [label = "Update VNF instance resource(VnfPkgInfo , vnfPkgId)"];
+    "tacker-server" -> "tacker-conductor"
+      [label = "execute vnf_package content process{vnfPkgId}"];
+    NFVO <- "tacker-conductor"
+      [label = "GET /vnf_packages/{vnfPkgId}/package_content "];
+    NFVO --> "tacker-conductor"
+      [label = "Response 200 OK with VNF package file"];
+    "tacker-server" <<- "tacker-conductor"
+      [label = "(VNF package content file)"];
+    "tacker-server" ->> "tacker-server"
+      [label = "Store received package file"];
+    "tacker-server" -> "tacker-conductor"
+      [label = "execute vnf_package vnfd process{vnfPkgId}"];
+    NFVO <- "tacker-conductor"
+    [label =
+    "GET /vnf_packages/{vnfPkgId}/vnfd
+    with 'Accept' header contains 'text/plain'"];
+    NFVO --> "tacker-conductor" [label = "Response 200 OK with VNFD contents"];
+    "tacker-server" <<- "tacker-conductor" [label = "(VNFD)"];
+    "tacker-server" ->> "tacker-server"
+      [label = "Update VNF instance resource(VNFD)"];
+    "tacker-server" -> "tacker-conductor"
+      [label = "execute vnf_package artifact process{vnfPkgId}"];
+    NFVO <- "tacker-conductor"
+      [label = "GET /vnf_packages/{vnfPkgId}/artifacts/{artifactPath}"];
+    NFVO --> "tacker-conductor" [label = "Response 200 OK with artifact file"];
+    "tacker-server" <<- "tacker-conductor" [label = "(artifact file)"];
+    "tacker-server" ->> "tacker-server"
+      [label = "Store received package file"];
+    "tacker-server" -> "tacker-conductor"
+      [label = "trriger asynchronous task"];
+    "tacker-conductor" ->> "tacker-conductor"
+      [label = "execute notification process"];
+    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
+    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
+    "tacker-conductor" ->> "tacker-conductor" [label = "VNF Modification"];
+    "tacker-conductor" ->> "tacker-conductor"
+      [label = "execute notification process"];
+    Client <- "tacker-conductor" [label = "POST {callback URI} (COMPLETED)"];
+    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
+  }

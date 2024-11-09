@@ -57,13 +57,7 @@ The operations provided through this interface are:
 1) Flow of creation of a VNF instance resource
 ----------------------------------------------
 
-.. seqdiag::
-
-  seqdiag {
-    Consumer -> VNFM [label = "1. POST .../vnf_instances"];
-    VNFM -->> VNFM [label = "2. Create VNF instance resource"];
-    Consumer <- VNFM [label = "3. 201 Created"];
-  }
+.. image:: ./etsi-nfv-sol-rest-api-for-VNF-deployment/01.png
 
 The procedure consists of the following steps as illustrated in above sequence:
 
@@ -89,42 +83,7 @@ been created in "NOT_INSTANTIATED" state.
 2) Flow of Instantiation of a VNF instance
 ------------------------------------------
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> WSGIMiddleware [label = "instantiate VNF"];
-    WSGIMiddleware -->> WSGIMiddleware [label = "request validation"];
-    Client <-- WSGIMiddleware [label = "202 Accepted"];
-    WSGIMiddleware -> TackerConductor [label = "Trigger asynchronous task"];
-    TackerConductor --> VnfLcmDriver [label = "instantiate_vnf(vnf_instance,
-        instantiate_vnf_request)"];
-    VnfLcmDriver --> ToscaParser [label = "read csar"];
-    VnfLcmDriver <-- ToscaParser [label = "tosca object"];
-    VnfLcmDriver -->> VnfLcmDriver [label = "get VNFD, prepare resource request"];
-    VnfLcmDriver --> OpenstackDriver [label = "1. pre_instantiate_vnf(resources)"];
-    OpenstackDriver --> Glance [label = "createImage"]
-    OpenstackDriver <-- Glance [label = "image created"]
-    VnfLcmDriver <-- OpenstackDriver [label = " resource  created"];
-    VnfLcmDriver --> OpenstackDriver [label = "instantiate_vnf(vnf_instance,
-        instantiate_vnf_request, vnfd_dict, resource_list)"];
-    OpenstackDriver --> HeatClient [label = "create Heat Client"];
-    OpenstackDriver <-- HeatClient [label = "Heat Client"];
-
-    OpenstackDriver --> TranslateTemplate [label = "convert Tosca to HOT"];
-    TranslateTemplate --> ToscaParser [label = "get tosca template"];
-    TranslateTemplate <-- ToscaParser [label = "tosca template"];
-    TranslateTemplate --> HeatTranslator [label = "Tosca to HOT"];
-    TranslateTemplate <-- HeatTranslator [label = "HOT"];
-    TranslateTemplate --> ToscaUtil [label = "post processing HOT using
-        resource info and instantiateVnf request"];
-    TranslateTemplate <-- ToscaUtil [label = "HOT"];
-    OpenstackDriver <-- TranslateTemplate [label = "HOT"];
-    OpenstackDriver --> Heat [label = "2. create stack"];
-    OpenstackDriver <-- Heat [label = "stack created"];
-    VnfLcmDriver <-- OpenstackDriver [label = "return stack id"];
-    VnfLcmDriver -->> VnfLcmDriver [label = "3 update DB"];
-    TackerConductor <-- VnfLcmDriver [label = "instantiation completed"];
-  }
+.. image:: ./etsi-nfv-sol-rest-api-for-VNF-deployment/02.png
 
 The procedure consists of the following steps as illustrated in above sequence:
 
@@ -151,28 +110,7 @@ The procedure consists of the following steps as illustrated in above sequence:
 
 Precondition: VNF instance in "INSTANTIATED" state.
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> WSGIMiddleware [label = "1. HEAL VNF"];
-    WSGIMiddleware -->> WSGIMiddleware [label = "request validation"];
-    Client <-- WSGIMiddleware [label = "202 Accepted"];
-    WSGIMiddleware -> TackerConductor [label = "Trigger asynchronous task"];
-    TackerConductor --> VnfLcmDriver [label = "heal_vnf(vnf_instance, heal_vnf_request)"];
-    VnfLcmDriver --> OpenstackDriver [label = "heal_vnf(vnf_instance, vim_connection_info,heal_vnf_request)"];
-    OpenstackDriver --> Heat [label = "2. Mark resource unhealthy"];
-    OpenstackDriver <-- Heat;
-    OpenstackDriver --> Heat [label = "3. update stack"];
-    OpenstackDriver <-- Heat [label = "stack updated"];
-    VnfLcmDriver <-- OpenstackDriver;
-    VnfLcmDriver --> OpenstackDriver [label = "post_heal_vnf(vnf_instance, vim_connection_info,heal_vnf_request)"];
-    OpenstackDriver --> Heat [label = "4. get updated resource data"];
-    OpenstackDriver <-- Heat [label = "resources"];
-    VnfLcmDriver <-- OpenstackDriver;
-    VnfLcmDriver -->> VnfLcmDriver [label = "5. update DB"];
-    TackerConductor <-- VnfLcmDriver [label = "request successfully completed"];
-
-  }
+.. image:: ./etsi-nfv-sol-rest-api-for-VNF-deployment/03.png
 
 The procedure consists of the following steps as illustrated in above sequence:
 
@@ -188,23 +126,7 @@ Postcondition: VNF instance in "INSTANTIATED" state, and healed.
 4) Flow of Termination of a VNF instance
 ----------------------------------------
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> WSGIMiddleware [label = "Terminate VNF"];
-    WSGIMiddleware -->> WSGIMiddleware [label = "request validation"];
-    Client <-- WSGIMiddleware [label = "202 Accepted"];
-    WSGIMiddleware -> TackerConductor [label = "Trigger asynchronous task"];
-    TackerConductor --> VnfLcmDriver [label = "terminate_vnf(vnf_instance, terminate_vnf_request)"];
-    VnfLcmDriver --> OpenstackDriver [label = "terminate_vnf(vnf_instance, terminate_vnf_request, resource_list)"];
-    OpenstackDriver --> Heat [label = "1. delete stack"];
-    OpenstackDriver <-- Heat [label = "stack deleted"];
-    OpenstackDriver --> Glance [label = "2. delete images"]
-    OpenstackDriver <-- Glance [label = "images deleted"]
-    VnfLcmDriver <-- OpenstackDriver [label = "resources removed"];
-    TackerConductor <-- VnfLcmDriver [label = "request successfully completed"];
-    TackerConductor -->> TackerConductor [label = "update DB"];
-  }
+.. image:: ./etsi-nfv-sol-rest-api-for-VNF-deployment/04.png
 
 The procedure consists of the following steps as illustrated in above sequence:
 
@@ -220,13 +142,7 @@ Postcondition: "instantiationState" should be set to "NOT_INSTANTIATED".
 
 Precondition: VNF instance in NOT_INSTANTIATED state.
 
-.. seqdiag::
-
-  seqdiag {
-    Consumer -> VNFM [label = "1.DELETE .../vnf_instances/{vnfInstanceId}"];
-    VNFM -->> VNFM [label = "2. Delete VNF instance resource"];
-    Consumer <- VNFM [label = "3. 204 No content"];
-    }
+.. image:: ./etsi-nfv-sol-rest-api-for-VNF-deployment/05.png
 
 The procedure consists of the following steps as illustrated in above sequence:
 

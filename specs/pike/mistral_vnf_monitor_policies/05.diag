@@ -1,0 +1,6 @@
+
+  seqdiag {
+    user  -> vnfmplugin [label = "scale_vnf with monitor_policies property"];
+    vnfmplugin -> vnfmplugin [label = "get workflow with action id for the VNF"];
+    vnfmplugin -> vnf_policy_monitor [label = "update action job via RPC"]
+  }

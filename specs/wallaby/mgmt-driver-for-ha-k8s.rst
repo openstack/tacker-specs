@@ -342,76 +342,7 @@ Sequence diagram
 Following sequence diagram describes the components involved and the flow of
 HA Kubernetes Master deployment in ``instantiate_end``:
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfLcmDriver"
-    "OpenstackDriver"
-    "Heat"
-    "MgmtDriver"
-    "RemoteCommandExecutor"
-
-    Client -> "Tacker-server"
-      [label = "instantiate VNF"];
-    Client <-- "Tacker-server"
-      [label = "Response 202 Accepted"];
-
-    "Tacker-server" -> "Tacker-conductor"
-      [label = "trigger asynchronous task"];
-
-    "Tacker-conductor" -> "VnfLcmDriver"
-      [label = "instantiate VNF"];
-
-    "VnfLcmDriver" -> "OpenstackDriver"
-      [label = "pre instantiate VNF"];
-    "VnfLcmDriver" <-- "OpenstackDriver"
-      [label = ""];
-
-    "VnfLcmDriver" -> "OpenstackDriver"
-      [label = "instantiate VNF"];
-
-    "OpenstackDriver" -> "Heat"
-      [label = "create stack"];
-    "OpenstackDriver" <-- "Heat"
-      [label = ""];
-
-    "VnfLcmDriver" <-- "OpenstackDriver"
-      [label = "return stack id"];
-
-    "VnfLcmDriver" -> "VnfLcmDriver"
-      [label = "update DB"];
-
-    "VnfLcmDriver" -> "MgmtDriver"
-      [label = "instantiate_end"];
-
-    "MgmtDriver" -> "Heat"
-      [label = "get the new vm info created."];
-    "MgmtDriver" <-- "Heat"
-      [label = ""];
-    "MgmtDriver" -> "RemoteCommandExecutor"
-      [label = "Changes HAProxy configuration"];
-    "MgmtDriver" <-- "RemoteCommandExecutor"
-      [label = ""];
-    "MgmtDriver" -> "RemoteCommandExecutor"
-      [label = "Install Kubernetes on the new Master-node"];
-    "MgmtDriver" <-- "RemoteCommandExecutor"
-      [label = ""];
-    "MgmtDriver" -> "RemoteCommandExecutor"
-      [label = "Install Kubernetes on the new Worker-node"];
-    "MgmtDriver" <-- "RemoteCommandExecutor"
-      [label = ""];
-
-    "VnfLcmDriver" <-- "MgmtDriver"
-      [label = ""];
-    "Tacker-conductor" <-- "VnfLcmDriver"
-      [label = ""];
-  }
+.. image:: ./mgmt-driver-for-ha-k8s/01.png
 
 The procedure consists of the following steps as illustrated in above sequence.
 The following No.3 and later processes are executed as ``instantiate_end``.

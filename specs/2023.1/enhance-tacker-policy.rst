@@ -84,23 +84,7 @@ pass them to policy checker when calling.
 
 The flow of a policy check in API process to support enhanced Tacker policy.
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> Keystonemiddleware [label = "request"];
-    Keystonemiddleware -> "API Process" [label = "1. Request with user info"];
-    "API Process" -> TackerDB [label = "2. Get the accessed \nresources from the TackerDB"]
-    "API Process" <-- TackerDB [label = "return the accessed\n resources"];
-    "API Process" -> "API Process" [label = "3. Get required \nresource \nattributes \nfrom accessed \nresources"];
-    "API Process" -> Context [label = "4. Invoke policy check function with accessed resource\n attributes"];
-    Context -> Context [label = "5. Convert special \nroles to user\n attributes"];
-    Context -> oslo.policy [label = "6. Invoke policy enforcer\n with resource attributes\n and user attributes"];
-    Context <-- oslo.policy;
-    "API Process" <-- Context;
-    === 7. Operate the accessed resource. ===
-    Keystonemiddleware <-- "API Process" [label = "response"];
-    Client <-- Keystonemiddleware [label = "response"];
-  }
+.. image:: ./enhance-tacker-policy/01.png
 
 Step 3 is specialized and needs to be implemented by each API process by itself.
 The other steps are common or already exist for all API processes to be changed:
@@ -275,22 +259,7 @@ list operation.
 
 The flow of a policy filter in API process to support enhanced Tacker policy.
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> Keystonemiddleware [label = "request"];
-    Keystonemiddleware -> "API Process" [label = "1. Request with user info"];
-    "API Process" -> Context [label = "2. Invoke policy check\n function without resource \nattributes"];
-    "API Process" <-- Context;
-    "API Process" -> TackerDB [label = "3. Get the accessed resources from the database"];
-    "API Process" <-- TackerDB [label = "return accessed resources"];
-    "API Process" -> Context [label = "4. Get user attributes"];
-    Context -> Context [label = "5. Convert special \nroles to user\n attributes"];
-    "API Process" <-- Context [label = "return user attributes"];
-    "API Process" -> "API Process" [label = "6. Filter the list\n operation results \nbased on policy\n rules"];
-    Keystonemiddleware <-- "API Process" [label = "7. Return the filtered\n result to user"];
-    Client <-- Keystonemiddleware [label = "response"];
-  }
+.. image:: ./enhance-tacker-policy/02.png
 
 Step 6 is specialized and needs to be implemented by each API process by itself.
 The other steps are common or already exist steps for all API processes to be

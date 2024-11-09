@@ -1,0 +1,51 @@
+
+  seqdiag {
+    node_width = 80;
+    edge_length = 100;
+
+    "Client"
+    "Tacker-server"
+    "Tacker-conductor"
+    "VnfLcmDriver"
+    "OpenstackDriver"
+    "Heat"
+    "MgmtDriver"
+    "VnfInstance(Tacker DB)"
+    "NfvoPlugin"
+
+    Client -> "Tacker-server"
+      [label = "POST /vnf_instances/{vnfInstanceId}/terminate"];
+    Client <-- "Tacker-server"
+      [label = "Response 202 Accepted"];
+    "Tacker-server" -> "Tacker-conductor"
+      [label = "trigger asynchronous task"];
+
+   "Tacker-conductor" -> "VnfLcmDriver"
+      [label = "execute VnfLcmDriver"];
+    "VnfLcmDriver" -> "OpenstackDriver"
+      [label = "execute OpenstackDriver"];
+    "OpenstackDriver" -> "Heat"
+      [label = "delete stack"];
+    "OpenstackDriver" <-- "Heat"
+      [label = "stack deleted"];
+    "VnfLcmDriver" <-- "OpenstackDriver"
+      [label = "resources removed"];
+
+    "VnfLcmDriver" -> "MgmtDriver"
+      [label = "terminate_end"];
+    "MgmtDriver" -> "NfvoPlugin"
+      [label = "delete the VIM information"];
+    "MgmtDriver" <-- "NfvoPlugin"
+      [label = ""];
+    "MgmtDriver" -> "VnfInstance(Tacker DB)"
+      [label = "Clear the Kubernetes cluster information stored in the
+      vim_connection_info of the VNF Instance"];
+    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
+      [label = ""];
+    "VnfLcmDriver" <-- "MgmtDriver"
+      [label = ""];
+    "Tacker-conductor" <-- "VnfLcmDriver"
+      [label = ""];
+
+
+  }

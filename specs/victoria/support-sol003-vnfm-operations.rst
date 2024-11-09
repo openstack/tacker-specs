@@ -55,54 +55,7 @@ VNF packages uses "vnf_packages" API.
 
 Precondition: One or more "Individual VNF package" resources are created.
 
-.. seqdiag::
-
-  seqdiag {
-    Client; NFVO; tacker-server; tacker-conductor;
-
-    Client -> "tacker-server" [label = "POST /vnf_instances/"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Create VNF instance resource"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "execute vnf_package list process{filter}"];
-    NFVO <- "tacker-conductor"
-      [label = "GET /vnf_packages/ with attribute filter(vnfdId)"];
-    NFVO --> "tacker-conductor" [label = "Response 200 OK with VnfPkgInfo"];
-    "tacker-server" <<- "tacker-conductor" [label = "(VnfPkgInfo)"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Update VNF instance resource(VnfPkgInfo)"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "execute vnf_package content process{vnfPkgId}"];
-    NFVO <- "tacker-conductor"
-      [label = "GET /vnf_packages/{vnfPkgId}/package_content "];
-    NFVO --> "tacker-conductor"
-      [label = "Response 200 OK with VNF package file"];
-    "tacker-server" <<- "tacker-conductor"
-      [label = "(VNF package content file)"];
-    "tacker-server" ->> "tacker-server"[label = "Store received package file"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "execute vnf_package vnfd process{vnfPkgId}"];
-    NFVO <- "tacker-conductor"
-    [label =
-    "GET /vnf_packages/{vnfPkgId}/vnfd with 'Accept' header contains 'text/plain'"];
-    NFVO --> "tacker-conductor" [label = "Response 200 OK with VNFD contents"];
-    "tacker-server" <<- "tacker-conductor" [label = "(VNFD)"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Update VNF instance resource(VNFD)"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "execute vnf_package artifact process{vnfPkgId}"];
-    NFVO <- "tacker-conductor"
-      [label = "GET /vnf_packages/{vnfPkgId}/artifacts/{artifactPath}"];
-    NFVO --> "tacker-conductor" [label = "Response 200 OK with artifact file"];
-    "tacker-server" <<- "tacker-conductor" [label = "(artifact file)"];
-    "tacker-server" ->> "tacker-server"
-      [label = "Store received package file"];
-    Client <-- "tacker-server" [label = " Response 201 Created"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI}"];
-    Client --> "tacker-conductor" [label = "Response 204 No Content"];
-  }
+.. image:: ./support-sol003-vnfm-operations/01.png
 
 
 * VNF packages (GET)
@@ -141,34 +94,7 @@ Grant API is sent in below sequences:
 - Scaling
 - Termination
 
-.. seqdiag::
-
-  seqdiag {
-    Client; NFVO; tacker-server; tacker-conductor;
-
-    Client -> "tacker-server" [label = "LCM Operation Request"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (STARTING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-server" -> "tacker-conductor"
-      [label = "trriger asynchronous task"];
-    NFVO <- "tacker-conductor" [label = "POST /grants"];
-    NFVO --> "tacker-conductor" [label = "201 Created"];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute MgmtDriver"];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" ->> "tacker-conductor"
-      [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (COMPLETED)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-sol003-vnfm-operations/02.png
 
 
 After receiving 201 created with body data, VNFM updates the grant information.

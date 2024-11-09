@@ -231,61 +231,7 @@ Following is a sample of scaling request body:
 Following sequence diagram describes the components involved and the flow of VNF
 ``scale-out`` operation:
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfLcmDriver"
-    "OpenstackDriver"
-    "Heat"
-    "MgmtDriver"
-    "VnfInstance(Tacker DB)"
-    "RemoteCommandExecutor"
-
-    Client -> "Tacker-server"
-      [label = "POST /vnf_instances/{vnfInstanceId}/scale"];
-    Client <-- "Tacker-server"
-      [label = "Response 202 Accepted"];
-    "Tacker-server" -> "Tacker-conductor"
-      [label = "trigger asynchronous task"];
-    "Tacker-conductor" -> "VnfLcmDriver"
-      [label = "execute VnfLcmDriver"];
-    "VnfLcmDriver" -> "OpenstackDriver"
-      [label = "execute OpenstackDriver"];
-    "OpenstackDriver" -> "Heat"
-      [label = "resource signal"];
-    "OpenstackDriver" -> "Heat"
-      [label = "update stack"];
-    "OpenstackDriver" <-- "Heat"
-      [label = ""];
-    "VnfLcmDriver" <-- "OpenstackDriver"
-      [label = ""];
-    "Tacker-conductor" <-- "VnfLcmDriver"
-      [label = ""];
-    "Tacker-conductor" -> "MgmtDriver"
-      [label = "scale_end"];
-
-    "MgmtDriver" -> "VnfInstance(Tacker DB)"
-      [label = "get the vim connection info"];
-    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
-      [label = ""];
-    "MgmtDriver" -> "Heat"
-      [label = "get the new vm info created by scale out operation."];
-    "MgmtDriver" <-- "Heat"
-      [label = ""];
-    "MgmtDriver" -> "RemoteCommandExecutor"
-      [label = "Install Kubernetes on the new Worker-node"];
-    "MgmtDriver" <-- "RemoteCommandExecutor"
-      [label = ""];
-
-    "Tacker-conductor" <-- "MgmtDriver"
-      [label = ""];
-  }
+.. image:: ./mgmt-driver-for-k8s-scale/01.png
 
 The procedure consists of the following steps as illustrated in above sequence
 
@@ -387,61 +333,7 @@ Following is a sample of scaling request body:
 Following sequence diagram describes the components involved and the flow of VNF
 ``scale-in`` operation:
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfLcmDriver"
-    "OpenstackDriver"
-    "Heat"
-    "MgmtDriver"
-    "VnfInstance(Tacker DB)"
-    "RemoteCommandExecutor"
-
-    Client -> "Tacker-server"
-      [label = "POST /vnf_instances/{vnfInstanceId}/scale"];
-    Client <-- "Tacker-server"
-      [label = "Response 202 Accepted"];
-    "Tacker-server" -> "Tacker-conductor"
-      [label = "trigger asynchronous task"];
-
-    "Tacker-conductor" -> "MgmtDriver"
-      [label = "scale_start"];
-    "MgmtDriver" -> "VnfInstance(Tacker DB)"
-      [label = "get the vim connection info"];
-    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
-      [label = ""];
-    "MgmtDriver" -> "Heat"
-      [label = "get the vm info to be removed by scale in operation."];
-    "MgmtDriver" <-- "Heat"
-      [label = ""];
-    "MgmtDriver" -> "RemoteCommandExecutor"
-      [label = "pre-processing for leaving from Kubernetes cluster"];
-    "MgmtDriver" <-- "RemoteCommandExecutor"
-      [label = ""];
-
-    "Tacker-conductor" <-- "MgmtDriver"
-      [label = ""];
-    "Tacker-conductor" -> "VnfLcmDriver"
-      [label = "execute VnfLcmDriver"];
-    "VnfLcmDriver" -> "OpenstackDriver"
-      [label = "execute OpenstackDriver"];
-    "OpenstackDriver" -> "Heat"
-      [label = "resource signal"];
-    "OpenstackDriver" -> "Heat"
-      [label = "update stack"];
-    "OpenstackDriver" <-- "Heat"
-      [label = ""];
-    "VnfLcmDriver" <-- "OpenstackDriver"
-      [label = ""];
-    "Tacker-conductor" <-- "VnfLcmDriver"
-      [label = ""];
-  }
+.. image:: ./mgmt-driver-for-k8s-scale/02.png
 
 The procedure consists of the following steps as illustrated in above sequence.
 

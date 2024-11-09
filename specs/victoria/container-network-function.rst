@@ -293,47 +293,7 @@ dependency.
 Following sequence diagram describes the components involved and the flow of
 CNF instantiation:
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 100;
-    edge_length = 115;
-
-    Client -> WSGIMiddleware [label =
-        "POST /vnflcm/v1/vnf_instances"];
-    Client <-- WSGIMiddleware [label = "200 Success"];
-    Client -> WSGIMiddleware [label =
-        "POST /vnflcm/v1/vnf_instances/{id}/instantiate"];
-    WSGIMiddleware -->> WSGIMiddleware [label = "request validation"];
-    Client <-- WSGIMiddleware [label = "202 Accepted"];
-
-    NFVOPlugin;
-    WSGIMiddleware -> VnfLcmDriver [label = "Trigger asynchronous task "];
-    VnfLcmDriver --> NFVOPlugin [label = "get VNF Package"];
-    VnfLcmDriver <-- NFVOPlugin;
-    VnfLcmDriver -->> VnfLcmDriver [label = "create VIM connection object"];
-
-    VnfLcmDriver -> KubernetesDriver [label = "pre_instantiation_vnf()"];
-    KubernetesDriver -->> KubernetesDriver [label = "No Action"];
-    VnfLcmDriver <-- KubernetesDriver;
-
-    VnfLcmDriver --> KubernetesDriver [label =
-        "instantiate_vnf()"];
-    KubernetesDriver --> KubernetesDriver [label = "1 create()"]
-    VnfLcmDriver <-- KubernetesDriver [label = "instance_id"];
-    VnfLcmDriver --> KubernetesDriver [label ="create_wait()"];
-    KubernetesDriver -> KubernetesPythonClient [label =
-        "check deployment status"];
-    KubernetesPythonClient -> Kubernetes [label = "get deployment status"];
-    KubernetesPythonClient <-- Kubernetes [label = "status"];
-    KubernetesDriver <-- KubernetesPythonClient;
-    VnfLcmDriver <-- KubernetesDriver;
-
-    VnfLcmDriver -> KubernetesDriver [label = "post_vnf_instantiation()"];
-    KubernetesDriver -->> KubernetesDriver[label =
-        "2. Update DB for VNFC resources[TBD]"];
-    VnfLcmDriver <-- KubernetesDriver;
-  }
+.. image:: ./container-network-function/01.png
 
 
 #. ``create()`` method will get instantiation request and VNF package path as
@@ -354,25 +314,7 @@ CNF instantiation:
 Following sequence diagram shows operation of ``create()`` method in
 Kubernetes infra driver:
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 100;
-    edge_length = 115;
-
-    KubernetesDriver --> KubernetesUtil [label =
-        "1. cnf_to_kube_objects(\ncnf_def_dict)"];
-    KubernetesDriver <-- KubernetesUtil [label =
-        "Kubernetes model\nobjects"];
-    KubernetesDriver --> KubernetesPythonClient [label =
-        "2. call client APIs for each\nmodel object"];
-    KubernetesPythonClient --> Kubernetes [label =
-        "deploy kubernetes\nobjects"];
-    KubernetesPythonClient <-- Kubernetes [label = "deployed objects info"];
-    KubernetesDriver <-- KubernetesPythonClient [label =
-        "3. deployed objects info"];
-    KubernetesDriver -->> KubernetesDriver [label = "prepare\ninstance id"];
-  }
+.. image:: ./container-network-function/02.png
 
 #. Definitions extracted from Kubernetes object YAML files will be translated
    into Kubernetes model objects [#kubernetes-model-objects]_. KubernetesUtils
@@ -429,40 +371,7 @@ CNF termination
 ---------------
 Following sequence diagram shows flow of termination of CNF.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 100;
-    edge_length = 115;
-
-    Client -> WSGIMiddleware [label = "Terminate VNF"];
-    WSGIMiddleware -->> WSGIMiddleware [label = "request validation"];
-    Client <-- WSGIMiddleware [label = "202 Accepted"];
-    WSGIMiddleware -> TackerConductor [label = "Trigger asynchronous task"];
-    TackerConductor --> VnfLcmDriver
-      [label = "terminate_vnf(vnf_instance, terminate_vnf_request)"];
-    VnfLcmDriver --> KubernetesDriver
-      [label = "delete(context, instance_id, access_info)"];
-    KubernetesDriver -->> KubernetesDriver
-      [label = "get deployment infromation"];
-    KubernetesDriver --> KubernetesPythonClient [label = "delete deployment"];
-    KubernetesPythonClient --> Kubernetes [label = "delete deployment"];
-    KubernetesPythonClient <-- Kubernetes [label = "deployment deleted"];
-    KubernetesDriver <-- KubernetesPythonClient;
-    VnfLcmDriver <-- KubernetesDriver;
-    VnfLcmDriver --> KubernetesDriver
-      [label = "delete_wait(context, instance_id, access_info)"];
-    KubernetesDriver --> KubernetesPythonClient
-      [label = "get deployment status"];
-    KubernetesPythonClient --> Kubernetes [label = "get deployment status"];
-    KubernetesPythonClient <-- Kubernetes [label = "deployment status"];
-    KubernetesDriver <-- KubernetesPythonClient
-      [label = "deployment status(deleted)"];
-    VnfLcmDriver <-- KubernetesDriver [label = "resources removed"];
-    TackerConductor <-- VnfLcmDriver
-      [label = "request successfully completed"];
-    TackerConductor -->> TackerConductor [label = "update DB"];
-  }
+.. image:: ./container-network-function/03.png
 
 Current implementation of Kubernetes driver handles limited objects such as
 Service, Deployment, HorizontalPodAutoscaler etc. Since this spec introduces
