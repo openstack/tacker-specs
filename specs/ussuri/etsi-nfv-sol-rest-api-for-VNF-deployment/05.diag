@@ -1,0 +1,6 @@
+
+  seqdiag {
+    Consumer -> VNFM [label = "1.DELETE .../vnf_instances/{vnfInstanceId}"];
+    VNFM -->> VNFM [label = "2. Delete VNF instance resource"];
+    Consumer <- VNFM [label = "3. 204 No content"];
+    }

@@ -1,0 +1,27 @@
+
+  seqdiag {
+    node_width = 100;
+    edge_length = 160;
+
+    Client -> "tacker-server"
+      [label = "POST /vnf_lcm_op_occs/{vnfLcmOpOccId}/rollback"];
+    Client <-- "tacker-server" [label = "Response 202 Accepted"];
+    "tacker-server" -> "tacker-conductor"
+      [label = "trriger asynchronous task"];
+    "tacker-conductor" ->> "tacker-conductor"
+      [label = "execute notification process"];
+    Client <- "tacker-conductor"
+      [label = "POST {callback URI} (ROLLING_BACK)"];
+    Client --> "tacker-conductor"
+      [label = "Response: 204 No Content"];
+    "tacker-conductor" -> "MgmtDriver" [label = "execute MgmtDriver"];
+    "tacker-conductor" <-- "MgmtDriver" [label = ""];
+    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
+    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
+    "tacker-conductor" ->> "tacker-conductor"
+      [label = "execute notification process"];
+    Client <- "tacker-conductor"
+      [label = "POST {callback URI} (ROLLED_BACK)"];
+    Client --> "tacker-conductor"
+      [label = "Response: 204 No Content"];
+  }

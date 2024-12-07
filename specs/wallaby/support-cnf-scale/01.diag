@@ -1,0 +1,33 @@
+
+  seqdiag {
+    node_width = 100;
+    edge_length = 115;
+
+    "Client" -> "Tacker-server"
+      [label = "POST /vnf_instances/{vnfInstanceId}/scale"];
+    "Client" <-- "Tacker-server" [label = "Response 202 Accepted"];
+    "Tacker-server" --> "Tacker-conductor" [label = "Trigger asynchronous task"]
+    "Tacker-conductor" -> "VnfLcmDriver" [label = "Call VnfLcmDriver"];
+    "VnfLcmDriver" -> "KubernetesDriver" [label = "scale()"];
+    "KubernetesDriver" -> "KubernetesPythonClient"
+      [label = "Execute read API to get current replicas"];
+    "KubernetesPythonClient" -> "Kubernetes" [label = "Call read API"];
+    "KubernetesPythonClient" <-- "Kubernetes" [label = ""];
+    "KubernetesDriver" <-- "KubernetesPythonClient" [label = ""];
+    "KubernetesDriver" -> "KubernetesPythonClient"
+      [label = "Execute patch API to change replicas"];
+    "KubernetesPythonClient" -> "Kubernetes" [label = "Call patch API"];
+    "KubernetesPythonClient" <-- "Kubernetes" [label = ""];
+    "KubernetesDriver" <-- "KubernetesPythonClient" [label = ""];
+    "VnfLcmDriver" <-- "KubernetesDriver" [label = ""];
+    "VnfLcmDriver" -> "KubernetesDriver" [label = "scale_wait()"];
+    "KubernetesDriver" -> "KubernetesPythonClient"
+      [label = "Execute read API for check scale result"];
+    "KubernetesPythonClient" -> "Kubernetes" [label = "Call read API"];
+    "KubernetesPythonClient" <-- "Kubernetes" [label = ""];
+    "KubernetesDriver" <-- "KubernetesPythonClient" [label = ""];
+    "VnfLcmDriver" <-- "KubernetesDriver" [label = ""];
+    "VnfLcmDriver" -->> "VnfLcmDriver" [label = "Save current scaleLevel"];
+    "Tacker-conductor" <-- "VnfLcmDriver" [label = ""];
+
+  }

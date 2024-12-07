@@ -1,0 +1,62 @@
+
+  seqdiag {
+    node_width = 80;
+    edge_length = 100;
+
+    "Client"
+    "Tacker-server"
+    "Tacker-conductor"
+    "VnfLcmDriver"
+    "OpenStackInfraDriver"
+    "Heat"
+    "MgmtDriver"
+    "VnfInstance(Tacker DB)"
+    "RemoteCommandExecutor"
+    "SFTPClient"
+
+    Client -> "Tacker-server"
+      [label = "POST /vnf_instances/{vnfInstanceId}/instantiate"];
+    Client <-- "Tacker-server"
+      [label = "Response 202 Accepted"];
+    "Tacker-server" -> "Tacker-conductor"
+      [label = "trigger asynchronous task"];
+
+    "Tacker-conductor" -> "VnfLcmDriver"
+      [label = "execute VnfLcmDriver"];
+    "VnfLcmDriver" -> "OpenStackInfraDriver"
+      [label = "execute OpenStackInfraDriver"];
+    "OpenStackInfraDriver" -> "Heat"
+      [label = "create stack"];
+    "OpenStackInfraDriver" <-- "Heat"
+      [label = "return stack id"];
+    "VnfLcmDriver" <-- "OpenStackInfraDriver"
+      [label = "return instance_id"];
+
+    "VnfLcmDriver" -> "MgmtDriver"
+      [label = "instantiate_end"];
+    "MgmtDriver" -> "VnfInstance(Tacker DB)"
+      [label = "get stack id"];
+    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
+      [label = ""];
+    "MgmtDriver" -> "Heat"
+      [label = "get SSH/SFTP IP address using stack id"];
+    "MgmtDriver" <-- "Heat"
+      [label = ""];
+    "MgmtDriver" -> "RemoteCommandExecutor"
+      [label = "install Docker on the VM"];
+    "MgmtDriver" <-- "RemoteCommandExecutor"
+      [label = ""];
+    "MgmtDriver" -> "SFTPClient"
+      [label = "transfer a Docker image file to the VM if specified by request parameter"];
+    "MgmtDriver" <-- "SFTPClient"
+      [label = ""];
+    "MgmtDriver" -> "RemoteCommandExecutor"
+      [label = "run Private registry container on Docker"];
+    "MgmtDriver" <-- "RemoteCommandExecutor"
+      [label = ""];
+    "VnfLcmDriver" <-- "MgmtDriver"
+      [label = ""];
+    "Tacker-conductor" <-- "VnfLcmDriver"
+      [label = ""];
+
+  }

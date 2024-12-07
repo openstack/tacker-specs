@@ -100,49 +100,7 @@ When the command is
 
    $ tacker-db-manage migrate-to-v2 --all [ --keep-orig ]
 
-.. seqdiag::
-
-  seqdiag {
-    User -> Tacker-db-manage [label = "tacker-db-manage migrate-to-v2 --all [ --keep-orig ]"];
-    Tacker-db-manage -> SQL_Alchemy [label = "Search for objects with deleted=0 from Vnf_instances"];
-    Tacker-db-manage <- SQL_Alchemy [label = "Get Vnf_instances objects"];
-    === Repeat every Vnf_instances object ===
-    Tacker-db-manage -> SQL_Alchemy [label = "Define VnfInstanceV2 Object"];
-    Tacker-db-manage <-- SQL_Alchemy
-    === Repeat every field ===
-    Tacker-db-manage -> SQL_Alchemy [label = "Search for related objects with the specified VNFID as a primary key or foreign key"];
-    Tacker-db-manage <- SQL_Alchemy [label = "Get object"];
-    Tacker-db-manage -> SQL_Alchemy [label = "Refer to the field of gotten object and update the field of VNFInstanceV2"];
-    Tacker-db-manage <-- SQL_Alchemy
-    === End line of "Repeat every field" ===
-    Tacker-db-manage -> SQL_Alchemy [label = "Create VnfInstanceV2 Object"];
-    SQL_Alchemy -> Tacker_DB [label = "Insert record"];
-    SQL_Alchemy <-- Tacker_DB;
-    Tacker-db-manage <-- SQL_Alchemy;
-    ... ...
-    Tacker-db-manage -> SQL_Alchemy [label = "Define VnfLcmOpOccV2 Object"];
-    Tacker-db-manage <-- SQL_Alchemy;
-    === Repeat every field ===
-    Tacker-db-manage -> SQL_Alchemy [label = "Search for related objects with the specified VNFID as a foreign key"];
-    Tacker-db-manage <- SQL_Alchemy [label = "Get object"];
-    Tacker-db-manage -> SQL_Alchemy [label = "Refer to the field of gotten object and update the field of VnfLcmOpOccV2"];
-    Tacker-db-manage <-- SQL_Alchemy;
-    === End line of "Repeat every field" ===
-    Tacker-db-manage -> SQL_Alchemy [label = "Create VnfLcmOpOccV2 Object"];
-    SQL_Alchemy -> Tacker_DB [label = "Insert record"];
-    SQL_Alchemy <-- Tacker_DB;
-    Tacker-db-manage <-- SQL_Alchemy;
-    === Skip if the keep original records flag is ON ===
-    Tacker-db-manage -> SQL_Alchemy [label = "Search for related objects with the specified VNFID as a primary key or foreign key"];
-    Tacker-db-manage <- SQL_Alchemy [label = "Get object"];
-    Tacker-db-manage -> SQL_Alchemy [label = "Delete object"];
-    SQL_Alchemy -> Tacker_DB [label = "Delete record"];
-    SQL_Alchemy <-- Tacker_DB;
-    Tacker-db-manage <-- SQL_Alchemy;
-    === End line of "Skip if the keep original records flag is ON" ===
-    === End line of "Repeat every Vnf_instances object" ===
-    User <-- Tacker-db-manage;
-  }
+.. image:: ./db-migration-tool/01.png
 
 When the command is
 
@@ -150,45 +108,7 @@ When the command is
 
    $ tacker-db-manage migrate-to-v2 --vnf-id <vnf-id> [ --keep-orig ]
 
-.. seqdiag::
-
-  seqdiag {
-    User -> Tacker-db-manage [label = "tacker-db-manage migrate-to-v2 --vnf-id <vnf-id> [ --keep-orig ]"];
-    Tacker-db-manage -> SQL_Alchemy [label = "Define VnfInstanceV2 Object"];
-    Tacker-db-manage <-- SQL_Alchemy
-    === Repeat every field ===
-    Tacker-db-manage -> SQL_Alchemy [label = "Search for related objects with the specified VNFID as a primary key or foreign key"];
-    Tacker-db-manage <- SQL_Alchemy [label = "Get object"];
-    Tacker-db-manage -> SQL_Alchemy [label = "Refer to the field of gotten object and update the field of VNFInstanceV2"];
-    Tacker-db-manage <-- SQL_Alchemy
-    === End line of "Repeat every field" ===
-    Tacker-db-manage -> SQL_Alchemy [label = "Create VnfInstanceV2 Object"];
-    SQL_Alchemy -> Tacker_DB [label = "Insert record"];
-    SQL_Alchemy <-- Tacker_DB;
-    Tacker-db-manage <-- SQL_Alchemy;
-    ... ...
-    Tacker-db-manage -> SQL_Alchemy [label = "Define VnfLcmOpOccV2 Object"];
-    Tacker-db-manage <-- SQL_Alchemy;
-    === Repeat every field ===
-    Tacker-db-manage -> SQL_Alchemy [label = "Search for related objects with the specified VNFID as a foreign key"];
-    Tacker-db-manage <- SQL_Alchemy [label = "Get object"];
-    Tacker-db-manage -> SQL_Alchemy [label = "Refer to the field of gotten object and update the field of VnfLcmOpOccV2"];
-    Tacker-db-manage <-- SQL_Alchemy;
-    === End line of "Repeat every field" ===
-    Tacker-db-manage -> SQL_Alchemy [label = "Create VnfLcmOpOccV2 Object"];
-    SQL_Alchemy -> Tacker_DB [label = "Insert record"];
-    SQL_Alchemy <-- Tacker_DB;
-    Tacker-db-manage <-- SQL_Alchemy;
-    === Skip if the keep original records flag is ON ===
-    Tacker-db-manage -> SQL_Alchemy [label = "Search for related objects with the specified VNFID as a primary key or foreign key"];
-    Tacker-db-manage <- SQL_Alchemy [label = "Get object"];
-    Tacker-db-manage -> SQL_Alchemy [label = "Delete object"];
-    SQL_Alchemy -> Tacker_DB [label = "Delete record"];
-    SQL_Alchemy <-- Tacker_DB;
-    Tacker-db-manage <-- SQL_Alchemy;
-    === End line of "Skip if the keep original records flag is ON" ===
-    User <-- Tacker-db-manage;
-  }
+.. image:: ./db-migration-tool/02.png
 
 
 When the command is
@@ -197,22 +117,7 @@ When the command is
 
    $ tacker-db-manage migrate-to-v2 --mark-delete --api-ver v1 --vnf-id <vnf-id>
 
-.. seqdiag::
-
-  seqdiag {
-    User -> Tacker-db-manage [label = "tacker-db-manage migrate-to-v2 --mark-delete --api-ver v1 --vnf-id <vnf-id>"];
-    === Repeat related v1 tables ===
-    Tacker-db-manage -> SQL_Alchemy [label = "Search for related objects with the specified VNFID as a primary key or foreign key"];
-    Tacker-db-manage <- SQL_Alchemy [label = "Get object"];
-    Tacker-db-manage -> SQL_Alchemy [label = "Update the deleted field of gotten object to 1"];
-    Tacker-db-manage <-- SQL_Alchemy
-    Tacker-db-manage -> SQL_Alchemy [label = "Save gotten object"];
-    SQL_Alchemy -> Tacker_DB [label = "Update record"];
-    SQL_Alchemy <-- Tacker_DB;
-    Tacker-db-manage <-- SQL_Alchemy;
-    === End line of "Repeat related v1 tables" ===
-    User <-- Tacker-db-manage;
-  }
+.. image:: ./db-migration-tool/03.png
 
 When the command is
 
@@ -220,22 +125,7 @@ When the command is
 
    $ tacker-db-manage migrate-to-v2 --mark-delete --api-ver v2 --vnf-id <vnf-id>
 
-.. seqdiag::
-
-  seqdiag {
-    User -> Tacker-db-manage [label = "tacker-db-manage migrate-to-v2 --mark-delete --api-ver v2 --vnf-id <vnf-id>"];
-    === Repeat related v2 tables ===
-    Tacker-db-manage -> SQL_Alchemy [label = "Search for related objects with the specified VNFID as a primary key or foreign key"];
-    Tacker-db-manage <- SQL_Alchemy [label = "Get object"];
-    Tacker-db-manage -> SQL_Alchemy [label = "Update the deleted field of gotten object to 1"];
-    Tacker-db-manage <-- SQL_Alchemy
-    Tacker-db-manage -> SQL_Alchemy [label = "Save gotten object"];
-    SQL_Alchemy -> Tacker_DB [label = "Update record"];
-    SQL_Alchemy <-- Tacker_DB;
-    Tacker-db-manage <-- SQL_Alchemy;
-    === End line of "Repeat related v2 tables" ===
-    User <-- Tacker-db-manage;
-  }
+.. image:: ./db-migration-tool/04.png
 
 Data model impact
 -----------------

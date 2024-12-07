@@ -1,0 +1,7 @@
+
+  seqdiag {
+    user  -> vnfmplugin [label = "create_vnf with monitor_policies property"];
+    vnfmplugin -> vnfmplugin [label = "generate workflow with auto generated action id"];
+    vnfmplugin -> vnfmplugin [label = "update vnf with monitor action id"];
+    vnfmplugin -> mistral [label = "run the workflow to start vnf_policy_monitor"];
+  }

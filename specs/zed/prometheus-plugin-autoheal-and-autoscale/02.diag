@@ -1,0 +1,36 @@
+
+  seqdiag {
+    node_width = 100;
+    edge_length = 150;
+
+    "Client"
+    "Tacker-server"
+    "Tacker-conductor"
+    "VnfFmDriver"
+    "Tacker DB"
+
+    "Client" -> "Tacker-server"
+      [label = "8. Get alarms"];
+    "Tacker-server" -> "Tacker-conductor"
+      [label = "9. Trigger synchronization task"];
+    "Tacker-conductor" -> "VnfFmDriver"
+      [label = "10. Get alarms"];
+    "VnfFmDriver" -> "Tacker DB"
+      [label = "11. Get alarms from DB according to conditions"];
+    "VnfFmDriver" <-- "Tacker DB"
+      [label = "Alarms"];
+    "Tacker-conductor" <-- "VnfFmDriver"
+      [label = "Alarms"];
+    "Tacker-server" <-- "Tacker-conductor"
+      [label = "Alarms"];
+    "Client" <-- "Tacker-server"
+      [label = "Alarms"];
+    "Client" -> "Client"
+      [label = "12. Get VNFC information from alarm", note = "If no alarm is returned, the processing is over"];
+    "Client" -> "Tacker-server"
+      [label = "13. Heal specified vnfc"];
+    "Tacker-server" -> "Tacker-conductor"
+      [label = "14. Trigger asynchronous task", note = "The same with the default heal operation"];
+    "Client" <-- "Tacker-server"
+      [label = "Response 202 Accepted"];
+  }

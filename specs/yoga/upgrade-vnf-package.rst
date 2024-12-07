@@ -245,70 +245,7 @@ Below is a diagram of the Blue-Green deployment process for OpenStack VIM:
 
 Sequence for Blue-Green Deployment operation (For OpenStack VIM)
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfLcmDriver"
-    "InfraDriver"
-    "CoordinateVNF script"
-    "TackerDB"
-    "VIM (OpenStack)"
-    "VNF"
-    "LB"
-
-    Client -> "Tacker-server"
-      [label = "1. POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/change_vnfpkg"];
-    Client <-- "Tacker-server"
-      [label = "Response 202 Accepted"];
-    "Tacker-server" ->> "Tacker-conductor"
-      [label = "2. ChangeCurrentVNFPackage"];
-    "Tacker-conductor" -> "VnfLcmDriver"
-      [label = "change_vnfpkg"];
-    "VnfLcmDriver" -> "InfraDriver"
-      [label = "3. create_newVNF"];
-    "InfraDriver" -> "VIM (OpenStack)"
-      [label = "4. create_newVNF"];
-    "InfraDriver" <-- "VIM (OpenStack)"
-      [label = ""];
-    "VnfLcmDriver" <-- "InfraDriver"
-      [label = ""];
-    "VnfLcmDriver" -> "CoordinateVNF script"
-      [label = "5. CoordinateVNF"];
-    "CoordinateVNF script" -> "VNF"
-      [label = "6. Coordinate new VNF"];
-    "CoordinateVNF script" <-- "VNF"
-      [label = ""];
-    "CoordinateVNF script" -> "LB"
-      [label = "7. update_loadbalancer"];
-    "CoordinateVNF script" <-- "LB"
-      [label = ""];
-    "CoordinateVNF script" -> "VNF"
-      [label = "8. Coordinate old VNF"];
-    "CoordinateVNF script" <-- "VNF"
-      [label = ""];
-    "VnfLcmDriver" <-- "CoordinateVNF script"
-      [label = ""];
-    "VnfLcmDriver" -> "InfraDriver"
-      [label = "9. terminate_oldVNF"];
-    "InfraDriver" -> "VIM (OpenStack)"
-      [label = "10. terminate_oldVNF"];
-    "InfraDriver" <-- "VIM (OpenStack)"
-      [label = ""];
-    "VnfLcmDriver" <-- "InfraDriver"
-      [label = ""];
-    "VnfLcmDriver" -> "TackerDB"
-      [label = "11. Update_DB"];
-    "VnfLcmDriver" <-- "TackerDB"
-      [label = ""];
-    "Tacker-conductor" <-- "VnfLcmDriver"
-      [label = ""];
-  }
+.. image:: ./upgrade-vnf-package/01.png
 
 
 #. The Client sends a POST request to the "Individual VNF instance" resource.
@@ -388,59 +325,7 @@ Below is a diagram of the Rolling update process for OpenStack VIM:
 
 Sequence for Rolling update operation (For OpenStack VIM)
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfLcmDriver"
-    "InfraDriver"
-    "CoordinateVNF script"
-    "TackerDB"
-    "VIM (OpenStack)"
-    "VNF"
-
-    Client -> "Tacker-server"
-      [label = "1. POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/change_vnfpkg"];
-    Client <-- "Tacker-server"
-      [label = "Response 202 Accepted"];
-    "Tacker-server" ->> "Tacker-conductor"
-      [label = "2. ChangeCurrentVNFPackage"];
-    "Tacker-conductor" -> "VnfLcmDriver"
-      [label = "change_vnfpkg"];
-    "VnfLcmDriver" -> "InfraDriver"
-      [label = "3. change_vnfpkg_process"];
-    "InfraDriver" -> "VIM (OpenStack)"
-      [label = "4. Get stack resource to update"];
-    "InfraDriver" <-- "VIM (OpenStack)"
-      [label = ""];
-    "InfraDriver" -> "VIM (OpenStack)"
-      [label = "5. update_stack"];
-    "InfraDriver" <-- "VIM (OpenStack)"
-      [label = ""];
-    "InfraDriver" -> "CoordinateVNF script"
-      [label = "6. CoordinateVNF"];
-    "CoordinateVNF script" -> "VNF"
-      [label = "7. Coordinate resource"];
-    "CoordinateVNF script" <-- "VNF"
-      [label = ""];
-    "InfraDriver" <-- "CoordinateVNF script"
-      [label = ""];
-    "InfraDriver" -> "InfraDriver"
-      [label = "8. Repeat steps 5 through 7 for each VNFC"];
-    "VnfLcmDriver" <-- "InfraDriver"
-      [label = ""];
-    "VnfLcmDriver" -> "TackerDB"
-      [label = "9. Update_DB"];
-    "VnfLcmDriver" <-- "TackerDB"
-      [label = ""];
-    "Tacker-conductor" <-- "VnfLcmDriver"
-      [label = ""];
-  }
+.. image:: ./upgrade-vnf-package/02.png
 
 
 #. The Client sends a POST request to the "Individual VNF instance" resource.
@@ -578,60 +463,7 @@ Below is a diagram of the Blue-Green deployment process for Kubernetes VIM:
 
 Sequence for Blue-Green deployment operation (For Kubernetes VIM)
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfLcmDriver"
-    "InfraDriver"
-    "CoordinateVNF script"
-    "TackerDB"
-    "VIM (Kubernetes)"
-
-    Client -> "Tacker-server"
-      [label = "1. POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/change_vnfpkg"];
-    Client <-- "Tacker-server"
-      [label = "Response 202 Accepted"];
-    "Tacker-server" ->> "Tacker-conductor"
-      [label = "2. ChangeCurrentVNFPackage"];
-    "Tacker-conductor" -> "VnfLcmDriver"
-      [label = "change_vnfpkg"];
-    "VnfLcmDriver" -> "InfraDriver"
-      [label = "3. apply_newDeployment"];
-    "InfraDriver" -> "VIM (Kubernetes)"
-      [label = "4. apply_newDeployment"];
-    "InfraDriver" <-- "VIM (Kubernetes)"
-      [label = ""];
-    "VnfLcmDriver" <-- "InfraDriver"
-      [label = ""];
-    "VnfLcmDriver" -> "CoordinateVNF script"
-      [label = "5. coordinate VNF"];
-    "CoordinateVNF script" -> "VIM (Kubernetes)"
-      [label = "6. update_label"];
-    "CoordinateVNF script" <-- "VIM (Kubernetes)"
-      [label = ""];
-    "VnfLcmDriver" <-- "CoordinateVNF script"
-      [label = ""];
-    "VnfLcmDriver" -> "InfraDriver"
-      [label = "7. terminate oldDeployment"];
-    "InfraDriver" -> "VIM (Kubernetes)"
-      [label = "8. terminate Old Deployment"];
-    "InfraDriver" <-- "VIM (Kubernetes)"
-      [label = ""];
-    "VnfLcmDriver" <-- "InfraDriver"
-      [label = ""];
-    "VnfLcmDriver" -> "TackerDB"
-      [label = "9. Update_DB"];
-    "VnfLcmDriver" <-- "TackerDB"
-      [label = ""];
-    "Tacker-conductor" <-- "VnfLcmDriver"
-      [label = ""];
-  }
+.. image:: ./upgrade-vnf-package/03.png
 
 #. The Client sends a POST request to the "Individual VNF instance" resource.
 #. Tacker-server sends ChangeCurrentVNFPackage request to Tacker-conductor, then Tacker-conductor fetches an on-boarded VNF package and calls VnfLcmDriver.
@@ -702,48 +534,7 @@ Below is a diagram of the Rolling update process for Kubernetes VIM:
 
 Sequence for Rolling update operation (For Kubernetes VIM)
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfLcmDriver"
-    "InfraDriver"
-    "CoordinateVNF script"
-    "TackerDB"
-    "VIM (Kubernetes)"
-
-    Client -> "Tacker-server"
-      [label = "1. POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/change_vnfpkg"];
-    Client <-- "Tacker-server"
-      [label = "Response 202 Accepted"];
-    "Tacker-server" ->> "Tacker-conductor"
-      [label = "2. ChangeCurrentVNFPackage"];
-    "Tacker-conductor" -> "VnfLcmDriver"
-      [label = "change_vnfpkg"];
-    "VnfLcmDriver" -> "InfraDriver"
-      [label = "3. apply_newDeployment"];
-    "InfraDriver" -> "VIM (Kubernetes)"
-      [label = "4. apply_newDeployment"];
-    "InfraDriver" <-- "VIM (Kubernetes)"
-      [label = ""];
-    "VnfLcmDriver" <-- "InfraDriver"
-      [label = ""];
-    "VnfLcmDriver" -> "CoordinateVNF script"
-      [label = "5. coordinate_VNF"];
-    "VnfLcmDriver" <-- "CoordinateVNF script"
-      [label = ""];
-    "VnfLcmDriver" -> "TackerDB"
-      [label = "6. Update_DB"];
-    "VnfLcmDriver" <-- "TackerDB"
-      [label = ""];
-    "Tacker-conductor" <-- "VnfLcmDriver"
-      [label = ""];
-  }
+.. image:: ./upgrade-vnf-package/04.png
 
 
 #. The Client sends a POST request to the "Individual VNF instance" resource.

@@ -1,0 +1,35 @@
+
+    seqdiag {
+        node_width = 80;
+        edge_length = 100;
+
+        "Test Class"
+        "User A"
+        "User B"
+        "Tacker"
+        "VNF Package A"
+        "VNF Package B"
+
+        "Test Class" -> "User A" [label = "Set User"];
+        "Test Class" <- "User A";
+
+        "Test Class" -> "User B" [label = "Set User"];
+        "Test Class" <- "User B";
+
+        "User A" -> "Tacker" [label = "Delete VNF Package B"];
+        "User A" <-- "Tacker" [label = "Failed to delete VNF Package B"];
+
+        "User B" -> "Tacker" [label = "Delete VNF Package A"];
+        "User B" <-- "Tacker" [label = "Failed to delete VNF Package A"];
+
+        "User A" -> "Tacker" [label = "Delete VNF Package A"];
+            "Tacker" -> "VNF Package A" [label = "Delete VNF Package A"];
+            "Tacker" <- "VNF Package A";
+        "User A" <-- "Tacker" [label = "Deleted VNF Package A"];
+
+        "User B" -> "Tacker" [label = "Delete VNF Package B"];
+            "Tacker" -> "VNF Package B" [label = "Delete VNF Package B"];
+            "Tacker" <- "VNF Package B";
+        "User B" <-- "Tacker" [label = "Deleted VNF Package B"];
+
+    }

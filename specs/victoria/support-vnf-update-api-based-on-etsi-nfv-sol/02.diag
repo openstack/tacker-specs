@@ -1,0 +1,13 @@
+
+  seqdiag {
+    Client -> "tacker-server" [label = "PATCH /vnf_instances/{vnfInstanceId}"];
+    Client <-- "tacker-server" [label = "Response 202 Accepted"];
+    "tacker-server" -> "tacker-conductor" [label = "trriger asynchronous task"];
+    "tacker-conductor" ->> "tacker-conductor" [label = "execute notification process"];
+    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
+    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
+    "tacker-conductor" ->> "tacker-conductor" [label = "VNF Modification"];
+    "tacker-conductor" ->> "tacker-conductor" [label = "execute notification process"];
+    Client <- "tacker-conductor" [label = "POST {callback URI} (COMPLETED)"];
+    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
+  }

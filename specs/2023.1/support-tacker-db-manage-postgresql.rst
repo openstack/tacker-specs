@@ -137,34 +137,7 @@ Flow of initializing PostgreSQL as Tacker DB backend
 
 The following sequence diagram describes initializing PostgreSQL as Tacker DB backend.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    "Client"
-    "Tacker"
-    "tacker-db-manage"
-    "PostgreSQL"
-
-    "Client" -> "PostgreSQL"
-      [label = "1. Creates Tacker DB and user"];
-    "Client" <-- "PostgreSQL"
-      [label = "Created"];
-    "Client" -> "Tacker"
-      [label = "2. Request to execute tacker-db-manage"];
-    "Tacker" -> "tacker-db-manage"
-      [label = "3. Execute tacker-db-manage"];
-    "tacker-db-manage" -> "PostgreSQL"
-      [label = "4. Update Tacker DB for PostgreSQL"];
-    "PostgreSQL" --> "tacker-db-manage"
-      [label = "Updated"];
-    "tacker-db-manage" --> "Tacker"
-      [label = ""];
-    "Tacker" --> "Client"
-      [label = "Succeeded"];
-  }
+.. image:: ./support-tacker-db-manage-postgresql/01.png
 
 #. The Client creates Tacker DB and user in PostgreSQL.
 #. The Client requests Tacker to execute tacker-db-manage

@@ -1,0 +1,7 @@
+
+  seqdiag {
+    Client -> "tacker-server" [label = "POST /vnflcm/v2/vnf_instances"];
+    "tacker-server" ->> "tacker-server"
+      [label = "Create VNF instance resource"];
+    Client <-- "tacker-server" [label = "Response 201 Created"];
+  }

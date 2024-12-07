@@ -272,63 +272,7 @@ the case in VnflcmDriver to re-use the same logics in different API versions.
 Sequence of multi-version API
 -----------------------------
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 100;
-    edge_length = 115;
-
-    "Client"
-    "Controller"
-    "Conductor"
-    "VnflcmDriver"
-    "InfraDriver"
-    "CommonUtils"
-    "Database"
-
-    Client -> Controller
-      [label = "HTTP request (e.g. VNF Lifecycle Management)"];
-    Controller -> CommonUtils
-      [label = "Process common logic"];
-    Controller <-- CommonUtils
-      [label = ""];
-    Controller -> Database
-      [label = "Validate request with appropriate API version"];
-    Controller <-- Database
-      [label = ""];
-    Controller -> Database
-      [label = "Create VnfLcmOpOcc(STARTING)"];
-    Controller <-- Database
-      [label = ""];
-    Controller -> Conductor
-      [label = "Send RPC"];
-    Client <-- Controller
-      [label = "202 Accepted"]
-    Conductor -> VnflcmDriver
-      [label = "Invoke VnflcmDriver with appropriate API version"];
-    VnflcmDriver -> CommonUtils
-      [label = "Process common logic"];
-    VnflcmDriver <-- CommonUtils
-      [label = ""];
-    VnflcmDriver -> Database
-      [label = "Update VnfLcmOpOcc(PROCESSING)"];
-    VnflcmDriver <-- Database
-      [label = ""];
-    VnflcmDriver -> InfraDriver
-      [label = "Invoke InfraDriver with appropriate API version"];
-    VnflcmDriver <-- InfraDriver
-      [label = ""];
-    VnflcmDriver -> CommonUtils
-      [label = "Process common logic"];
-    VnflcmDriver <-- CommonUtils
-      [label = ""];
-    VnflcmDriver -> Database
-      [label = "Update VnfLcmOpOcc(COMPLETED)"];
-    VnflcmDriver <-- Database
-      [label = ""];
-    Conductor <-- VnflcmDriver
-      [label = ""];
-  }
+.. image:: ./multi-version-api/01.png
 
 
 #. Client sends HTTP request (e.g. `POST vnflcm/v2/vnf_instances/instantiate`)

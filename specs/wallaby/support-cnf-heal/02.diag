@@ -1,0 +1,52 @@
+
+  seqdiag {
+    node_width = 100;
+    edge_length = 115;
+
+    "Client" -> "Tacker-server"
+      [label = "POST /vnf_instances/{vnfInstanceId}/heal"];
+    "Client" <-- "Tacker-server" [label = "Response 202 Accepted"];
+    "Tacker-server" --> "Tacker-conductor" [label = "Trigger asynchronous task"]
+    "Tacker-conductor" -> "VnfLcmDriver" [label = "Call VnfLcmDriver"];
+
+    "VnfLcmDriver" -> "KubernetesDriver" [label = "heal_vnf()"];
+    "KubernetesDriver" -> "KubernetesPythonClient"
+      [label = "Execute delete API"];
+    "KubernetesPythonClient" -> "Kubernetes" [label = "Execute delete API"];
+    "KubernetesPythonClient" <-- "Kubernetes" [label = ""];
+    "KubernetesDriver" <-- "KubernetesPythonClient" [label = ""];
+    "KubernetesDriver" -> "KubernetesPythonClient"
+      [label = "Execute read API for check successful deletion"];
+    "KubernetesPythonClient" -> "Kubernetes" [label = "Execute read API"];
+    "KubernetesPythonClient" <-- "Kubernetes" [label = ""];
+    "KubernetesDriver" <-- "KubernetesPythonClient" [label = ""];
+    "KubernetesDriver" -->> "KubernetesDriver"
+      [label = "Translate into target Kubernetes object"];
+    "KubernetesDriver" -> "KubernetesPythonClient"
+      [label = "Execute create API"];
+    "KubernetesPythonClient" -> "Kubernetes" [label = "Execute create API"];
+    "KubernetesPythonClient" <-- "Kubernetes" [label = ""];
+    "KubernetesDriver" <-- "KubernetesPythonClient" [label = ""];
+    "VnfLcmDriver" <-- "KubernetesDriver" [label = ""];
+
+    "VnfLcmDriver" -> "KubernetesDriver" [label = "heal_vnf_wait()"];
+    "KubernetesDriver" -> "KubernetesPythonClient"
+      [label = "Execute read API for check successful creation"];
+    "KubernetesPythonClient" -> "Kubernetes" [label = "Execute read API"];
+    "KubernetesPythonClient" <-- "Kubernetes" [label = ""];
+    "KubernetesDriver" <-- "KubernetesPythonClient" [label = ""];
+    "VnfLcmDriver" <-- "KubernetesDriver" [label = ""];
+
+    "VnfLcmDriver" -> "KubernetesDriver" [label = "post_heal_vnf()"];
+    "KubernetesDriver" -> "KubernetesPythonClient"
+      [label = "read Kubernetes resources data"];
+    "KubernetesPythonClient" -> "Kubernetes" [label = "Execute read API"];
+    "KubernetesPythonClient" <-- "Kubernetes" [label = ""];
+    "KubernetesDriver" <-- "KubernetesPythonClient" [label = ""];
+    "KubernetesDriver" -->> "KubernetesDriver"
+      [label = "Update vnfc resource information"];
+    "VnfLcmDriver" <-- "KubernetesDriver" [label = ""];
+
+    "Tacker-conductor" <-- "VnfLcmDriver" [label = ""];
+
+  }

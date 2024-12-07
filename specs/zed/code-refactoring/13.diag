@@ -1,0 +1,27 @@
+
+  seqdiag {
+    node_width = 100;
+    edge_length = 150;
+
+    "Client"
+    "Tacker-server"
+    "Tacker-conductor"
+    "TackerDB"
+
+    "Client" -> "Tacker-server"
+      [label = "Trigger operation sending notification"];
+    "Tacker-server" -> "Tacker-conductor"
+      [label = "send_notification"];
+    "Tacker-conductor" -> "TackerDB"
+      [label = "Get specific vnf instance id"];
+    "Tacker-conductor" <-- "TackerDB"
+      [label = "vnf instance id"];
+    "Tacker-conductor" -> "Tacker-conductor"
+      [label = "Filters the subscriptions by a specific vnfdid"];
+    "Client" <- "Tacker-conductor"
+      [label = "Sends Notify filtered on a specific vnfdid."];
+    "Client" --> "Tacker-conductor"
+      [label = "response"];
+    "Tacker-server" <-- "Tacker-conductor"
+      [label = "return"];
+  }

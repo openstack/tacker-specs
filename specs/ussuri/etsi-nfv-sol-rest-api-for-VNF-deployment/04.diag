@@ -1,0 +1,16 @@
+
+  seqdiag {
+    Client -> WSGIMiddleware [label = "Terminate VNF"];
+    WSGIMiddleware -->> WSGIMiddleware [label = "request validation"];
+    Client <-- WSGIMiddleware [label = "202 Accepted"];
+    WSGIMiddleware -> TackerConductor [label = "Trigger asynchronous task"];
+    TackerConductor --> VnfLcmDriver [label = "terminate_vnf(vnf_instance, terminate_vnf_request)"];
+    VnfLcmDriver --> OpenstackDriver [label = "terminate_vnf(vnf_instance, terminate_vnf_request, resource_list)"];
+    OpenstackDriver --> Heat [label = "1. delete stack"];
+    OpenstackDriver <-- Heat [label = "stack deleted"];
+    OpenstackDriver --> Glance [label = "2. delete images"]
+    OpenstackDriver <-- Glance [label = "images deleted"]
+    VnfLcmDriver <-- OpenstackDriver [label = "resources removed"];
+    TackerConductor <-- VnfLcmDriver [label = "request successfully completed"];
+    TackerConductor -->> TackerConductor [label = "update DB"];
+  }

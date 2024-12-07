@@ -54,19 +54,7 @@ CLI feature by default in case of handling large query results.
 (4) After receiving all paginated records from the server, client side
     assembles retained records and then displays them as a CLI response.
 
-.. seqdiag::
-
-  seqdiag {
-    user -> tacker-client [label = "execute list command"]
-    tacker-client -> tacker-server [label = "execute HTTP GET method" ]
-    tacker-client <-- tacker-server [label = "return the first page" ]
-    tacker-client -> tacker-server [label = "execute HTTP GET method" ]
-    tacker-client <-- tacker-server [label = "return next page" ]
-    === loop while there is next page existing ===
-    tacker-client -> tacker-server [label = "execute HTTP GET method" ]
-    tacker-client <-- tacker-server [label = "return the last page" ]
-    user <-- tacker-client [label = "show all records" ]
-  }
+.. image:: ./enhance-cli-for-paging/01.png
 
 
 Data Model Impact

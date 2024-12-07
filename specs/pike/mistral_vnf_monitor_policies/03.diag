@@ -1,0 +1,4 @@
+
+  seqdiag {
+      conductor -> vnf_policy_monitor [label = "update action job via RPC"]
+  }

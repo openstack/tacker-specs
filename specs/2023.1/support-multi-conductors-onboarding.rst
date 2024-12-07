@@ -36,53 +36,7 @@ In current implementation, onboarding process are as follows.
 
 The sequence of the process is as follows.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80; edge_length = 100;
-
-    "Client" "DB" "Tacker-server" "Backend Storage" "Messaging Queue" "Tacker-conductor 1" "Tacker-conductor 2" "Tacker-conductor 3"
-
-    Client -> "Tacker-server"
-    [label = "1. PUT /vnfpkgm/v1/vnf_packages/{vnfPkgId}/package_content"];
-
-    "Tacker-server" -> "DB"
-    [label = "2. Update onboardingState to UPLOADING"]
-
-    "Tacker-server" <- "DB"
-    [label = ""]
-
-    "Tacker-server" -> "Backend Storage"
-    [label = "3. Upload CSAR file"]
-
-    "Tacker-server" <- "Backend Storage"
-    [label = ""]
-
-    "Tacker-server" -> "Messaging Queue"
-    [label = "4. Send a rpc message of 'Upload VNF Package from content' with fanout=False"]
-
-    Client <- "Tacker-server"
-    [label = "response 202 Accepted"]
-
-    "Messaging Queue" -> "Tacker-conductor 1"
-    [label = ""]
-
-    "Tacker-conductor 1" -> "Backend Storage"
-    [label = "5. Send a request to download the CSAR file"]
-
-    "Tacker-conductor 1" <- "Backend Storage"
-    [label = "Download the CSAR file from Backend Storage to the local file system"]
-
-    "Tacker-conductor 1" -> "DB"
-    [label = "6. Update onboardingState to ONBOARDED"]
-
-    "Tacker-conductor 1" <- "DB"
-    [label = ""]
-
-    "Messaging Queue" <- "Tacker-conductor 1"
-    [label = ""]
-
-  }
+.. image:: ./support-multi-conductors-onboarding/01.png
 
 - when receiving the "POST /vnfpkgm/v1/vnf_packages/{vnf_package_id}
   /package_content/upload_from_uri" request.
@@ -106,53 +60,7 @@ The sequence of the process is as follows.
 
 The sequence of the process is as follows.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80; edge_length = 100;
-
-    "Client" "DB" "Tacker-server" "Backend Storage" "Messaging Queue" "Tacker-conductor 1" "Tacker-conductor 2" "Tacker-conductor 3"
-
-    Client -> "Tacker-server"
-    [label = "1. POST /vnfpkgm/v1/vnf_packages/{vnf_package_id}/package_content/upload_from_uri"];
-
-    "Tacker-server" -> "DB"
-    [label = "2. Update onboardingState to UPLOADING"]
-
-    "Tacker-server" <- "DB"
-    [label = ""]
-
-    "Tacker-server" -> "Messaging Queue"
-    [label = "3. Send a rpc message of 'Upload VNF Package from uri' with fanout=False"]
-
-    Client <- "Tacker-server"
-    [label = "response 202 Accepted"]
-
-    "Messaging Queue" -> "Tacker-conductor 1"
-    [label = ""]
-
-    "Tacker-conductor 1" -> "Backend Storage"
-    [label = "4. Upload CSAR file"]
-
-    "Tacker-conductor 1" <- "Backend Storage"
-    [label = ""]
-
-    "Tacker-conductor 1" -> "Backend Storage"
-    [label = "5. Send a request to download the CSAR file"]
-
-    "Tacker-conductor 1" <- "Backend Storage"
-    [label = "Download the CSAR file from Backend Storage to the local file system"]
-
-    "Tacker-conductor 1" -> "DB"
-    [label = "6. Update onboardingState to ONBOARDED"]
-
-    "Tacker-conductor 1" <- "DB"
-    [label = ""]
-
-    "Messaging Queue" <- "Tacker-conductor 1"
-    [label = ""]
-
-  }
+.. image:: ./support-multi-conductors-onboarding/02.png
 
 .. note:: Configurations of a backend storage are defined in
           ``[glance_store]`` section in ``tacker.conf``.
@@ -211,89 +119,7 @@ We would change the process of onboarding as follows.
   #. The Tacker-conductor that sends a message to all Tacker-conductors
      updates the onboardingState to "ONBOARDED".
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80; edge_length = 100;
-
-    "Client" "DB" "Tacker-server" "Backend Storage" "Messaging Queue" "Tacker-conductor 1" "Tacker-conductor 2" "Tacker-conductor 3"
-
-    Client -> "Tacker-server"
-    [label = "1. PUT /vnfpkgm/v1/vnf_packages/{vnfPkgId}/package_content"];
-
-    "Tacker-server" -> "DB"
-    [label = "2. Update onboardingState to UPLOADING"]
-
-    "Tacker-server" <- "DB"
-    [label = ""]
-
-    "Tacker-server" -> "Backend Storage"
-    [label = "3. Upload CSAR file"]
-
-    "Tacker-server" <- "Backend Storage"
-    [label = ""]
-
-    "Tacker-server" -> "Messaging Queue"
-    [label = "4. Send a rpc message of 'Upload VNF Package from content' with fanout=False"]
-
-    Client <- "Tacker-server"
-    [label = "response 202 Accepted"]
-
-    "Messaging Queue" -> "Tacker-conductor 1"
-    [label = ""]
-
-    "Tacker-conductor 1" -> "Messaging Queue"
-    [label = "5. sends a rpc message to download the CSAR file with fanout=True"]
-
-    "Messaging Queue" -> "Tacker-conductor 1"
-    [label = ""]
-
-    "Messaging Queue" -> "Tacker-conductor 2"
-    [label = ""]
-
-    "Messaging Queue" -> "Tacker-conductor 3"
-    [label = ""]
-
-    "Tacker-conductor 1" -> "Backend Storage"
-    [label = "6. Download the CSAR file to local file system"]
-
-    "Tacker-conductor 1" <- "Backend Storage"
-    [label = ""]
-
-    "Tacker-conductor 2" -> "Backend Storage"
-    [label = "6. Download the CSAR file to local file system"]
-
-    "Tacker-conductor 2" <- "Backend Storage"
-    [label = ""]
-
-    "Tacker-conductor 3" -> "Backend Storage"
-    [label = "6. Download the CSAR file to local file system"]
-
-    "Tacker-conductor 3" <- "Backend Storage"
-    [label = ""]
-
-    "Messaging Queue" <- "Tacker-conductor 1"
-    [label = ""]
-
-    "Messaging Queue" <- "Tacker-conductor 2"
-    [label = ""]
-
-    "Messaging Queue" <- "Tacker-conductor 3"
-    [label = ""]
-
-    "Tacker-conductor 1" <- "Messaging Queue"
-    [label = ""]
-
-    "Tacker-conductor 1" -> "DB"
-    [label = "7. Update onboardingState to ONBOARDED"]
-
-    "Tacker-conductor 1" <- "DB"
-    [label = ""]
-
-    "Messaging Queue" <- "Tacker-conductor 1"
-    [label = ""]
-
-  }
+.. image:: ./support-multi-conductors-onboarding/03.png
 
 - when receiving the "POST /vnfpkgm/v1/vnf_packages/{vnf_package_id}/
   package_content/upload_from_uri" request.
@@ -318,89 +144,7 @@ We would change the process of onboarding as follows.
   #. The Tacker-conductor that sends a message to all Tacker-conductors
      updates the onboardingState to "ONBOARDED".
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80; edge_length = 100;
-
-    "Client" "DB" "Tacker-server" "Backend Storage" "Messaging Queue" "Tacker-conductor 1" "Tacker-conductor 2" "Tacker-conductor 3"
-
-    Client -> "Tacker-server"
-    [label = "1. POST /vnfpkgm/v1/vnf_packages/{vnf_package_id}/package_content/upload_from_uri"];
-
-    "Tacker-server" -> "DB"
-    [label = "2. Update onboardingState to UPLOADING"]
-
-    "Tacker-server" <- "DB"
-    [label = ""]
-
-    "Tacker-server" -> "Messaging Queue"
-    [label = "3. Send a rpc message of 'Upload VNF Package from uri' with fanout=False"]
-
-    Client <- "Tacker-server"
-    [label = "response 202 Accepted"]
-
-    "Messaging Queue" -> "Tacker-conductor 1"
-    [label = ""]
-
-    "Tacker-conductor 1" -> "Backend Storage"
-    [label = "4. Upload CSAR file"]
-
-    "Tacker-conductor 1" <- "Backend Storage"
-    [label = ""]
-
-    "Tacker-conductor 1" -> "Messaging Queue"
-    [label = "5. sends a rpc message to download the CSAR file with fanout=True"]
-
-    "Messaging Queue" -> "Tacker-conductor 1"
-    [label = ""]
-
-    "Messaging Queue" -> "Tacker-conductor 2"
-    [label = ""]
-
-    "Messaging Queue" -> "Tacker-conductor 3"
-    [label = ""]
-
-    "Tacker-conductor 1" -> "Backend Storage"
-    [label = "6. Download the CSAR file to local file system"]
-
-    "Tacker-conductor 1" <- "Backend Storage"
-    [label = ""]
-
-    "Tacker-conductor 2" -> "Backend Storage"
-    [label = "6. Download the CSAR file to local file system"]
-
-    "Tacker-conductor 2" <- "Backend Storage"
-    [label = ""]
-
-    "Tacker-conductor 3" -> "Backend Storage"
-    [label = "6. Download the CSAR file to local file system"]
-
-    "Tacker-conductor 3" <- "Backend Storage"
-    [label = ""]
-
-    "Messaging Queue" <- "Tacker-conductor 1"
-    [label = ""]
-
-    "Messaging Queue" <- "Tacker-conductor 2"
-    [label = ""]
-
-    "Messaging Queue" <- "Tacker-conductor 3"
-    [label = ""]
-
-    "Tacker-conductor 1" <- "Messaging Queue"
-    [label = ""]
-
-    "Tacker-conductor 1" -> "DB"
-    [label = "7. Update onboardingState to ONBOARDED"]
-
-    "Tacker-conductor 1" <- "DB"
-    [label = ""]
-
-    "Messaging Queue" <- "Tacker-conductor 1"
-    [label = ""]
-
-  }
+.. image:: ./support-multi-conductors-onboarding/04.png
 
 .. note:: If even one of the Tacker-conductor fails to download CSAR file,
           the ``onboardingState`` is not being updated to "ONBOARDED".
@@ -430,83 +174,7 @@ We would change the process of deleting VNF packages as follows.
   #. All Tacker-conductors that get the message delete the file from
      their local file system and return a result via rpc.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80; edge_length = 100;
-
-    "Client" "DB" "Tacker-server" "Backend Storage" "Messaging Queue" "Tacker-conductor 1" "Tacker-conductor 2" "Tacker-conductor 3"
-
-    Client -> "Tacker-server"
-    [label = "1. DELETE /vnfpkgm/v1/vnf_packages/{vnf_package_id}"];
-
-    "Tacker-server" -> "DB"
-    [label = "2. Update the deleted flag to 1"]
-
-    "Tacker-server" <- "DB"
-    [label = ""]
-
-    "Tacker-server" -> "Messaging Queue"
-    [label = "3. Send a rpc message of 'Delete VNF Package' with fanout=False"]
-
-    Client <- "Tacker-server"
-    [label = "response 204 No Content"]
-
-    "Messaging Queue" -> "Tacker-conductor 1"
-    [label = ""]
-
-    "Tacker-conductor 1" -> "Backend Storage"
-    [label = "4. Delete CSAR file"]
-
-    "Tacker-conductor 1" <- "Backend Storage"
-    [label = ""]
-
-    "Tacker-conductor 1" -> "Messaging Queue"
-    [label = "5. sends a rpc message to delete the file from local file system with fanout=True"]
-
-    "Messaging Queue" -> "Tacker-conductor 1"
-    [label = ""]
-
-    "Messaging Queue" -> "Tacker-conductor 2"
-    [label = ""]
-
-    "Messaging Queue" -> "Tacker-conductor 3"
-    [label = ""]
-
-    "Tacker-conductor 1" -> "Backend Storage"
-    [label = "6. Delete the CSAR file from local file system"]
-
-    "Tacker-conductor 1" <- "Backend Storage"
-    [label = ""]
-
-    "Tacker-conductor 2" -> "Backend Storage"
-    [label = "6. Delete the CSAR file from local file system"]
-
-    "Tacker-conductor 2" <- "Backend Storage"
-    [label = ""]
-
-    "Tacker-conductor 3" -> "Backend Storage"
-    [label = "6. Delete the CSAR file from local file system"]
-
-    "Tacker-conductor 3" <- "Backend Storage"
-    [label = ""]
-
-    "Messaging Queue" <- "Tacker-conductor 1"
-    [label = ""]
-
-    "Messaging Queue" <- "Tacker-conductor 2"
-    [label = ""]
-
-    "Messaging Queue" <- "Tacker-conductor 3"
-    [label = ""]
-
-    "Tacker-conductor 1" <- "Messaging Queue"
-    [label = ""]
-
-    "Messaging Queue" <- "Tacker-conductor 1"
-    [label = ""]
-
-  }
+.. image:: ./support-multi-conductors-onboarding/05.png
 
 
 If a Tacker-conductor is newly added to the cluster,

@@ -52,31 +52,7 @@ The following items can be updated by this operation.:
 Precondition: The resource representing the VNF instance has been created.
 The VNF Package used for "Modify VNF" has been onboarded in NFVO.
 
-.. seqdiag::
-
-  seqdiag {
-    Client; NFVO; tacker-server; tacker-conductor;
-
-    Client -> "tacker-server" [label = "PATCH /vnf_instances/{vnfInstanceId}"];
-    "tacker-server" -> "tacker-conductor" [label = "execute vnf_package list process{filter}"];
-    NFVO <- "tacker-conductor" [label = "GET /vnf_packages/ with attribute filter(vnfdId)"];
-    NFVO --> "tacker-conductor" [label = "Response 200 OK with VnfPkgInfo"];
-    "tacker-server" <<- "tacker-conductor" [label = "(VnfPkgInfo)"];
-    "tacker-server" ->> "tacker-server" [label = "Update VNF instance resource(VnfPkgInfo)"];
-    "tacker-server" -> "tacker-conductor" [label = "execute vnf_package content process{vnfPkgId}"];
-    NFVO <- "tacker-conductor" [label = "GET /vnf_packages/{vnfPkgId}/package_content "];
-    NFVO --> "tacker-conductor" [label = "Response 200 OK with VNF package file"];
-    "tacker-server" <<- "tacker-conductor" [label = "(VNF package content file)"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" -> "tacker-conductor" [label = "trriger asynchronous task"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "VNF Modification"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (COMPLETED)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-vnf-update-api-based-on-etsi-nfv-sol/01.png
 
 
 The procedure consists of the following steps as illustrated in above sequence:
@@ -99,20 +75,7 @@ instance is updated.
 
 Precondition: The resource representing the VNF instance has been created.
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = "PATCH /vnf_instances/{vnfInstanceId}"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" -> "tacker-conductor" [label = "trriger asynchronous task"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "VNF Modification"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (COMPLETED)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-vnf-update-api-based-on-etsi-nfv-sol/02.png
 
 
 #. The Client sends a PATCH request to the "Individual VNF instance" resource.

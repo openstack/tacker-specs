@@ -259,40 +259,7 @@ will be as follows:
 The flow of calling the Kubernetes APIs is shown as below
 (take ``instantiate`` as an example):
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 90;
-    edge_length = 130;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfLcmDriver"
-    "InfraDriver(Kubernetes)"
-    "IdP"
-    "VIM(Kubernetes)"
-
-    "Client" -> "Tacker-server"
-      [label = "1. instantiate vnf"];
-    "Client" <-- "Tacker-server"
-      [label = "response"];
-    "Tacker-server" ->> "Tacker-conductor"
-      [label = "2. instantiate"];
-    "Tacker-conductor" -> "VnfLcmDriver"
-      [label = "3. instantiate_vnf"];
-    "VnfLcmDriver" -> "InfraDriver(Kubernetes)"
-      [label = "4. instantiate_vnf"];
-    "InfraDriver(Kubernetes)" -> "IdP"
-      [label = "5. get token"];
-    "InfraDriver(Kubernetes)" <-- "IdP";
-    "InfraDriver(Kubernetes)" -> "VIM(Kubernetes)"
-      [label = "6. call Kubernetes APIs"];
-    "InfraDriver(Kubernetes)" <-- "VIM(Kubernetes)"
-      [label = "response"];
-    "VnfLcmDriver" <-- "InfraDriver(Kubernetes)";
-    "Tacker-conductor" <-- "VnfLcmDriver";
-  }
+.. image:: ./support-openid-k8s-vim/01.png
 
 
 #. The Client sends a request to Tacker-server to instantiate a vnf.

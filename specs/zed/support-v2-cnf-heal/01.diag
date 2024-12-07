@@ -1,0 +1,56 @@
+
+  seqdiag {
+
+    node_width = 100;
+    edge_length = 120;
+
+    Client; NFVO; tacker-server; tacker-conductor; VnfLcmDriver;
+    MgmtDriver; KubernetesDriver; Kubernetes; VNF;
+
+    Client -> "tacker-server"
+      [label = "POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/heal"];
+    "tacker-server" -> "tacker-server"
+      [label = "validate vnfcInstanceId in the request."];
+    Client <-- "tacker-server" [label = "Response 202 Accepted"];
+    "tacker-server" ->> "tacker-conductor"
+      [label = "trigger asynchronous task"];
+    "tacker-conductor" ->> "tacker-conductor"
+      [label = "execute notification process"];
+    Client <- "tacker-conductor" [label = "POST {callback URI} (STARTING)"];
+    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
+    "NFVO" <- "tacker-conductor" [label = "POST /grants"];
+    "NFVO" --> "tacker-conductor" [label = "201 Created"];
+    "tacker-conductor" ->> "tacker-conductor"
+      [label = "execute notification process"];
+    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
+    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
+    "tacker-conductor" -> "VnfLcmDriver" [label = "execute preamble operation"];
+    "VnfLcmDriver" -> "MgmtDriver" [label = "execute preamble operation"];
+    "MgmtDriver" -> "VNF" [label = "VNF Configuration"];
+    "MgmtDriver" <-- "VNF" [label = ""];
+    "VnfLcmDriver" <-- "MgmtDriver" [label = ""];
+    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
+    "tacker-conductor" -> "VnfLcmDriver" [label = "execute LCM operation"];
+    "VnfLcmDriver" -> "KubernetesDriver" [label = "execute KubernetesDriver"];
+    "KubernetesDriver" -> "Kubernetes" [label = "call Delete API"];
+    "KubernetesDriver" <-- "Kubernetes" [label = ""];
+    "KubernetesDriver" -> "Kubernetes"
+      [label = "call Create API only if heal targets are singleton Pods"];
+    "KubernetesDriver" <-- "Kubernetes" [label = ""];
+    "KubernetesDriver" -> "Kubernetes"
+       [label = "call Read API to check the status of healed resources"];
+    "KubernetesDriver" <-- "Kubernetes" [label = "resource information"];
+    "VnfLcmDriver" <-- "KubernetesDriver" [label = ""];
+    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
+    "tacker-conductor" -> "VnfLcmDriver" [label = "execute postamble operation"];
+    "VnfLcmDriver" -> "MgmtDriver" [label = "execute postamble operation"];
+    "MgmtDriver" -> "VNF" [label = "VNF Configuration"];
+    "MgmtDriver" <-- "VNF" [label = ""];
+    "VnfLcmDriver" <-- "MgmtDriver" [label = ""];
+    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
+    "tacker-conductor" ->> "tacker-conductor"
+      [label = "execute notification process"];
+    Client <- "tacker-conductor"
+      [label = "POST {callback URI} (COMPLETED or FAILED_TEMP)"];
+    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
+  }

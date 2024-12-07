@@ -1,0 +1,53 @@
+
+  seqdiag {
+    node_width = 80;
+    edge_length = 100;
+
+    "Client"
+    "Tacker-server"
+    "Tacker-conductor"
+    "VnfLcmDriver"
+    "InfraDriver"
+    "CoordinateVNF script"
+    "TackerDB"
+    "VIM (Kubernetes)"
+
+    Client -> "Tacker-server"
+      [label = "1. POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/change_vnfpkg"];
+    Client <-- "Tacker-server"
+      [label = "Response 202 Accepted"];
+    "Tacker-server" ->> "Tacker-conductor"
+      [label = "2. ChangeCurrentVNFPackage"];
+    "Tacker-conductor" -> "VnfLcmDriver"
+      [label = "change_vnfpkg"];
+    "VnfLcmDriver" -> "InfraDriver"
+      [label = "3. apply_newDeployment"];
+    "InfraDriver" -> "VIM (Kubernetes)"
+      [label = "4. apply_newDeployment"];
+    "InfraDriver" <-- "VIM (Kubernetes)"
+      [label = ""];
+    "VnfLcmDriver" <-- "InfraDriver"
+      [label = ""];
+    "VnfLcmDriver" -> "CoordinateVNF script"
+      [label = "5. coordinate VNF"];
+    "CoordinateVNF script" -> "VIM (Kubernetes)"
+      [label = "6. update_label"];
+    "CoordinateVNF script" <-- "VIM (Kubernetes)"
+      [label = ""];
+    "VnfLcmDriver" <-- "CoordinateVNF script"
+      [label = ""];
+    "VnfLcmDriver" -> "InfraDriver"
+      [label = "7. terminate oldDeployment"];
+    "InfraDriver" -> "VIM (Kubernetes)"
+      [label = "8. terminate Old Deployment"];
+    "InfraDriver" <-- "VIM (Kubernetes)"
+      [label = ""];
+    "VnfLcmDriver" <-- "InfraDriver"
+      [label = ""];
+    "VnfLcmDriver" -> "TackerDB"
+      [label = "9. Update_DB"];
+    "VnfLcmDriver" <-- "TackerDB"
+      [label = ""];
+    "Tacker-conductor" <-- "VnfLcmDriver"
+      [label = ""];
+  }

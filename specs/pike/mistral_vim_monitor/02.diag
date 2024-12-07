@@ -1,0 +1,9 @@
+
+  seqdiag {
+    user  -> nfvoplugin [label = "de_register_vim"];
+    nfvoplugin -> nfvoplugin [label = "remove monitor workflow"];
+    nfvoplugin -> nfvoplugin [label = "remove vim from db"];
+    mistral_vim_monitor_action -> conductor [label = "update_vim"];
+    mistral_vim_monitor_action <-- conductor [label = "replies with bad_action"];
+    mistral_vim_monitor_action -> mistral_vim_monitor_action [label = "exit"];
+  }

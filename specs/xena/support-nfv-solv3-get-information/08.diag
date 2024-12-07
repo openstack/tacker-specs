@@ -1,0 +1,6 @@
+
+  seqdiag {
+    Client -> "tacker-server"
+      [label = " DELETE /vnflcm/v2/subscriptions/{subscriptionId}"];
+    Client <-- "tacker-server" [label = " Response 204 No Content"];
+  }

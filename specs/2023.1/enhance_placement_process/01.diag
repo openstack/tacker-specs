@@ -1,0 +1,27 @@
+
+  blockdiag {
+    orientation = portrait;
+    edge_layout = flowchart;
+
+    create [shape=flowchart.condition,label='stack create/update'];
+    start [shape=beginpoint];
+    lin [shape=flowchart.loopin,label='stack create/update\nin other AZ'];
+    recreate [shape=flowchart.condition,label='stack create/update'];
+    lout [shape=flowchart.loopout,label='no more AZ\ncandidates'];
+    failure [shape=endpoint,label='end'];
+    success [shape=endpoint,label='end'];
+
+    class none [shape=none];
+    n [class=none];
+
+    start -> create [label='NFVO AZ']
+    create -> lin [label=error]
+    lin -> recreate [label='other AZ']
+    recreate -> lout [label='error']
+    lout -> failure [label='failure'];
+
+    create -> success;
+
+    recreate -> n [dir=none]
+    n -> success [label='success'];
+  }

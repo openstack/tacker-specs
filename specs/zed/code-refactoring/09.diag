@@ -1,0 +1,44 @@
+
+    seqdiag {
+      node_width = 100;
+      edge_length = 150;
+
+      "Client"
+      "Tacker-server"
+      "Tacker-conductor"
+      "TackerDB"
+      "Heat"
+
+      "Client" -> "Tacker-server"
+        [label = "POST /vnf_instances/{vnfInstanceId}/instantiate"];
+      "Tacker-server" -> "Tacker-conductor"
+        [label = "instantiate"];
+
+      ... ------------- Omitted from description ------------- ...
+
+      "Tacker-conductor" -> "Heat"
+        [label = "POST stacks"];
+      "Tacker-conductor" <-- "Heat"
+        [label = "201 Created"];
+
+      "Tacker-conductor" -> "Tacker-conductor"
+        [note = "Get 'stack_id' parameter from Response"];
+
+      "Tacker-conductor" -> "TackerDB"
+        [label = "Save 'stack_id' in TackerDB"];
+      "Tacker-conductor" <-- "TackerDB"
+
+      === start of the checking of the resource status ===
+
+      === loop start (Repeat until 'CREATE_COMPLETE')===
+
+      "Tacker-conductor" -> "Heat"
+        [label = "GET stacks/{stack_name}/{stack_id}", leftnote = "Can be sent with the Heat API without redirection"];
+      "Tacker-conductor" <-- "Heat"
+        [label = "200 OK"];
+
+      === loop end ===
+
+      === end of the checking of the resource status ===
+
+    }

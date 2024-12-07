@@ -36,7 +36,7 @@ Some notes about using this template:
 
 * If you would like to provide a diagram with your spec, text representations
   are preferred. http://asciiflow.com/ is a very nice tool to assist with
-  making ascii diagrams. blockdiag and mermaid are another tools.
+  making ascii diagrams. mermaid is another tools.
   These are described below.
   If you require an image (screenshot) for your BP, attaching that to the BP
   and checking it in is also accepted. However, text representations are
@@ -51,63 +51,6 @@ asciiflow::
   |          +-----+           +--------+          |
   +----------+     +-----------+        +----------+
 
-blockdiag
-
-.. blockdiag::
-
-  blockdiag sample {
-    a -> b -> c;
-  }
-
-actdiag
-
-.. actdiag::
-
-   actdiag {
-     write -> convert -> image
-     lane user {
-       label = "User"
-       write [label = "Writing reST"];
-       image [label = "Get diagram IMAGE"];
-     }
-     lane actdiag {
-       convert [label = "Convert reST to Image"];
-     }
-   }
-
-nwdiag
-
-.. nwdiag::
-
-  nwdiag {
-    network dmz {
-      address = "210.x.x.x/24"
-
-      web01 [address = "210.x.x.1"];
-      web02 [address = "210.x.x.2"];
-    }
-    network internal {
-      address = "172.x.x.x/24";
-
-      web01 [address = "172.x.x.1"];
-      web02 [address = "172.x.x.2"];
-      db01;
-      db02;
-    }
-  }
-
-seqdiag
-
-.. seqdiag::
-
-  seqdiag {
-    browser  -> webserver [label = "GET /index.html"];
-    browser <-- webserver;
-    browser  -> webserver [label = "POST /blog/comment"];
-    webserver  -> database [label = "INSERT comment"];
-    webserver <-- database;
-    browser <-- webserver;
-  }
 
 mermaid Flowchart
 

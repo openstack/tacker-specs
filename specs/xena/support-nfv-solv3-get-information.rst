@@ -73,12 +73,7 @@ flow of v1 API and that of v2 API.
 
 * List VNF Instances (GET /vnf_instances)
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = "GET /vnflcm/v2/vnf_instances"];
-    Client <-- "tacker-server" [label = "Response 200 OK (VnfInstance[])"];
-  }
+.. image:: ./support-nfv-solv3-get-information/01.png
 
 The procedure consists of the following steps as illustrated in the above sequence:
 
@@ -92,12 +87,7 @@ Precondition: The resource representing the VNF instance has been created.
 
 * Show VNF (GET /vnf_instances/{vnfInstanceId})
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = "GET /vnflcm/v2/vnf_instances/vnf_instanceId"];
-    Client <-- "tacker-server" [label = "Response 200 OK (VnfInstance)"];
-  }
+.. image:: ./support-nfv-solv3-get-information/02.png
 
 The procedure consists of the following steps as illustrated in the above sequence:
 
@@ -116,13 +106,7 @@ Precondition: The resource representing the VNF instance has been created.
 
 * List VNF occurrence (GET /vnf_lcm_op_occs)
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = " GET /vnflcm/v2/vnf_lcm_op_occs"];
-    "tacker-server" -> "tacker-server" [label = "request validation"];
-    Client <-- "tacker-server" [label = " Response 200 OK"];
-  }
+.. image:: ./support-nfv-solv3-get-information/03.png
 
 The procedure consists of the following steps as illustrated in the above sequence:
 
@@ -136,12 +120,7 @@ The procedure consists of the following steps as illustrated in the above sequen
 
 * Show VNF occurrence (GET /vnf_lcm_op_occs/{vnfLcmOpOccId})
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = " GET /vnflcm/v2/vnf_lcm_op_occs/{vnfLcmOpOccId}"];
-    Client <-- "tacker-server" [label = " Response 200 OK"];
-  }
+.. image:: ./support-nfv-solv3-get-information/04.png
 
 The procedure consists of the following steps as illustrated in the above sequence:
 
@@ -159,16 +138,7 @@ The procedure consists of the following steps as illustrated in the above sequen
 * Create Subscriptions (POST /subscriptions)
 * Test Notification endpoint (GET)
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = " POST /vnflcm/v2/subscriptions"];
-    "tacker-server" -> Client [label = " GET {callback URI}"];
-    "tacker-server" <-- Client [label = " Response 204 No Content"];
-    "tacker-server" -> "tacker-server"
-      [label = " generate subscription_id (uuid)"];
-    Client <-- "tacker-server" [label = " Response 201 Created"];
-  }
+.. image:: ./support-nfv-solv3-get-information/05.png
 
 The procedure consists of the following steps as illustrated in the above sequence:
 
@@ -181,13 +151,7 @@ The procedure consists of the following steps as illustrated in the above sequen
 
 * List Subscriptions (GET /subscriptions)
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = " GET /vnflcm/v2/subscriptions"];
-    "tacker-server" -> "tacker-server" [label = "request validation"];
-    Client <-- "tacker-server" [label = " Response 200 OK"];
-  }
+.. image:: ./support-nfv-solv3-get-information/06.png
 
 The procedure consists of the following steps as illustrated in the above sequence:
 
@@ -199,12 +163,7 @@ The procedure consists of the following steps as illustrated in the above sequen
 
 * Show Subscriptions (GET /subscriptions/{subscriptionId})
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server" [label = " GET /vnflcm/v2/subscriptions/{subscriptionId}"];
-    Client <-- "tacker-server" [label = " Response 200 OK"];
-  }
+.. image:: ./support-nfv-solv3-get-information/07.png
 
 The procedure consists of the following steps as illustrated in the above sequence:
 
@@ -217,13 +176,7 @@ The procedure consists of the following steps as illustrated in the above sequen
 
 * Delete Subscriptions (DELETE /subscriptions/{subscriptionId})
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> "tacker-server"
-      [label = " DELETE /vnflcm/v2/subscriptions/{subscriptionId}"];
-    Client <-- "tacker-server" [label = " Response 204 No Content"];
-  }
+.. image:: ./support-nfv-solv3-get-information/08.png
 
 The procedure consists of the following steps as illustrated in the above sequence:
 

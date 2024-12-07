@@ -83,47 +83,17 @@ with the conductor via the following interface VimMonitor:
 
 sequence diagram for register vim:
 
-.. seqdiag::
-
-  seqdiag {
-    user  -> nfvoplugin [label = "register_vim"];
-    nfvoplugin -> nfvoplugin [label = "generate workflow with auto generated action id"];
-    nfvoplugin -> nfvoplugin [label = "update vim with monitor action id"];
-    nfvoplugin -> mistral [label = "run the workflow"];
-    mistral_vim_monitor_action -> conductor [label = "update_vim"]
-  }
+.. image:: ./mistral_vim_monitor/01.png
 
 
 sequence diagram for de-register vim:
 
-.. seqdiag::
-
-  seqdiag {
-    user  -> nfvoplugin [label = "de_register_vim"];
-    nfvoplugin -> nfvoplugin [label = "remove monitor workflow"];
-    nfvoplugin -> nfvoplugin [label = "remove vim from db"];
-    mistral_vim_monitor_action -> conductor [label = "update_vim"];
-    mistral_vim_monitor_action <-- conductor [label = "replies with bad_action"];
-    mistral_vim_monitor_action -> mistral_vim_monitor_action [label = "exit"];
-  }
+.. image:: ./mistral_vim_monitor/02.png
 
 
 sequence diagram for update vim with auth url change:
 
-.. seqdiag::
-
-  seqdiag {
-    user  -> nfvoplugin [label = "update_vim"];
-    nfvoplugin -> nfvoplugin [label = "remove old monitor workflow"];
-    nfvoplugin -> nfvoplugin [label = "generate workflow with auto generated action uuid"];
-    nfvoplugin -> nfvoplugin [label = "update vim with monitor action uuid"];
-    nfvoplugin -> mistral [label = "run the workflow"];
-    new_mistral_vim_monitor_action -> conductor [label = "update_vim"]
-    new_mistral_vim_monitor_action <-- conductor
-    old_mistral_vim_monitor_action -> conductor [label = "update_vim"]
-    old_mistral_vim_monitor_action <-- conductor [label = "replies with bad_action"];
-    old_mistral_vim_monitor_action -> old_mistral_vim_monitor_action [label = "exit"];
-  }
+.. image:: ./mistral_vim_monitor/03.png
 
 
 Alternatives

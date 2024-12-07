@@ -1,0 +1,5 @@
+
+  seqdiag {
+    Client -> "tacker-server" [label = " GET /vnflcm/v2/subscriptions/{subscriptionId}"];
+    Client <-- "tacker-server" [label = " Response 200 OK"];
+  }

@@ -1,0 +1,15 @@
+
+  seqdiag {
+    Client; tacker-server; tacker-conductor; tacker-database;
+    Client -> "tacker-server"
+      [label = "POST /vnflcm/v2/vnf_lcm_op_occs/{vnfLcmOpOccId}/fail"];
+    "tacker-server" -> "tacker-database"
+      [label = "mark operation as failed"];
+    "tacker-server" <-- "tacker-database"
+    "tacker-server" ->> "tacker-conductor"
+      [label = "trigger asynchronous task"];
+    "tacker-conductor" ->> "tacker-conductor" [label = "execute notification process"];
+    Client <- "tacker-conductor" [label = "POST {callback URI} (FAILED)"];
+    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
+    Client <-- "tacker-server" [label = "Response 200 OK"];
+  }

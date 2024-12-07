@@ -154,43 +154,7 @@ Sequence for operation
 The following describes the processing flow of the Tacker after
 the External Monitoring Tool sends the alert.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 150;
-    edge_length = 160;
-
-    "External Monitoring Tool"
-    "Prometheus Plugin"
-    "Vnflcm Controller"
-    "Vnflcm Driver"
-    "Tacker DB"
-
-    "External Monitoring Tool" -> "Prometheus Plugin"
-      [label = "1. POST /alert/auto_healing"];
-    "Prometheus Plugin" -> "Prometheus Plugin"
-      [label = "2. Check if this API is enabled in Prometheus Plugin"];
-    "Prometheus Plugin" -> "Prometheus Plugin"
-      [label = "3. Check the status of the received alert"];
-    "Prometheus Plugin" -> "Prometheus Plugin"
-      [label = "4. Check if this alert is for AutoHeal"];
-    "Prometheus Plugin" -> "Tacker DB"
-      [label = "5. Find the corresponding resource from the DB"];
-    "Prometheus Plugin" <-- "Tacker DB"
-      [label = "vnf_instance"];
-    "Prometheus Plugin" -> "Prometheus Plugin"
-      [label = "6. Check whether the resource has AutoHeal enabled"];
-    "Prometheus Plugin" -> "Prometheus Plugin"
-      [label = "7. Check vnfc_info_id in vnf_instance"];
-    "Prometheus Plugin" -> "Vnflcm Controller"
-      [label = "8. Call the internal Heal function"];
-    "Vnflcm Controller" -> "Vnflcm Driver"
-      [label = "9. Trigger asynchronous task", note = "The same with the default Heal operation"];
-    "Prometheus Plugin" <-- "Vnflcm Controller"
-      [label = "Response 202 Accepted"];
-    "External Monitoring Tool" <-- "Prometheus Plugin"
-      [label = "Response 204 No Content"];
-  }
+.. image:: ./vnfm-autoheal-and-autoscale/01.png
 
 #. As an External Monitoring Tool, Prometheus monitors specified resources
    through user-defined rules. When the data monitored by Prometheus matches
@@ -330,45 +294,7 @@ Sequence for operation
 The following describes the processing flow of
 the Tacker after the External Monitoring Tool sends the alert.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 150;
-    edge_length = 160;
-
-    "External Monitoring Tool"
-    "Prometheus Plugin"
-    "Vnflcm Controller"
-    "Vnflcm Driver"
-    "Tacker DB"
-
-    "External Monitoring Tool" -> "Prometheus Plugin"
-      [label = "1. POST /alert/auto_scaling"];
-    "Prometheus Plugin" -> "Prometheus Plugin"
-      [label = "2. Check if this API is enabled in Prometheus Plugin"];
-    "Prometheus Plugin" -> "Prometheus Plugin"
-      [label = "3. Check the status of the received alert"];
-    "Prometheus Plugin" -> "Prometheus Plugin"
-      [label = "4. Check if this alert is for AutoScale"];
-    "Prometheus Plugin" -> "Prometheus Plugin"
-      [label = "5. Check that the received alert contains a valid type of Scale"];
-    "Prometheus Plugin" -> "Tacker DB"
-      [label = "6. Find the corresponding resource from the DB"];
-    "Prometheus Plugin" <-- "Tacker DB"
-      [label = "vnf_instance"];
-    "Prometheus Plugin" -> "Prometheus Plugin"
-      [label = "7. Check whether the resource has AutoScale enabled"];
-    "Prometheus Plugin" -> "Prometheus Plugin"
-      [label = "8. Check aspect_id in vnf_instance"];
-    "Prometheus Plugin" -> "Vnflcm Controller"
-      [label = "9. Call the internal Scale function"];
-    "Vnflcm Controller" -> "Vnflcm Driver"
-      [label = "10. Trigger asynchronous task", note = "The same with the default Scale operation"];
-    "Prometheus Plugin" <-- "Vnflcm Controller"
-      [label = "Response 202 Accepted"];
-    "External Monitoring Tool" <-- "Prometheus Plugin"
-      [label = "Response 204 No Content"];
-  }
+.. image:: ./vnfm-autoheal-and-autoscale/02.png
 
 #. As an External Monitoring Tool, Prometheus monitors specified resources
    through user-defined rules. When the data monitored by Prometheus matches

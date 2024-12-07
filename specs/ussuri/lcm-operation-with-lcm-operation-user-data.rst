@@ -55,23 +55,7 @@ Instantiation procedure with LCM operation user data
 As an example, VNF instantiation procedure using LCM operation user data is
 described below.
 
-.. seqdiag::
-
-  seqdiag {
-    Client -> VNFMplugin [label = "Request InstantiateVNF"];
-    VNFMplugin -> VNFMplugin [label = "Decide instantiation method"];
-    VNFMplugin -> NFVOplugin [label = "Get VNF package"];
-    VNFMplugin <<- NFVOplugin [label = "VNFD, baseHOT,
-                                        LCM operation user data"];
-    VNFMplugin -> Glance [label = "Create image"];
-    VNFMplugin <<- Glance [label = "ImageId"];
-    VNFMplugin -> LCMOperationUserData [label = "Call LCM operation user data"];
-    VNFMplugin <<- LCMOperationUserData [label = "key-value parameters"];
-    VNFMplugin -> Heat [label = "Create stack with key-value
-                                 parameters and baseHOT"];
-    VNFMplugin <<- Heat;
-    Client <<- VNFMplugin;
-  }
+.. image:: ./lcm-operation-with-lcm-operation-user-data/01.png
 
 Instantiating VNF, as illustrated in above sequence diagram, consists of
 following steps.

@@ -1,0 +1,69 @@
+
+  seqdiag {
+    node_width = 80;
+    edge_length = 100;
+
+    "Client"
+    "Tacker-server"
+    "Tacker-conductor"
+    "VnfLcmDriver"
+    "OpenStackInfraDriver"
+    "Heat"
+    "MgmtDriver"
+    "VnfInstance(Tacker DB)"
+    "RemoteCommandExecutor"
+    "SFTPClient"
+
+    Client -> "Tacker-server"
+      [label = "POST /vnf_instances/{vnfInstanceId}/scale"];
+    Client <-- "Tacker-server"
+      [label = "Response 202 Accepted"];
+    "Tacker-server" -> "Tacker-conductor"
+      [label = "trigger asynchronous task"];
+    "Tacker-conductor" -> "VnfLcmDriver"
+      [label = "execute VnfLcmDriver"];
+    "VnfLcmDriver" -> "OpenStackInfraDriver"
+      [label = "execute OpenStackInfraDriver"];
+    "OpenStackInfraDriver" -> "Heat"
+      [label = "resource signal"];
+    "OpenStackInfraDriver" <-- "Heat"
+      [label = ""];
+    "OpenStackInfraDriver" -> "Heat"
+      [label = "update stack"];
+    "OpenStackInfraDriver" <-- "Heat"
+      [label = ""];
+    "VnfLcmDriver" <-- "OpenStackInfraDriver"
+      [label = ""];
+
+    "VnfLcmDriver" -> "MgmtDriver"
+      [label = "scale_end"];
+    "MgmtDriver" -> "VnfInstance(Tacker DB)"
+      [label = "get stack id"];
+    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
+      [label = ""];
+    "MgmtDriver" -> "Heat"
+      [label = "get the new VM info created by scale out operation"];
+    "MgmtDriver" <-- "Heat"
+      [label = ""];
+    "MgmtDriver" -> "RemoteCommandExecutor"
+      [label = "install Kubernetes and join cluster on the new Worker VM"];
+    "MgmtDriver" <-- "RemoteCommandExecutor"
+      [label = ""];
+    "MgmtDriver" -> "VnfInstance(Tacker DB)"
+      [label = "get private_registry_connection_info of Instantiate VNF request"];
+    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
+      [label = ""];
+    "MgmtDriver" -> "SFTPClient"
+      [label = "transfer CA certificate files to the new Worker VM if specified by Instantiate VNF request parameter"];
+    "MgmtDriver" <-- "SFTPClient"
+      [label = ""];
+    "MgmtDriver" -> "RemoteCommandExecutor"
+      [label = "configure connections to Docker private registries on the new Worker VM"];
+    "MgmtDriver" <-- "RemoteCommandExecutor"
+      [label = ""];
+    "VnfLcmDriver" <-- "MgmtDriver"
+      [label = ""];
+    "Tacker-conductor" <-- "VnfLcmDriver"
+      [label = ""];
+
+  }

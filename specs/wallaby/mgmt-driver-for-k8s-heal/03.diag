@@ -1,0 +1,82 @@
+
+  seqdiag {
+    node_width = 80;
+    edge_length = 100;
+
+    "Client"
+    "Tacker-server"
+    "Tacker-conductor"
+    "VnfLcmDriver"
+    "OpenstackDriver"
+    "Heat"
+    "MgmtDriver"
+    "VnfInstance(Tacker DB)"
+    "RemoteCommandExecutor"
+    "NfvoPlugin"
+
+    Client -> "Tacker-server"
+      [label = "POST /vnf_instances/{vnfInstanceId}/heal"];
+    Client <-- "Tacker-server"
+      [label = "Response 202 Accepted"];
+    "Tacker-server" -> "Tacker-conductor"
+      [label = "trigger asynchronous task"];
+
+    "Tacker-conductor" -> "MgmtDriver"
+      [label = "heal_start"];
+    "MgmtDriver" -> "NfvoPlugin"
+      [label = "delete the failed VIM information"];
+    "MgmtDriver" <-- "NfvoPlugin"
+      [label = ""];
+    "MgmtDriver" -> "VnfInstance(Tacker DB)"
+      [label = "Clear the old Kubernetes cluster information stored in the
+      vim_connection_info of the VNF Instance"];
+    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
+
+    "Tacker-conductor" <-- "MgmtDriver"
+      [label = ""];
+
+    "Tacker-conductor" -> "VnfLcmDriver"
+      [label = "execute VnfLcmDriver"];
+    "VnfLcmDriver" -> "OpenstackDriver"
+      [label = "execute OpenstackDriver"];
+    "OpenstackDriver" -> "Heat"
+      [label = "resource signal"];
+    "OpenstackDriver" -> "Heat"
+      [label = "update stack"];
+    "OpenstackDriver" <-- "Heat"
+      [label = ""];
+    "VnfLcmDriver" <-- "OpenstackDriver"
+      [label = ""];
+    "Tacker-conductor" <-- "VnfLcmDriver"
+      [label = ""];
+
+    "Tacker-conductor" -> "MgmtDriver"
+      [label = "heal_end"];
+    "MgmtDriver" -> "VnfInstance(Tacker DB)"
+      [label = "get stack id"];
+    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
+      [label = ""];
+    "MgmtDriver" -> "Heat"
+      [label = "get ssh ip address and Kubernetes address using stack id"];
+    "MgmtDriver" <-- "Heat"
+      [label = ""];
+    "MgmtDriver" -> "RemoteCommandExecutor"
+      [label = "install Kubernetes on the new node"];
+    "MgmtDriver" <-- "RemoteCommandExecutor"
+      [label = ""];
+    "MgmtDriver" -> "RemoteCommandExecutor"
+      [label = "install etcd cluster by invoking shell script"];
+    "MgmtDriver" <-- "RemoteCommandExecutor"
+      [label = ""];
+    "MgmtDriver" -> "NfvoPlugin"
+      [label = "register Kubernetes VIM to tacker"];
+    "MgmtDriver" <-- "NfvoPlugin"
+      [label = ""]
+    "MgmtDriver" -> "VnfInstance(Tacker DB)"
+      [label = "append Kubernetes cluster VIM info to VimConnectionInfo"]
+    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
+      [label = ""]
+    "Tacker-conductor" <-- "MgmtDriver"
+      [label = ""];
+
+  }

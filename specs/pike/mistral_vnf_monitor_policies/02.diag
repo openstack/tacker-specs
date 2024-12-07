@@ -1,0 +1,6 @@
+
+  seqdiag {
+    === loop according to monitor policy ===
+    vnf_policy_monitor -> conductor [label = "execute_policy_action"]
+    conductor -> policy_action [label = "execute_action" ]
+  }

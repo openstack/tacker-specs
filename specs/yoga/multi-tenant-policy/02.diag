@@ -1,0 +1,28 @@
+
+    seqdiag {
+        node_width = 80;
+        edge_length = 100;
+
+        "client"
+        "tacker-server"
+        "tacker-condunctor"
+        "vnflcm_driver"
+        "infra_driver"
+
+        "client" -> "tacker-server"
+            [label = "Request Instantiate VNF"];
+        "client" <- "tacker-server"
+        "tacker-server" --> "tacker-condunctor"
+            [label = "Execute instantiate"];
+        "tacker-condunctor" -> "vnflcm_driver"
+            [label = "Execute instantiate_vnf"];
+        "vnflcm_driver" -> "vnflcm_driver"
+            [label = "Verify VIM and VNF belong to the same Tenant"];
+        === if same tenant ===
+        "vnflcm_driver" -> "infra_driver"
+            [label = "create VNF resrouces"];
+        === if not same tenant ===
+        "tacker-condunctor" <- "vnflcm_driver"
+            [label = "return TenantMatchFailure"];
+
+    }

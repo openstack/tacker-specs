@@ -1,0 +1,18 @@
+
+  seqdiag {
+    node_width = 100;
+    edge_length = 115;
+
+    KubernetesDriver --> KubernetesUtil [label =
+        "1. cnf_to_kube_objects(\ncnf_def_dict)"];
+    KubernetesDriver <-- KubernetesUtil [label =
+        "Kubernetes model\nobjects"];
+    KubernetesDriver --> KubernetesPythonClient [label =
+        "2. call client APIs for each\nmodel object"];
+    KubernetesPythonClient --> Kubernetes [label =
+        "deploy kubernetes\nobjects"];
+    KubernetesPythonClient <-- Kubernetes [label = "deployed objects info"];
+    KubernetesDriver <-- KubernetesPythonClient [label =
+        "3. deployed objects info"];
+    KubernetesDriver -->> KubernetesDriver [label = "prepare\ninstance id"];
+  }

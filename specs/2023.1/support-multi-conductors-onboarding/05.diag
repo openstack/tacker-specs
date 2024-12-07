@@ -1,0 +1,76 @@
+
+  seqdiag {
+    node_width = 80; edge_length = 100;
+
+    "Client" "DB" "Tacker-server" "Backend Storage" "Messaging Queue" "Tacker-conductor 1" "Tacker-conductor 2" "Tacker-conductor 3"
+
+    Client -> "Tacker-server"
+    [label = "1. DELETE /vnfpkgm/v1/vnf_packages/{vnf_package_id}"];
+
+    "Tacker-server" -> "DB"
+    [label = "2. Update the deleted flag to 1"]
+
+    "Tacker-server" <- "DB"
+    [label = ""]
+
+    "Tacker-server" -> "Messaging Queue"
+    [label = "3. Send a rpc message of 'Delete VNF Package' with fanout=False"]
+
+    Client <- "Tacker-server"
+    [label = "response 204 No Content"]
+
+    "Messaging Queue" -> "Tacker-conductor 1"
+    [label = ""]
+
+    "Tacker-conductor 1" -> "Backend Storage"
+    [label = "4. Delete CSAR file"]
+
+    "Tacker-conductor 1" <- "Backend Storage"
+    [label = ""]
+
+    "Tacker-conductor 1" -> "Messaging Queue"
+    [label = "5. sends a rpc message to delete the file from local file system with fanout=True"]
+
+    "Messaging Queue" -> "Tacker-conductor 1"
+    [label = ""]
+
+    "Messaging Queue" -> "Tacker-conductor 2"
+    [label = ""]
+
+    "Messaging Queue" -> "Tacker-conductor 3"
+    [label = ""]
+
+    "Tacker-conductor 1" -> "Backend Storage"
+    [label = "6. Delete the CSAR file from local file system"]
+
+    "Tacker-conductor 1" <- "Backend Storage"
+    [label = ""]
+
+    "Tacker-conductor 2" -> "Backend Storage"
+    [label = "6. Delete the CSAR file from local file system"]
+
+    "Tacker-conductor 2" <- "Backend Storage"
+    [label = ""]
+
+    "Tacker-conductor 3" -> "Backend Storage"
+    [label = "6. Delete the CSAR file from local file system"]
+
+    "Tacker-conductor 3" <- "Backend Storage"
+    [label = ""]
+
+    "Messaging Queue" <- "Tacker-conductor 1"
+    [label = ""]
+
+    "Messaging Queue" <- "Tacker-conductor 2"
+    [label = ""]
+
+    "Messaging Queue" <- "Tacker-conductor 3"
+    [label = ""]
+
+    "Tacker-conductor 1" <- "Messaging Queue"
+    [label = ""]
+
+    "Messaging Queue" <- "Tacker-conductor 1"
+    [label = ""]
+
+  }

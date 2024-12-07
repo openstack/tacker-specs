@@ -152,73 +152,7 @@ Sequence before changing
 
 The following sequence omits the notification process.
 
-.. seqdiag::
-
-  seqdiag {
-      node_width = 80;
-      edge_length = 100;
-
-    EM; Client; NFVO; "Tacker common process"; "Tacker UserData script";
-    Heat; VDU1-VNFC1; VDU1-VNFC2;
-
-    === Instantiate VNF ===
-
-    "Client" -> "Tacker common process"
-      [label = "POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/instantiate"];
-    "Client" <-- "Tacker common process" [label = "Response 202 Accepted"];
-    "Tacker common process" ->> "Tacker common process"
-      [label = "calculate the number of VMs"];
-    "NFVO" <- "Tacker common process" [label = "POST /grants"];
-    "NFVO" --> "Tacker common process"
-      [label = "201 Created with OpenStack Glance imageid"];
-    "Tacker common process" -> "Tacker UserData script"
-      [label = "request, instance, grantRequest, grant, tmp_csar_dir"];
-    "Tacker common process" <-- "Tacker UserData script"
-      [label = "HOT and corresponding input-parameter including desired_capacity"];
-    "Tacker common process" -> "Heat"
-      [label = "POST /v1/{tenant_id}/stacks --parameter
-       imageid=<original imageid>; desired_capacity=1"];
-    "Heat" -> "VDU1-VNFC1" [label = "create VM"];
-    "Heat" <-- "VDU1-VNFC1" [label = ""];
-    "Tacker common process" <-- "Heat" [label = ""];
-
-    === Update internal configuration on VNFC ===
-
-    "EM" -> "VDU1-VNFC1" [label = "update the internal configuration"];
-    "EM" <-- "VDU1-VNFC1" [label = ""];
-
-    === Modify the VNF Instance's information in Tacker DB ===
-
-    "Client" -> "Tacker common process"
-     [label = "PATCH vnflcm/v2/vnf_instances/{vnfInstanceId}"];
-    "Tacker common process" -> "Tacker common process"
-      [label = "change vnfdid of the vnfInstance.
-       new vnfd includes identifier of the new image."];
-    "Client" <-- "Tacker common process" [label = "Response 202 Accepted"];
-
-    === Scale-out the VNF ===
-
-    "Client" -> "Tacker common process"
-      [label = "/vnflcm/v2/vnf_instances/{vnfInstanceId}/scale"];
-    "Client" <-- "Tacker common process" [label = "Response 202 Accepted"];
-    "NFVO" <- "Tacker common process" [label = "POST /grants"];
-    "NFVO" --> "Tacker common process"
-      [label = "201 Created with new OpenStack Glance imageid"];
-    "Tacker common process" -> "Tacker UserData script"
-      [label = "request, instance, grantRequest, grant, tmp_csar_dir"];
-    "Tacker UserData script" -> "Tacker UserData script"
-      [label = "calculate the number of VMs"];
-    "Tacker common process" <-- "Tacker UserData script"
-      [label = "HOT and corresponding input-paramaeter including desired_capacity"];
-    "Tacker common process" -> "Heat"
-      [label = "PATCH /v1/{tenant_id}/stacks/{stack_name}/{stack_id}
-       --existing --parameter imageid=<new imageid>; desired_capacity=2"];
-    "Heat" -> "VDU1-VNFC1" [label = "re-create VM"];
-    "Heat" <--  "VDU1-VNFC1" [label = ""];
-    "Heat" -> "VDU1-VNFC2" [label = "create VM"];
-    "Heat" <-- "VDU1-VNFC2" [label = ""];
-    "Tacker common process" <-- "Heat" [label = ""];
-  }
+.. image:: ./individual-vnfc-management/01.png
 
 
 The procedure consists of the following steps as illustrated in above sequence:
@@ -270,72 +204,7 @@ The following sequence omits the notification process.
 
 Changes are highlighted in red boxes.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    EM; Client; NFVO; "Tacker common process"; "Tacker UserData script";
-    Heat; VDU1-VNFC1; VDU1-VNFC2;
-
-    === Instantiate VNF ===
-
-    "Client" -> "Tacker common process"
-      [label = "POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/instantiate"];
-    "Client" <-- "Tacker common process" [label = "Response 202 Accepted"];
-    "Tacker common process" ->> "Tacker common process"
-      [label = "calculate the number of VMs"];
-    "NFVO" <- "Tacker common process" [label = "POST /grants"];
-    "NFVO" --> "Tacker common process"
-      [label = "201 Created with OpenStack Glance imageid"];
-    "Tacker common process" -> "Tacker UserData script"
-      [label = "request, instance, grantRequest, grant, tmp_csar_dir"];
-    "Tacker common process" <-- "Tacker UserData script"
-      [label = "adjusted HOT and corresponding input-parameter",
-       leftnote = "Tacker UserData script makes adjusted HOT"];
-    "Tacker common process" -> "Heat"
-      [label = "POST /v1/{tenant_id}/stacks --parameter imageid=<original imageid>"];
-    "Heat" -> "VDU1-VNFC1" [label = "create VM"];
-    "Heat" <-- "VDU1-VNFC1" [label = ""];
-    "Tacker common process" <-- "Heat" [label = ""];
-
-    === Update internal configuration on VNFC ===
-
-    "EM" -> "VDU1-VNFC1" [label = "update the internal configuration"];
-    "EM" <-- "VDU1-VNFC1" [label = ""];
-
-    === Modify the VNF Instance's information in Tacker DB ===
-
-    "Client" -> "Tacker common process"
-     [label = "PATCH vnflcm/v2/vnf_instances/{vnfInstanceId}"];
-    "Tacker common process" -> "Tacker common process"
-      [label = "change vnfdid of the vnfInstance.
-       new vnfd includes identifier of the new image."];
-    "Client" <-- "Tacker common process" [label = "Response 202 Accepted"];
-
-    === Scale-out the VNF ===
-
-    "Client" -> "Tacker common process"
-      [label = "/vnflcm/v2/vnf_instances/{vnfInstanceId}/scale"];
-    "Client" <-- "Tacker common process" [label = "Response 202 Accepted"];
-    "NFVO" <- "Tacker common process" [label = "POST /grants"];
-    "NFVO" --> "Tacker common process"
-      [label = "201 Created with new OpenStack Glance imageid"];
-    "Tacker common process" -> "Tacker UserData script"
-      [label = "request, instance, grantRequest, grant, tmp_csar_dir"];
-    "Tacker UserData script" -> "Tacker UserData script"
-      [label = "calculate the number of VMs"];
-    "Tacker common process" <-- "Tacker UserData script"
-      [label = "adjusted HOT and corresponding input-parameter",
-       leftnote = "Tacker UserData script makes adjusted HOT"];
-    "Tacker common process" -> "Heat"
-      [label = "PATCH /v1/{tenant_id}/stacks/{stack_name}/{stack_id}
-       --existing --parameter imageid=<new imageid>"];
-    "Heat" -> "VDU1-VNFC2" [label = "create VM"];
-    "Heat" <-- "VDU1-VNFC2" [label = ""];
-    "Tacker common process" <-- "Heat" [label = ""];
-  }
+.. image:: ./individual-vnfc-management/02.png
 
 
 The procedure consists of the following steps as illustrated in above sequence:

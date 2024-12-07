@@ -1,0 +1,16 @@
+
+  seqdiag {
+    Client; NFVO; tacker-server; tacker-conductor; MgmtDriver; VnfLcmDriver;
+
+    Client -> "tacker-server"
+      [label = "POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/instantiate"];
+    Client <-- "tacker-server" [label = "Response 202 Accepted"];
+    "tacker-server" -> "tacker-conductor"
+      [label = "trriger asynchronous task"];
+    NFVO <- "tacker-conductor" [label = "POST /grants"];
+    NFVO --> "tacker-conductor" [label = "201 Created"];
+    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
+    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
+    "tacker-conductor" -> "MgmtDriver" [label = "execute MgmtDriver"];
+    "tacker-conductor" <-- "MgmtDriver" [label = ""];
+  }

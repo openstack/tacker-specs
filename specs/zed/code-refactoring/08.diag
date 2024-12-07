@@ -1,0 +1,53 @@
+
+    seqdiag {
+      node_width = 100;
+      edge_length = 150;
+
+      "Client"
+      "Tacker-server"
+      "Tacker-conductor"
+      "Heat"
+
+      "Client" -> "Tacker-server"
+        [label = "POST /vnf_instances/{vnfInstanceId}/heal"];
+      "Tacker-server" -> "Tacker-conductor"
+        [label = "heal"];
+
+     ... ------------- Omitted from description ------------- ...
+
+      "Tacker-conductor" -> "Heat"
+        [label = "PATCH stacks/{stack_name}"];
+      "Tacker-conductor" <-- "Heat"
+        [label = "302 Found"];
+      "Tacker-conductor" -> "Heat"
+        [label = "(Redirection) PATCH stacks/{stack_name}/{stack_id}"];
+      "Tacker-conductor" <-- "Heat"
+        [label = "202 Accepted"];
+
+      === start of the checking of the resource status ===
+
+      "Tacker-conductor" -> "Heat"
+        [label = "GET stacks/{stack_name}", leftnote = "First check of the resource status"];
+      "Tacker-conductor" <-- "Heat"
+        [label = "302 Found"];
+
+      "Tacker-conductor" -> "Heat"
+        [label = "(Redirection) GET stacks/{stack_name}/{stack_id}"];
+      "Tacker-conductor" <-- "Heat"
+        [label = "200 OK"];
+
+      "Tacker-conductor" -> "Tacker-conductor"
+        [note = "Get 'stack_id' parameter from Response and \nsave it to a local variable"];
+
+      === loop start (Repeat until 'UPDATE_COMPLETE')===
+
+      "Tacker-conductor" -> "Heat"
+        [label = "GET stacks/{stack_name}/{stack_id}", leftnote = "Second and subsequent check of resource state. \nCan be sent with the Heat API without redirection."];
+      "Tacker-conductor" <-- "Heat"
+        [label = "200 OK"];
+
+      === loop end ===
+
+      === end of the checking of the resource status ===
+
+    }

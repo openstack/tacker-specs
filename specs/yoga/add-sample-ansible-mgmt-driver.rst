@@ -123,30 +123,7 @@ during each LCM operation.
 The Ansible Driver Sample runs using the Ansible service on the same server
 as Tacker.
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    "Tacker-conductor"
-    "AnsibleMgmtDriver"
-    "ScriptANSIBLE"
-    "Ansible"
-    "VnfInstance"
-
-    "Tacker-conductor" -> "AnsibleMgmtDriver"
-      [label = "Execute LCM Configuration"];
-    "AnsibleMgmtDriver" -> "ScriptANSIBLE"
-      [label = "Get configuration setting and select ansible playbook"];
-    "AnsibleMgmtDriver" <- "ScriptANSIBLE"
-      [label = "return ansible playbook path at Scripts and configuration"];
-    "AnsibleMgmtDriver" -> "Ansible"
-      [label = "Execute ansible-playbook command using playbook in Scripts"];
-    "Ansible" -> "VnfInstance"
-      [label = "Configuration instance"];
-
-  }
+.. image:: ./add-sample-ansible-mgmt-driver/01.png
 
 Alternatives
 ------------

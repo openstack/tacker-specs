@@ -1,0 +1,66 @@
+
+  seqdiag {
+    node_width = 80;
+    edge_length = 100;
+
+    "Client"
+    "Tacker-server"
+    "Tacker-conductor"
+    "VnfLcmDriver"
+    "OpenstackDriver"
+    "Heat"
+    "MgmtDriver"
+    "VnfInstance(Tacker DB)"
+    "RemoteCommandExecutor"
+    "NfvoPlugin"
+
+    Client -> "Tacker-server"
+      [label = "POST /vnf_instances/{vnfInstanceId}/instantiate"];
+    Client <-- "Tacker-server"
+      [label = "Response 202 Accepted"];
+    "Tacker-server" -> "Tacker-conductor"
+      [label = "trigger asynchronous task"];
+
+   "Tacker-conductor" -> "VnfLcmDriver"
+      [label = "execute VnfLcmDriver"];
+    "VnfLcmDriver" -> "OpenstackDriver"
+      [label = "execute OpenstackDriver"];
+    "OpenstackDriver" -> "Heat"
+      [label = "create stack"];
+    "OpenstackDriver" <-- "Heat"
+      [label = "return stack id"];
+    "VnfLcmDriver" <-- "OpenstackDriver"
+      [label = "return instance_id"];
+
+    "VnfLcmDriver" -> "MgmtDriver"
+      [label = "instantiate_end"];
+    "MgmtDriver" -> "VnfInstance(Tacker DB)"
+      [label = "get stack id"];
+    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
+      [label = ""];
+    "MgmtDriver" -> "Heat"
+      [label = "get ssh ip address and Kubernetes address using stack id"];
+    "MgmtDriver" <-- "Heat"
+      [label = ""];
+    "MgmtDriver" -> "RemoteCommandExecutor"
+      [label = "install Kubernetes on the new node"];
+    "MgmtDriver" <-- "RemoteCommandExecutor"
+      [label = ""];
+    "MgmtDriver" -> "RemoteCommandExecutor"
+      [label = "get identification token from Kubernetes cluster"];
+    "MgmtDriver" <-- "RemoteCommandExecutor"
+      [label = ""];
+    "MgmtDriver" -> "NfvoPlugin"
+      [label = "register Kubernetes VIM to tacker"];
+    "MgmtDriver" <-- "NfvoPlugin"
+      [label = ""]
+    "MgmtDriver" -> "VnfInstance(Tacker DB)"
+      [label = "append Kubernetes cluster VIM info to VimConnectionInfo"]
+    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
+      [label = ""]
+    "VnfLcmDriver" <-- "MgmtDriver"
+      [label = ""];
+    "Tacker-conductor" <-- "VnfLcmDriver"
+      [label = ""];
+
+  }

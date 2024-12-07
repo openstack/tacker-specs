@@ -1,0 +1,20 @@
+
+  seqdiag {
+    Client; NFVO; tacker-server; tacker-conductor; VnfLcmDriver; TackerDB; Barbican;
+
+    Client -> "tacker-server"
+      [label = "POST /vnflcm/v2/vnf_instances/{vnfInstanceId}/instantiate"];
+    Client <-- "tacker-server" [label = "202 Accepted"];
+    "tacker-server" -> "tacker-conductor"
+      [label = "trigger asynchronous task"];
+    NFVO <- "tacker-conductor" [label = "POST /grants"];
+    NFVO --> "tacker-conductor" [label = "201 Created"];
+    "tacker-conductor" -> "tacker-conductor" [label = "encrypt auth credentials"];
+    "tacker-conductor" -> "Barbican" [label = "register the encryption key"];
+    "tacker-conductor" <-- "Barbican" [label = "200 Successful Request"];
+    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
+    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
+    "tacker-conductor" -> "TackerDB" [label = "store encrypted auth credentials"];
+    "tacker-conductor" <-- "TackerDB" [label = ""];
+
+  }

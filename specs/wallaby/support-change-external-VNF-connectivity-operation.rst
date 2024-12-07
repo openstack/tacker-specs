@@ -47,30 +47,7 @@ The operation provided through a new API in this specification is below.
 Along with the addition of the Change external VNF connectivity API,
 the existing LCM APIs also support new related attributes.
 
-.. seqdiag::
-
-  seqdiag {
-    Client; NFVO; tacker-server; tacker-conductor;
-
-    Client -> "tacker-server" [label = "Change external VNF connectivity"];
-    Client <-- "tacker-server" [label = "Response 202 Accepted"];
-    "tacker-server" ->> "tacker-conductor" [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (STARTING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-server" -> "tacker-conductor" [label = "trigger asynchronous task"];
-    NFVO <- "tacker-conductor" [label = "POST /grants"];
-    NFVO --> "tacker-conductor" [label = "201 Created"];
-    "tacker-conductor" ->> "tacker-conductor" [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (PROCESSING)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute MgmtDriver"];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" -> "VnfLcmDriver" [label = "execute VnfLcmDriver"];
-    "tacker-conductor" <-- "VnfLcmDriver" [label = ""];
-    "tacker-conductor" ->> "tacker-conductor" [label = "execute notification process"];
-    Client <- "tacker-conductor" [label = "POST {callback URI} (COMPLETED)"];
-    Client --> "tacker-conductor" [label = "Response: 204 No Content"];
-  }
+.. image:: ./support-change-external-VNF-connectivity-operation/01.png
 
 This operation allows the client to change the external
 connectivity of a VNF instance.

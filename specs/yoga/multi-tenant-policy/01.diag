@@ -1,0 +1,24 @@
+
+    seqdiag {
+        node_width = 80;
+        edge_length = 100;
+
+        "Client belong to tenant-B"
+        "Tacker-server"
+        "Tacker-condunctor"
+        "Notify Receiver of tenant-A"
+        "Notify Receiver of tenant-B"
+
+        "Client belong to tenant-B" -> "Tacker-server"
+            [label = "Request LCM Operation"];
+        "Tacker-server" -> "Tacker-condunctor"
+            [label = "Execute LCM Operation"];
+        "Tacker-condunctor" -> "Tacker-condunctor"
+            [label = "Checking tenant of operation and vnf instance"];
+        "Tacker-condunctor" -> "Notify Receiver of tenant-B"
+            [label = "Send LCM Operation Notification"];
+        "Tacker-condunctor" <-- "Notify Receiver of tenant-B"
+        "Tacker-condunctor" -> "Tacker-condunctor"
+            [label = "Execute LCM Process"];
+
+    }

@@ -1,0 +1,6 @@
+
+  seqdiag {
+    Client -> "tacker-server" [label = " GET /vnflcm/v2/vnf_lcm_op_occs"];
+    "tacker-server" -> "tacker-server" [label = "request validation"];
+    Client <-- "tacker-server" [label = " Response 200 OK"];
+  }

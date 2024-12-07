@@ -112,14 +112,7 @@ happened on the monitored vnf, for example the VNF was scaled, and was respawned
 
 Sequence diagram for create VNF:
 
-.. seqdiag::
-
-  seqdiag {
-    user  -> vnfmplugin [label = "create_vnf with monitor_policies property"];
-    vnfmplugin -> vnfmplugin [label = "generate workflow with auto generated action id"];
-    vnfmplugin -> vnfmplugin [label = "update vnf with monitor action id"];
-    vnfmplugin -> mistral [label = "run the workflow to start vnf_policy_monitor"];
-  }
+.. image:: ./mistral_vnf_monitor_policies/01.png
 
 Monitor policy is divided into two parts: policy monitor and policy action. Policy monitor,
 such as ping and http_ping is implemented as mistral task action. Policy action will
@@ -128,13 +121,7 @@ be run in tacker conductor.
 Each VNF with monitor policies will have a workflow generated, and will be kept as meta
 information of VNF instance so that they can be managed.
 
-.. seqdiag::
-
-  seqdiag {
-    === loop according to monitor policy ===
-    vnf_policy_monitor -> conductor [label = "execute_policy_action"]
-    conductor -> policy_action [label = "execute_action" ]
-  }
+.. image:: ./mistral_vnf_monitor_policies/02.png
 
 The mistral workflow action will be run once the workflow is started. The action will do
 its job according to monitor policy. When policy action is needed, the monitor action will
@@ -146,11 +133,7 @@ such as respawn, log etc.
 If the policy action needs to update the vnf_policy_monitor, it will notify vnf_policy_monitor
 the change.
 
-.. seqdiag::
-
-  seqdiag {
-      conductor -> vnf_policy_monitor [label = "update action job via RPC"]
-  }
+.. image:: ./mistral_vnf_monitor_policies/03.png
 
 If conductor finds the action is obsolete, it will return bad_action to vnf_policy_monitor,
 then the vnf_policy_monitor will exit.
@@ -164,25 +147,12 @@ VDUs.
 
 Sequence diagram for deleting VNF:
 
-.. seqdiag::
-
-  seqdiag {
-    user  -> vnfmplugin [label = "delete_vnf with monitor_policies property"];
-    vnfmplugin -> vnfmplugin [label = "get workflow with action id for the VNF"];
-    vnfmplugin -> mistral [label = "delete workflow and its execution"];
-    vnfmplugin -> vnf_policy_monitor [label = "kill action job via RPC"]
-  }
+.. image:: ./mistral_vnf_monitor_policies/04.png
 
 
 Sequence diagram for scale VNF:
 
-.. seqdiag::
-
-  seqdiag {
-    user  -> vnfmplugin [label = "scale_vnf with monitor_policies property"];
-    vnfmplugin -> vnfmplugin [label = "get workflow with action id for the VNF"];
-    vnfmplugin -> vnf_policy_monitor [label = "update action job via RPC"]
-  }
+.. image:: ./mistral_vnf_monitor_policies/05.png
 
 
 Alternatives

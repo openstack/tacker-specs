@@ -1,0 +1,6 @@
+
+  seqdiag {
+    Client -> "tacker-server"
+      [label = " DELETE /subscriptions/{subscriptionId}"];
+    Client <-- "tacker-server" [label = " Resonse 204 No Content"];
+  }

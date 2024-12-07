@@ -152,73 +152,7 @@ network:
 Following sequence diagram describes the components involved and the flow of
 install Kubernetes cluster with MgmtDriver operation:
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfLcmDriver"
-    "OpenstackDriver"
-    "Heat"
-    "MgmtDriver"
-    "VnfInstance(Tacker DB)"
-    "RemoteCommandExecutor"
-    "NfvoPlugin"
-
-    Client -> "Tacker-server"
-      [label = "POST /vnf_instances/{vnfInstanceId}/instantiate"];
-    Client <-- "Tacker-server"
-      [label = "Response 202 Accepted"];
-    "Tacker-server" -> "Tacker-conductor"
-      [label = "trigger asynchronous task"];
-
-   "Tacker-conductor" -> "VnfLcmDriver"
-      [label = "execute VnfLcmDriver"];
-    "VnfLcmDriver" -> "OpenstackDriver"
-      [label = "execute OpenstackDriver"];
-    "OpenstackDriver" -> "Heat"
-      [label = "create stack"];
-    "OpenstackDriver" <-- "Heat"
-      [label = "return stack id"];
-    "VnfLcmDriver" <-- "OpenstackDriver"
-      [label = "return instance_id"];
-
-    "VnfLcmDriver" -> "MgmtDriver"
-      [label = "instantiate_end"];
-    "MgmtDriver" -> "VnfInstance(Tacker DB)"
-      [label = "get stack id"];
-    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
-      [label = ""];
-    "MgmtDriver" -> "Heat"
-      [label = "get ssh ip address and Kubernetes address using stack id"];
-    "MgmtDriver" <-- "Heat"
-      [label = ""];
-    "MgmtDriver" -> "RemoteCommandExecutor"
-      [label = "install Kubernetes on the new node"];
-    "MgmtDriver" <-- "RemoteCommandExecutor"
-      [label = ""];
-    "MgmtDriver" -> "RemoteCommandExecutor"
-      [label = "get identification token from Kubernetes cluster"];
-    "MgmtDriver" <-- "RemoteCommandExecutor"
-      [label = ""];
-    "MgmtDriver" -> "NfvoPlugin"
-      [label = "register Kubernetes VIM to tacker"];
-    "MgmtDriver" <-- "NfvoPlugin"
-      [label = ""]
-    "MgmtDriver" -> "VnfInstance(Tacker DB)"
-      [label = "append Kubernetes cluster VIM info to VimConnectionInfo"]
-    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
-      [label = ""]
-    "VnfLcmDriver" <-- "MgmtDriver"
-      [label = ""];
-    "Tacker-conductor" <-- "VnfLcmDriver"
-      [label = ""];
-
-  }
+.. image:: ./mgmt-driver-for-k8s-cluster/01.png
 
 The procedure consists of the following steps as illustrated in above sequence.
 
@@ -562,74 +496,7 @@ network
 Following sequence diagram describes the components involved and the flow of
 install Kubernetes cluster with MgmtDriver operation:
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfLcmDriver"
-    "OpenstackDriver"
-    "Heat"
-    "MgmtDriver"
-    "VnfInstance(Tacker DB)"
-    "RemoteCommandExecutor"
-    "NfvoPlugin"
-
-    Client -> "Tacker-server"
-      [label = "POST /vnf_instances/{vnfInstanceId}/instantiate"];
-    Client <-- "Tacker-server"
-      [label = "Response 202 Accepted"];
-    "Tacker-server" -> "Tacker-conductor"
-      [label = "trigger asynchronous task"];
-
-   "Tacker-conductor" -> "VnfLcmDriver"
-      [label = "execute VnfLcmDriver"];
-    "VnfLcmDriver" -> "OpenstackDriver"
-      [label = "execute OpenstackDriver"];
-    "OpenstackDriver" -> "Heat"
-      [label = "create stack"];
-    "OpenstackDriver" <-- "Heat"
-      [label = "return stack id"];
-    "VnfLcmDriver" <-- "OpenstackDriver"
-      [label = "return instance_id"];
-
-    "VnfLcmDriver" -> "MgmtDriver"
-      [label = "instantiate_end"];
-    "MgmtDriver" -> "VnfInstance(Tacker DB)"
-      [label = "get stack id"];
-    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
-      [label = ""];
-    "MgmtDriver" -> "Heat"
-      [label = "get ssh ipaddress and Kubernetes address using stack id"];
-    "MgmtDriver" <-- "Heat"
-      [label = ""];
-    "MgmtDriver" -> "RemoteCommandExecutor"
-      [label = "install Kubernetes on the new node"];
-    "MgmtDriver" <-- "RemoteCommandExecutor"
-      [label = ""];
-    "MgmtDriver" -> "RemoteCommandExecutor"
-      [label = "get identification token and hash value of
-      ssl certificates from Kubernets Custer"];
-    "MgmtDriver" <-- "RemoteCommandExecutor"
-      [label = ""];
-    "MgmtDriver" -> "NfvoPlugin"
-      [label = "register Kubernetes VIM to tacker"];
-    "MgmtDriver" <-- "NfvoPlugin"
-      [label = ""]
-    "MgmtDriver" -> "VnfInstance(Tacker DB)"
-      [label = "append Kubernetes cluster VIM info to VimConnectionInfo"]
-    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
-      [label = ""]
-    "VnfLcmDriver" <-- "MgmtDriver"
-      [label = ""];
-    "Tacker-conductor" <-- "VnfLcmDriver"
-      [label = ""];
-
-  }
+.. image:: ./mgmt-driver-for-k8s-cluster/02.png
 
 The procedure consists of the following steps as illustrated in above sequence.
 
@@ -970,58 +837,7 @@ Same to instantiation, this logic will be executed through MgmtDriver in
 Following sequence diagram describes the components involved and the flow of
 terminate Kubernetes cluster with MgmtDriver operation:
 
-.. seqdiag::
-
-  seqdiag {
-    node_width = 80;
-    edge_length = 100;
-
-    "Client"
-    "Tacker-server"
-    "Tacker-conductor"
-    "VnfLcmDriver"
-    "OpenstackDriver"
-    "Heat"
-    "MgmtDriver"
-    "VnfInstance(Tacker DB)"
-    "NfvoPlugin"
-
-    Client -> "Tacker-server"
-      [label = "POST /vnf_instances/{vnfInstanceId}/terminate"];
-    Client <-- "Tacker-server"
-      [label = "Response 202 Accepted"];
-    "Tacker-server" -> "Tacker-conductor"
-      [label = "trigger asynchronous task"];
-
-   "Tacker-conductor" -> "VnfLcmDriver"
-      [label = "execute VnfLcmDriver"];
-    "VnfLcmDriver" -> "OpenstackDriver"
-      [label = "execute OpenstackDriver"];
-    "OpenstackDriver" -> "Heat"
-      [label = "delete stack"];
-    "OpenstackDriver" <-- "Heat"
-      [label = "stack deleted"];
-    "VnfLcmDriver" <-- "OpenstackDriver"
-      [label = "resources removed"];
-
-    "VnfLcmDriver" -> "MgmtDriver"
-      [label = "terminate_end"];
-    "MgmtDriver" -> "NfvoPlugin"
-      [label = "delete the VIM information"];
-    "MgmtDriver" <-- "NfvoPlugin"
-      [label = ""];
-    "MgmtDriver" -> "VnfInstance(Tacker DB)"
-      [label = "Clear the Kubernetes cluster information stored in the
-      vim_connection_info of the VNF Instance"];
-    "MgmtDriver" <-- "VnfInstance(Tacker DB)"
-      [label = ""];
-    "VnfLcmDriver" <-- "MgmtDriver"
-      [label = ""];
-    "Tacker-conductor" <-- "VnfLcmDriver"
-      [label = ""];
-
-
-  }
+.. image:: ./mgmt-driver-for-k8s-cluster/03.png
 
 The procedure consists of the following steps as illustrated in above sequence:
 
