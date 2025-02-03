@@ -6,4 +6,5 @@ Tacker 2025.1 Specifications
    :glob:
    :maxdepth: 1
 
+   reduce-fts/*
    *
