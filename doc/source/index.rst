@@ -22,6 +22,7 @@ Specifications
    :glob:
    :maxdepth: 2
 
+   specs/2025.2/index
    specs/2025.1/index
    specs/2024.2/index
    specs/2024.1/index
