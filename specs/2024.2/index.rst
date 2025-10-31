@@ -7,4 +7,3 @@ Tacker 2024.2 Specifications
    :maxdepth: 1
 
    perf-improve-list-apis/*
-   *
