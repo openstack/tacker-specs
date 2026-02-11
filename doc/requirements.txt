@@ -3,6 +3,6 @@
 # process, which may cause wedges in the gate later.
 sphinx>=2.0.0,!=2.1.0 # BSD
 openstackdocstheme>=2.2.1 # Apache-2.0
-pillow===11.0.0
+pillow===12.1.1
 sphinxcontrib-actdiag # BSD
 sphinxcontrib-mermaid # BSD
