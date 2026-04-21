@@ -6,4 +6,4 @@ Tacker 2026.2 Specifications
    :glob:
    :maxdepth: 1
 
-   *
+   many-tacker-instances/*
