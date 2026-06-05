@@ -300,7 +300,7 @@ Then how does the scaling feature work?
 Take this template for example, after all the Senlin resources(a cluster with
 three VDUs created on it, a receiver and scaling policy attached to the
 cluster, and also an alarm) are deployed by Heat, the scaling management can
-be left to Senlin completely. VDUs can be created and deleted automaticaly
+be left to Senlin completely. VDUs can be created and deleted automatically
 under the rules of the scaling policy according to the resource consumption.
 If users don't want to scale in/out VDUs automatically, they can also use
 'tacker vnf-scale' command to control the scalability manually. The request
